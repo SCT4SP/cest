@@ -5,6 +5,27 @@
 #include <map>
 #include <cassert>
 
+constexpr bool common_static_map_tests()
+{
+  auto f = []<template <class ...> class M>() {
+    static_assert(sizeof(M<float,int>)==sizeof(M<double,int>));
+    static_assert(sizeof(M<int,float>)==sizeof(M<int,double>));
+    using iter_t       = typename M<char,int>::iterator;
+    using const_iter_t = typename M<char,int>::const_iterator;
+//    static_assert(std::weakly_incrementable<iter_t>);
+    static_assert(std::is_same_v<
+                    typename iter_t::iterator_category,
+                    std::bidirectional_iterator_tag
+                  >);
+    static_assert(!std::is_same_v<iter_t, const_iter_t>);
+  };
+
+  f.operator()<std::map>();
+  f.operator()<cest::map>();
+
+  return true;
+}
+
 template <template <class...> class M, class T, class U>
 constexpr auto map_test1()
 {
@@ -52,6 +73,7 @@ void map_tests()
   constexpr const auto tup2 = std::tuple{'a',1,true,false};
 
 #ifndef NO_STATIC_TESTS
+  static_assert(common_static_map_tests());
 //  static_assert((map_test1<cest::map,char,int>()) == tup1);
 #endif
 

@@ -28,6 +28,25 @@ constexpr void debug_print_set(S<Ts...> &s) {
 #endif // NO_STATIC_TESTS
 }
 
+constexpr bool common_static_set_tests()
+{
+  auto f = []<template <class ...> class S>() {
+    static_assert(sizeof(S<float>)==sizeof(S<double>));
+    static_assert(std::weakly_incrementable<typename S<int>::iterator>);
+    using iter_t = typename S<int>::iterator;
+    static_assert(std::is_same_v<
+                    typename iter_t::iterator_category,
+                    std::bidirectional_iterator_tag
+                  >);
+    static_assert(std::is_same_v<iter_t, typename S<int>::const_iterator>);
+  };
+
+  f.operator()<std::set>();
+  f.operator()<cest::set>();
+
+  return true;
+}
+
 template <template <typename...> typename S>
 constexpr auto set_test1()
 {
@@ -242,8 +261,7 @@ void set_tests()
   constexpr const auto tup12 = tuple{true};
 
 #ifndef NO_STATIC_TESTS
-  static_assert(sizeof(set<float>)==sizeof(set<double>));
-  static_assert(std::weakly_incrementable<set<int>::iterator>);
+  static_assert(common_static_set_tests());
   static_assert(set_test1<set>() == tup1);
   static_assert(set_test2<set>() == tup2);
   static_assert(set_test3<set>(3,2,1) == tup3);
@@ -274,10 +292,6 @@ void set_tests()
          assert(set_test8<set>()                           == tup11);
   {
          using std::set;
-#ifndef NO_STATIC_TESTS
-         static_assert(sizeof(set<float>)==sizeof(set<double>));
-         static_assert(std::weakly_incrementable<set<int>::iterator>);
-#endif
          assert(set_test1<set>() == tup1);
          assert(set_test2<set>() == tup2);
          assert(set_test3<set>(3,2,1) == tup3);

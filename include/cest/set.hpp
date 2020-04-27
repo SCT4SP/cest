@@ -1,5 +1,5 @@
-#ifndef _CE_SET_HPP_
-#define _CE_SET_HPP_
+#ifndef _CEST_SET_HPP_
+#define _CEST_SET_HPP_
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/set_tests.hpp
 
@@ -245,4 +245,4 @@ struct set
 
 } // namespace cest
 
-#endif // _CE_SET_HPP_
+#endif // _CEST_SET_HPP_

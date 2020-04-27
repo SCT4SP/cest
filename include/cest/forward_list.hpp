@@ -1,5 +1,5 @@
-#ifndef _CE_FORWARD_LIST_HPP_
-#define _CE_FORWARD_LIST_HPP_
+#ifndef _CEST_FORWARD_LIST_HPP_
+#define _CEST_FORWARD_LIST_HPP_
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/forward_list_tests.hpp
 
@@ -82,4 +82,4 @@ public:
 
 } // namespace cestd
 
-#endif // _CE_FORWARD_LIST_HPP_
+#endif // _CEST_FORWARD_LIST_HPP_

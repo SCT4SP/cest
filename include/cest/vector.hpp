@@ -1,5 +1,5 @@
-#ifndef _CE_VECTOR_HPP_
-#define _CE_VECTOR_HPP_
+#ifndef _CEST_VECTOR_HPP_
+#define _CEST_VECTOR_HPP_
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/vector_tests.hpp
 
@@ -83,4 +83,4 @@ public:
 
 } // namespace cest
 
-#endif // _CE_VECTOR_HPP_
+#endif // _CEST_VECTOR_HPP_

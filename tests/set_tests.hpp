@@ -33,12 +33,13 @@ constexpr bool common_static_set_tests()
   auto f = []<template <class ...> class S>() {
     static_assert(sizeof(S<float>)==sizeof(S<double>));
     static_assert(std::weakly_incrementable<typename S<int>::iterator>);
-    using iter_t = typename S<int>::iterator;
+    using       iter_t = typename S<int>::iterator;
+    using const_iter_t = typename S<int>::const_iterator;
     static_assert(std::is_same_v<
                     typename iter_t::iterator_category,
                     std::bidirectional_iterator_tag
                   >);
-    static_assert(std::is_same_v<iter_t, typename S<int>::const_iterator>);
+    static_assert(std::is_same_v<iter_t, const_iter_t>);
   };
 
   f.operator()<std::set>();

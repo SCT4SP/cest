@@ -1,3 +1,6 @@
+#ifndef _NARY_SWAP_HPP_
+#define _NARY_SWAP_HPP_
+
 // Copyright (c) 2019-2020 Paul Keir, University of the West of Scotland.
 
 // A version of std::swap which works for 0 or more variables using C++17 fold
@@ -68,3 +71,5 @@ constexpr void swapr(T &t1, T &t2)
   t1 = std::move(temp);
 }
 */
+
+#endif // _NARY_SWAP_HPP_

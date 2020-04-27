@@ -9,32 +9,33 @@
 
 namespace cest {
 
-template<
+template <
   class Key,
   class Compare   = std::less<Key>,
   class Allocator = std::allocator<Key>
 >
-struct set
+class set
 {
+public:
   struct node;
   struct const_tree_iter;
 
-  using key_type        = Key;
-  using value_type      = Key;
-  using allocator_type  = Allocator;
-  using reference       =       value_type&;
-  using const_reference = const value_type&;
-  using pointer         = std::allocator_traits<Allocator>::pointer;
-  using const_pointer   = std::allocator_traits<Allocator>::const_pointer;
-  using iterator        = const_tree_iter;// const_tree_iter; (rename)
-  using const_iterator  = const_tree_iter;// const_tree_iter;
-  using key_compare     = Compare;
-  using value_compare   = Compare;
-  using size_type       = std::size_t;
-  using difference_type = std::ptrdiff_t;
-  using node_type       = node;
-
-  using _Iter           = const_tree_iter;
+  using key_type              = Key;
+  using value_type            = Key;
+  using size_type             = std::size_t;
+  using difference_type       = std::ptrdiff_t;
+  using key_compare           = Compare;
+  using value_compare         = Compare;
+  using allocator_type        = Allocator;
+  using reference             =       value_type&;
+  using const_reference       = const value_type&;
+  using pointer               = std::allocator_traits<Allocator>::pointer;
+  using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
+  using iterator              = const_tree_iter;
+  using const_iterator        = const_tree_iter;
+  using reverse_iterator      = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+  using node_type             = node;
 
   struct const_tree_iter {
     using reference         = const value_type&;
@@ -111,15 +112,15 @@ struct set
 
 // This seems to exist in cppreference.com; but GCC doesn't have it, and
 // it results in the iterator's type failing std::weakly_incrementable etc.
-//  constexpr     iterator  begin()       noexcept { return _Iter(m_begin); }
-  constexpr const_iterator  begin() const noexcept { return _Iter(m_begin); }
-  constexpr const_iterator cbegin() const noexcept { return _Iter(m_begin); }
-  constexpr       iterator    end()       noexcept { return _Iter(nullptr); }
-  constexpr const_iterator    end() const noexcept { return _Iter(nullptr); }
-  constexpr const_iterator   cend() const noexcept { return _Iter(nullptr); }
-  constexpr size_type        size() const noexcept { return m_size;         }
+//  constexpr     iterator  begin()       noexcept { return {m_begin}; }
+  constexpr const_iterator  begin() const noexcept { return {m_begin}; }
+  constexpr const_iterator cbegin() const noexcept { return {m_begin}; }
+  constexpr       iterator    end()       noexcept { return {nullptr}; }
+  constexpr const_iterator    end() const noexcept { return {nullptr}; }
+  constexpr const_iterator   cend() const noexcept { return {nullptr}; }
+  constexpr size_type        size() const noexcept { return m_size;    }
   [[nodiscard]]
-  constexpr bool            empty() const noexcept { return 0==m_size;      }
+  constexpr bool            empty() const noexcept { return 0==m_size; }
 
   constexpr       iterator find(const Key &key) {
     if (empty()) return end();
@@ -131,8 +132,9 @@ struct set
       else                       {              break; }
     }
 
-    return _Iter(n);
+    return {n};
   }
+
   constexpr const_iterator find(const Key &key) const {
     if (empty()) return end();
 
@@ -143,8 +145,9 @@ struct set
       else                       {              break; }
     }
 
-    return _Iter(n);
+    return {n};
   }
+
   template <class K>
   constexpr       iterator find(const K &key) {
     if (empty()) return end();
@@ -156,8 +159,9 @@ struct set
       else                       {              break; }
     }
 
-    return _Iter(n);
+    return {n};
   }
+
   template <class K>
   constexpr const_iterator find(const K &key) const {
     if (empty()) return end();
@@ -169,18 +173,21 @@ struct set
       else                       {              break; }
     }
 
-    return _Iter(n);
+    return {n};
   }
+
   constexpr void rotate_left(node *&n) {
     node  *nr   = n->r;
     node *&nrlp = n->r->l ? n->r->l->p : nr;
     nary::swap(n,n->r,n->r->l, n->r->p,n->p,nrlp);
   };
+
   constexpr void rotate_right(node *&n) {
     node  *nl   = n->l;
     node *&nlrp = n->l->r ? n->l->r->p : nl;
     nary::swap(n,n->l,n->l->r, n->l->p,n->p,nlrp);
   };
+
   constexpr std::pair<iterator,bool> insert(const value_type &value) {
     bool added = false;
     node *ret_node = nullptr; // node added; or the one that prevents insertion
@@ -226,7 +233,7 @@ struct set
     ins(m_root,nullptr,ins);
     m_root->c = BLACK; // make_black
 
-    return {_Iter(ret_node),added};
+    return {iterator(ret_node),added};
   }
 //  std::pair<iterator,bool> insert( value_type&& value );
 

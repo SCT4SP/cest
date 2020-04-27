@@ -12,7 +12,8 @@ constexpr bool common_static_map_tests()
     static_assert(sizeof(M<int,float>)==sizeof(M<int,double>));
     using iter_t       = typename M<char,int>::iterator;
     using const_iter_t = typename M<char,int>::const_iterator;
-//    static_assert(std::weakly_incrementable<iter_t>);
+    static_assert(std::weakly_incrementable<iter_t>);
+    static_assert(std::weakly_incrementable<const_iter_t>);
     static_assert(std::is_same_v<
                     typename iter_t::iterator_category,
                     std::bidirectional_iterator_tag
@@ -74,12 +75,14 @@ void map_tests()
 
 #ifndef NO_STATIC_TESTS
   static_assert(common_static_map_tests());
-//  static_assert((map_test1<cest::map,char,int>()) == tup1);
+  static_assert((map_test1<cest::map,char,int>()) == tup1);
+  static_assert((map_test2<cest::map,char,int>()) == tup2);
 #endif
 
-//  assert((map_test1<cest::map,char,int>()) == tup1);
   assert((map_test1<std::map,char,int>()) == tup1);
   assert((map_test2<std::map,char,int>()) == tup2);
+  assert((map_test1<cest::map,char,int>()) == tup1);
+  assert((map_test2<cest::map,char,int>()) == tup2);
 }
 
 #endif // _CEST_MAP_TESTS_HPP_

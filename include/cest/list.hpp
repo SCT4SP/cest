@@ -1,12 +1,12 @@
-#ifndef _CE_LIST_HPP_
-#define _CE_LIST_HPP_
+#ifndef _CEST_LIST_HPP_
+#define _CEST_LIST_HPP_
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/list_tests.hpp
 
 #include <memory>
 #include <algorithm>
 
-namespace cestd {
+namespace cest {
 
 template <
   typename T,
@@ -341,6 +341,6 @@ __list_imp<_Tp, _Alloc>::swap(__list_imp& __c)
       rebind_alloc<node> m_node_alloc;
 };
 
-} // namespace cestd
+} // namespace cest
 
-#endif // _CE_LIST_HPP_
+#endif // _CEST_LIST_HPP_

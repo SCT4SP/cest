@@ -9,8 +9,6 @@ void list_tests()
 {
 }
 
-#endif // _CEST_LIST_TESTS_HPP_
-
 //list<_Tp, _Alloc>::emplace_back(_Args&&... __args)
 //{
 //    __node_allocator& __na = base::__node_alloc();
@@ -37,3 +35,5 @@ void list_tests()
 //    ++base::__sz();
 //    __hold.release();
 //}
+
+#endif // _CEST_LIST_TESTS_HPP_

@@ -1,13 +1,13 @@
-#ifndef _CE_QUEUE_HPP_
-#define _CE_QUEUE_HPP_
+#ifndef _CEST_QUEUE_HPP_
+#define _CEST_QUEUE_HPP_
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/queue_tests.hpp
 
-namespace cestd {
+namespace cest {
 
 template <
   class T,
-  class Container = cestd::list<T> // default to list for now
+  class Container = cest::list<T> // default to list for now
 >
 struct queue
 {
@@ -22,6 +22,6 @@ struct queue
   const_reference front() const;
 };
 
-} // namespace cestd
+} // namespace cest
 
-#endif // _CE_QUEUE_HPP_
+#endif // _CEST_QUEUE_HPP_

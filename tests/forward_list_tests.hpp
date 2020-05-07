@@ -41,7 +41,7 @@ constexpr auto forward_list_test4() {
 }
 
 template <template <typename...> typename FL>
-constexpr auto rt_forward_list_tests() {
+constexpr void rt_forward_list_tests() {
          assert(forward_list_test1<FL>() == 0);
          assert(forward_list_test2<FL>() == 42);
          assert(forward_list_test3<FL>() == 1);
@@ -49,7 +49,7 @@ constexpr auto rt_forward_list_tests() {
 }
 
 template <template <typename...> typename FL>
-constexpr auto ct_forward_list_tests() {
+constexpr void ct_forward_list_tests() {
   static_assert(forward_list_test1<FL>() == 0);
   static_assert(forward_list_test2<FL>() == 42);
   static_assert(forward_list_test3<FL>() == 1);

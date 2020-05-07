@@ -106,26 +106,35 @@ constexpr auto vec_test7() {
   return std::tuple{sz0,sz1,sz2,sum};
 }
 
+template <template <typename...> typename V>
+constexpr void rt_vector_tests() {
+  assert(vec_test0<V>()      == 0);
+  assert(vec_test1<V>()      == (std::tuple{123,false,1,1}));
+  assert(vec_test2<V>()      == (std::tuple{2,2}));
+  assert(vec_test2b<V>()     == (std::tuple{42,2,2}));
+  assert(vec_test3<V>()      == (std::tuple{3,4}));
+  assert(vec_test4<V>()      == 6);
+  assert(vec_test5<V>()      == (std::tuple{true,0,2}));
+  assert(vec_test6<V>()      == (std::tuple{false,4,3}));
+  assert(vec_test7<V>()      == (std::tuple{0,0,0,6}));
+}
+
 void vector_tests()
 {
-  using cest::vector;
 #ifndef NO_STATIC_TESTS
-  static_assert(vec_test0<vector>() == 0);
-  static_assert(vec_test1<vector>() == std::tuple{123,false,1,1});
-  static_assert(vec_test2<vector>() == std::tuple{2,2});
-  static_assert(vec_test2b<vector>() == (std::tuple{42,2,2}));
-  static_assert(vec_test3<vector>() == std::tuple{3,4});
-  static_assert(vec_test4<vector>() == 6);
-  static_assert(vec_test5<vector>() == std::tuple{true,0,2});
-  static_assert(vec_test6<vector>() == std::tuple{false,4,3});
-  static_assert(vec_test7<vector>() == std::tuple{0,0,0,6});
+  static_assert(vec_test0<cest::vector>() == 0);
+  static_assert(vec_test1<cest::vector>() == std::tuple{123,false,1,1});
+  static_assert(vec_test2<cest::vector>() == std::tuple{2,2});
+  static_assert(vec_test2b<cest::vector>() == (std::tuple{42,2,2}));
+  static_assert(vec_test3<cest::vector>() == std::tuple{3,4});
+  static_assert(vec_test4<cest::vector>() == 6);
+  static_assert(vec_test5<cest::vector>() == std::tuple{true,0,2});
+  static_assert(vec_test6<cest::vector>() == std::tuple{false,4,3});
+  static_assert(vec_test7<cest::vector>() == std::tuple{0,0,0,6});
 #endif
 
-  assert(vec_test1<vector>()      == (std::tuple{123,false,1,1}));
-  assert(vec_test2<vector>()      == (std::tuple{2,2}));
-  assert(vec_test2b<vector>()     == (std::tuple{42,2,2}));
-  assert(vec_test7<vector>()      == (std::tuple{0,0,0,6}));
-  assert(vec_test7<std::vector>() == (std::tuple{0,0,0,6}));
+  rt_vector_tests<cest::vector>();
+  rt_vector_tests<std::vector>();
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

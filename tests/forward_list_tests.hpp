@@ -32,9 +32,11 @@ constexpr auto forward_list_test4() {
   m.push_front(1);
   m.push_front(2);
   m.push_front(3);
-  int sum = 0;
+  int sum1 = 0, sum2 = 0;
   for (auto it = m.begin(); it != m.end(); it++)
-    sum += *it;
+    sum1 += *it;
+  for (auto it = m.begin(); it != m.end(); ++it)
+    sum2 += *it;
   return sum;
 }
 
@@ -56,8 +58,8 @@ constexpr auto ct_forward_list_tests() {
 
 void forward_list_tests()
 {
-  ct_forward_list_tests<cestd::forward_list>();
-  rt_forward_list_tests<cestd::forward_list>();
+  ct_forward_list_tests<cest::forward_list>();
+  rt_forward_list_tests<cest::forward_list>();
 }
 
 #endif // _CEST_FORWARD_LIST_TESTS_HPP_

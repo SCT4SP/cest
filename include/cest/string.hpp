@@ -41,7 +41,9 @@ public:
   constexpr iterator        begin()       { return m_p;          }
   constexpr const_iterator  begin() const { return m_p;          }
   constexpr const_iterator cbegin() const { return m_p;          }
-  constexpr iterator          end()       { return m_p + m_size; }
+  constexpr iterator          end()       noexcept { return m_p + m_size; }
+  constexpr const_iterator    end() const noexcept { return m_p + m_size; }
+  constexpr const_iterator   cend() const noexcept { return m_p + m_size; }
   constexpr bool            empty() const { return m_size == 0;  }
   constexpr void         pop_back()       { m_size--; }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }

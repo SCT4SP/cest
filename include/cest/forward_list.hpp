@@ -5,7 +5,7 @@
 
 #include <memory>
 
-namespace cestd {
+namespace cest {
 
 template <
   class T,
@@ -80,6 +80,6 @@ public:
   std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
-} // namespace cestd
+} // namespace cest
 
 #endif // _CEST_FORWARD_LIST_HPP_

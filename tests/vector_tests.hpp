@@ -85,10 +85,13 @@ constexpr auto vec_test6() {
   v.push_back(5);
   v.push_back(6);
   auto it_erase = v.erase(v.begin()+2,v.begin()+4); // remove 3 & 4
-  int sum = 0;
+  int sum1 = 0;
   for (auto it = v.begin(); it != it_erase; it++)  // 1 + 2
-    sum += *it;
-  return std::tuple{v.empty(),v.size(),sum};
+    sum1 += *it;
+  int sum2 = 0;
+  for (auto it = v.cbegin(); it != it_erase; ++it)  // 1 + 2
+    sum2 += *it;
+  return std::tuple{v.empty(),v.size(),sum1,sum2};
 }
 
 // tests reserve
@@ -115,7 +118,7 @@ constexpr void rt_vector_tests() {
   assert(vec_test3<V>()      == (std::tuple{3,4}));
   assert(vec_test4<V>()      == 6);
   assert(vec_test5<V>()      == (std::tuple{true,0,2}));
-  assert(vec_test6<V>()      == (std::tuple{false,4,3}));
+  assert(vec_test6<V>()      == (std::tuple{false,4,3,3}));
   assert(vec_test7<V>()      == (std::tuple{0,0,0,6}));
 }
 
@@ -129,7 +132,7 @@ void vector_tests()
   static_assert(vec_test3<cest::vector>() == std::tuple{3,4});
   static_assert(vec_test4<cest::vector>() == 6);
   static_assert(vec_test5<cest::vector>() == std::tuple{true,0,2});
-  static_assert(vec_test6<cest::vector>() == std::tuple{false,4,3});
+  static_assert(vec_test6<cest::vector>() == std::tuple{false,4,3,3});
   static_assert(vec_test7<cest::vector>() == std::tuple{0,0,0,6});
 #endif
 

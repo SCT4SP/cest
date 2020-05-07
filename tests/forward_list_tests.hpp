@@ -35,9 +35,9 @@ constexpr auto forward_list_test4() {
   int sum1 = 0, sum2 = 0;
   for (auto it = m.begin(); it != m.end(); it++)
     sum1 += *it;
-  for (auto it = m.begin(); it != m.end(); ++it)
+  for (auto it = m.cbegin(); it != m.end(); ++it)
     sum2 += *it;
-  return sum;
+  return std::tuple{sum1,sum2};
 }
 
 template <template <typename...> typename FL>
@@ -45,7 +45,7 @@ constexpr auto rt_forward_list_tests() {
          assert(forward_list_test1<FL>() == 0);
          assert(forward_list_test2<FL>() == 42);
          assert(forward_list_test3<FL>() == 1);
-         assert(forward_list_test4<FL>() == 6);
+         assert(forward_list_test4<FL>() == (std::tuple{6,6}));
 }
 
 template <template <typename...> typename FL>
@@ -53,13 +53,14 @@ constexpr auto ct_forward_list_tests() {
   static_assert(forward_list_test1<FL>() == 0);
   static_assert(forward_list_test2<FL>() == 42);
   static_assert(forward_list_test3<FL>() == 1);
-  static_assert(forward_list_test4<FL>() == 6);
+  static_assert(forward_list_test4<FL>() == std::tuple{6,6});
 }
 
 void forward_list_tests()
 {
   ct_forward_list_tests<cest::forward_list>();
   rt_forward_list_tests<cest::forward_list>();
+  rt_forward_list_tests<std::forward_list>();
 }
 
 #endif // _CEST_FORWARD_LIST_TESTS_HPP_

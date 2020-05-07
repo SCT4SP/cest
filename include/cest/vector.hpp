@@ -23,7 +23,7 @@ public:
   using pointer               = std::allocator_traits<Allocator>::pointer;
   using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
   using iterator              = T*;
-  using const_iterator        = const iterator;
+  using const_iterator        = const T*;
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 

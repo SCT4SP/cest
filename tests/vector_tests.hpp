@@ -89,7 +89,8 @@ constexpr auto vec_test6() {
   for (auto it = v.begin(); it != it_erase; it++)  // 1 + 2
     sum1 += *it;
   int sum2 = 0;
-  for (auto it = v.cbegin(); it != it_erase; ++it)  // 1 + 2
+  using cit_t = typename V<int>::const_iterator;
+  for (cit_t it = v.cbegin(); it != it_erase; ++it)  // 1 + 2
     sum2 += *it;
   return std::tuple{v.empty(),v.size(),sum1,sum2};
 }

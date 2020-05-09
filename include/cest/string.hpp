@@ -25,18 +25,23 @@ public:
   using const_reference     = const value_type&;
   using pointer             = std::allocator_traits<Allocator>::pointer;
   using const_pointer       = std::allocator_traits<Allocator>::const_pointer;
-  using iterator            = CharT*;
-  using const_iterator      = const iterator;
+  using iterator            =       CharT*;
+  using const_iterator      = const CharT*;
   using reverse_iterator    = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
+  static const size_type npos = static_cast<size_type>(-1);
+
   constexpr basic_string() : m_p(nullptr), m_size(0), m_capacity(0) {}
+  constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
+  }
   constexpr ~basic_string() {
     std::destroy_n(m_p,m_size);
     if (0 != m_capacity) m_alloc.deallocate(m_p,m_capacity);
   }
 
   constexpr size_type        size() const { return m_size;       }
+  constexpr size_type      length() const { return m_size;       }
   constexpr size_type    capacity() const { return m_capacity;   }
   constexpr iterator        begin()       { return m_p;          }
   constexpr const_iterator  begin() const { return m_p;          }

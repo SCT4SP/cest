@@ -3,7 +3,6 @@
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/vector_tests.hpp
 
-#include "iterator.hpp"
 #include <memory>  // std::allocator
 #include <cstddef>
 
@@ -23,18 +22,18 @@ public:
   using const_reference       = const value_type&;
   using pointer               = std::allocator_traits<Allocator>::pointer;
   using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
-  using iterator              = iter<pointer,vector>; // T*;
-  using const_iterator        = iter<const_pointer,vector>; // const T*;
+  using iterator              =       T*;
+  using const_iterator        = const T*;
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   constexpr vector() : m_p(nullptr), m_size(0), m_capacity(0) {}
   constexpr size_type        size() const { return m_size;       }
   constexpr size_type    capacity() const { return m_capacity;   }
-  constexpr iterator        begin()       { return iterator(m_p);        }
-  constexpr const_iterator  begin() const { return const_iterator(m_p);          }
-  constexpr const_iterator cbegin() const { return const_iterator(m_p);       }
-  constexpr iterator          end()       { return iterator(m_p + m_size); }
+  constexpr iterator        begin()       { return {m_p};          }
+  constexpr const_iterator  begin() const { return {m_p};          }
+  constexpr const_iterator cbegin() const { return {m_p};          }
+  constexpr iterator          end()       { return {m_p + m_size}; }
   constexpr bool            empty() const { return m_size == 0;  }
   constexpr void         pop_back()       { m_size--; }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }

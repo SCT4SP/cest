@@ -35,7 +35,7 @@ public:
   constexpr basic_string() = default;
   constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
     size_type sz = traits_type::length(s);
-    reserve(sz+1); // \0 -> efficient c_str()
+    reserve(sz+1); // +1: null terminator \0 leads to an efficient c_str()
     std::copy_n(s,sz+1,m_p); // traits_type::copy(m_p,s,sz+1); constexpr GCC?
     m_size = sz;
   }
@@ -54,7 +54,7 @@ public:
   constexpr const_iterator    end() const noexcept { return m_p + m_size; }
   constexpr const_iterator   cend() const noexcept { return m_p + m_size; }
   constexpr bool            empty() const { return m_size == 0;  }
-  constexpr void         pop_back()       { m_size--; }
+  constexpr void         pop_back()       { m_p[--m_size] = '\0'; }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
   constexpr const CharT*    c_str() const noexcept { return m_p; }

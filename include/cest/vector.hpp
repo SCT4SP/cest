@@ -27,7 +27,7 @@ public:
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  constexpr vector() : m_p(nullptr), m_size(0), m_capacity(0) {}
+  constexpr vector()  = default;
   constexpr size_type        size() const { return m_size;       }
   constexpr size_type    capacity() const { return m_capacity;   }
   constexpr iterator        begin()       { return {m_p};          }
@@ -81,9 +81,10 @@ public:
     if (0 != m_capacity) m_alloc.deallocate(m_p,m_capacity);
   }
 
-  size_type m_size, m_capacity;
-  allocator_type m_alloc;
-  value_type *m_p;
+  allocator_type  m_alloc;
+  size_type       m_size     = 0;
+  size_type       m_capacity = 0;
+  value_type     *m_p        = nullptr;
 };
 
 } // namespace cest

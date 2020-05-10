@@ -34,6 +34,10 @@ public:
 
   constexpr basic_string() = default;
   constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
+    size_type sz = traits_type::length(s);
+    reserve(sz+1); // \0 -> efficient c_str()
+    std::copy_n(s,sz+1,m_p); // traits_type::copy(m_p,s,sz+1); constexpr GCC?
+    m_size = sz;
   }
   constexpr ~basic_string() {
     std::destroy_n(m_p,m_size);
@@ -53,6 +57,7 @@ public:
   constexpr void         pop_back()       { m_size--; }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
+  constexpr const CharT*    c_str() const noexcept { return m_p; }
 
   constexpr void push_back(const value_type &value) {
     if (0 == m_capacity) {
@@ -68,7 +73,7 @@ public:
     if (new_cap > m_capacity)
     {
       value_type *p = m_alloc.allocate(new_cap);
-      std::copy_n(m_p, m_size, p);
+      std::copy_n(m_p,m_size,p);
       if (0 != m_capacity) {
         std::destroy_n(m_p,m_size);
         m_alloc.deallocate(m_p,m_capacity);

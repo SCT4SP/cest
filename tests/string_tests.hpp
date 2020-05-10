@@ -25,28 +25,15 @@ constexpr auto string_test1()
 template <typename S>
 constexpr auto string_test2()
 {
-  S str("ok");
-  return std::tuple{true};
-}
-
-template <typename S, template <typename...> typename V>
-constexpr auto string_test3()
-{
-
-//  S const token(tokens.front());
-  /*S token(tokens.front());
-  tokens.pop();
-
-  bool b = token == "Zod";*/
-//  return std::tuple{b};
-  return std::tuple{true};
+  S str("Ok");
+  auto nt = str.c_str()[str.length()];
+  return std::tuple{true,str.size(),str.length(),str[0],str[1],nt};
 }
 
 void string_tests()
 {
   constexpr const auto tup1 = std::tuple{true,0,false,1,'q'};
-  constexpr const auto tup2 = std::tuple{true};
-  constexpr const auto tup3 = std::tuple{true};
+  constexpr const auto tup2 = std::tuple{true,2,2,'O','k','\0'};
 
 #ifndef NO_STATIC_TESTS
   static_assert((string_test1<cest::string>()) == tup1);
@@ -57,7 +44,6 @@ void string_tests()
   assert(string_test1<std::string>()  == tup1);
   assert(string_test2<cest::string>() == tup2);
   assert(string_test2<std::string>()  == tup2);
-//  assert((string_test3<std::string,std::vector>()) == tup2);
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

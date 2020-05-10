@@ -58,6 +58,12 @@ public:
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
   constexpr const CharT*    c_str() const noexcept { return m_p; }
+  constexpr const CharT*     data() const noexcept { return m_p; }
+  constexpr       CharT*     data()       noexcept { return m_p; }
+  constexpr       CharT&    front()                { return m_p[0]; }
+  constexpr const CharT&    front() const          { return m_p[0]; }
+  constexpr       CharT&     back()                { return m_p[m_size-1]; }
+  constexpr const CharT&     back() const          { return m_p[m_size-1]; }
 
   constexpr void push_back(const value_type &value) {
     if (0 == m_capacity) {
@@ -81,6 +87,12 @@ public:
       m_p = p;
       m_capacity = new_cap;
     }
+  }
+
+  friend constexpr bool operator==(const basic_string &x,
+                                   const basic_string &y) noexcept {
+    return x.size() == y.size() &&
+           !traits_type::compare(x.data(), y.data(), x.size());
   }
 
   allocator_type  m_alloc;

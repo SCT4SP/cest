@@ -32,7 +32,7 @@ public:
 
   static const size_type npos = static_cast<size_type>(-1);
 
-  constexpr basic_string() : m_p(nullptr), m_size(0), m_capacity(0) {}
+  constexpr basic_string() = default;
   constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
   }
   constexpr ~basic_string() {
@@ -78,9 +78,10 @@ public:
     }
   }
 
-  size_type m_size, m_capacity;
-  allocator_type m_alloc;
-  value_type *m_p;
+  allocator_type  m_alloc;
+  size_type       m_size     = 0;
+  size_type       m_capacity = 0;
+  value_type     *m_p        = nullptr;
 };
 
 using string    = basic_string<char>;

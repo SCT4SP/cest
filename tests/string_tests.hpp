@@ -25,7 +25,7 @@ constexpr auto string_test1()
 template <typename S>
 constexpr auto string_test2()
 {
-  //S str("ok");
+  S str("ok");
   return std::tuple{true};
 }
 

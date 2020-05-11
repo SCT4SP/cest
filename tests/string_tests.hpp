@@ -59,7 +59,19 @@ constexpr auto string_test4()
   typename S::size_type i4 = str.find("xxx");
   typename S::size_type i5 = str.find(cd);
   typename S::size_type i6 = str.find(xxx);
-  return std::tuple{str[i1],i2==S::npos,i3,i4==S::npos,i5,i6==S::npos};
+  cd.clear();
+  bool e = cd.empty();
+  return std::tuple{str[i1],i2==S::npos,i3,i4==S::npos,i5,i6==S::npos,e};
+}
+
+template <typename S>
+constexpr auto string_test5()
+{
+  S str("abc");
+  bool b1 = (str += 'd') == "abcd";
+  bool b2 = str == "abcd";
+  str += str;
+  return std::tuple{b1,b2};
 }
 
 void string_tests()
@@ -67,13 +79,15 @@ void string_tests()
   constexpr const auto tup1 = std::tuple{true,0,false,1,'q'};
   constexpr const auto tup2 = std::tuple{true,2,2,'O','k','\0','\0',true,'!'};
   constexpr const auto tup3 = std::tuple{false,false,false,false};
-  constexpr const auto tup4 = std::tuple{'b',true,2,true,2,true};
+  constexpr const auto tup4 = std::tuple{'b',true,2,true,2,true,true};
+  constexpr const auto tup5 = std::tuple{true,true};
 
 #ifndef NO_STATIC_TESTS
   static_assert((string_test1<cest::string>()) == tup1);
   static_assert((string_test2<cest::string>()) == tup2);
   static_assert((string_test3<cest::string>()) == tup3);
   static_assert((string_test4<cest::string>()) == tup4);
+//  static_assert((string_test5<cest::string>()) == tup5);
 #endif
   
   assert(string_test1<cest::string>() == tup1);
@@ -84,6 +98,8 @@ void string_tests()
   assert(string_test3<std::string>()  == tup3);
   assert(string_test4<cest::string>() == tup4);
   assert(string_test4<std::string>()  == tup4);
+  assert(string_test5<cest::string>() == tup5);
+  assert(string_test5<std::string>()  == tup5);
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

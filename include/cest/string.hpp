@@ -32,7 +32,12 @@ public:
 
   static const size_type npos = static_cast<size_type>(-1);
 
-  constexpr basic_string() = default;
+  constexpr basic_string() noexcept(noexcept( Allocator() )) :
+    basic_string( Allocator() ) {}
+
+  explicit constexpr
+  basic_string(const Allocator& alloc) noexcept : m_alloc(alloc) { }
+
   constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
     size_type sz = traits_type::length(s);
     reserve(sz+1); // +1: null terminator \0 leads to an efficient c_str()
@@ -50,11 +55,16 @@ public:
   constexpr iterator        begin()       { return m_p;          }
   constexpr const_iterator  begin() const { return m_p;          }
   constexpr const_iterator cbegin() const { return m_p;          }
-  constexpr iterator          end()       noexcept { return m_p + m_size; }
-  constexpr const_iterator    end() const noexcept { return m_p + m_size; }
-  constexpr const_iterator   cend() const noexcept { return m_p + m_size; }
-  constexpr bool            empty() const { return m_size == 0;  }
-  constexpr void         pop_back()       { m_p[--m_size] = '\0'; }
+  constexpr iterator          end()       noexcept { return m_p + m_size;  }
+  constexpr const_iterator    end() const noexcept { return m_p + m_size;  }
+  constexpr const_iterator   cend() const noexcept { return m_p + m_size;  }
+  constexpr bool            empty() const          { return m_size == 0;   }
+  constexpr void            clear()       noexcept {
+    traits_type::assign(this->data()[m_size = 0], CharT());
+  }
+  constexpr void         pop_back()                {
+    traits_type::assign(this->data()[--m_size],   CharT());
+  }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
   constexpr const CharT*    c_str() const noexcept { return m_p; }
@@ -116,6 +126,33 @@ public:
     }
     std::construct_at(&m_p[m_size++],value);
   }
+
+  constexpr basic_string& append(const CharT* s, size_type count) {
+    const size_type len = count + this->size();
+
+    if (len <= this->capacity())
+    {
+      if (count)
+        traits_type::copy(this->data() + this->size(), s, count);
+    }
+    else {
+      this->reserve(len);
+      traits_type::copy(this->data() + this->size(), s, count);
+      
+//      this->_M_mutate(this->size(), size_type(0), s, count);
+    }
+
+    traits_type::assign(this->data()[m_size = len], CharT());
+    return *this;
+  }
+  constexpr basic_string& append(const basic_string& str) {
+    return this->append(str.data(), str.size());
+  }
+
+  constexpr basic_string& operator+=(const basic_string& str) {
+    return this->append(str);
+  }
+  constexpr basic_string& operator+=(CharT ch) { push_back(ch); return *this; }
 
   constexpr void reserve(size_type new_cap)
   {

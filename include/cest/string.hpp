@@ -89,10 +89,16 @@ public:
     }
   }
 
-  friend constexpr bool operator==(const basic_string &x,
-                                   const basic_string &y) noexcept {
-    return x.size() == y.size() &&
-           !traits_type::compare(x.data(), y.data(), x.size());
+  friend constexpr bool operator==(const basic_string &lhs,
+                                   const basic_string &rhs) noexcept {
+    return lhs.length() == rhs.length() &&
+           !traits_type::compare(lhs.data(), rhs.data(), lhs.length());
+  }
+
+  friend constexpr bool operator==(const CharT *lhs,
+                                   const basic_string &rhs) noexcept {
+    return traits_type::length(lhs) == rhs.length() &&
+           !traits_type::compare(lhs, rhs.data(), traits_type::length(lhs));
   }
 
   allocator_type  m_alloc;

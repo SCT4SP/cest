@@ -65,6 +65,49 @@ public:
   constexpr       CharT&     back()                { return m_p[m_size-1]; }
   constexpr const CharT&     back() const          { return m_p[m_size-1]; }
 
+  constexpr
+  size_type find(const basic_string &str, size_type pos = 0) const noexcept {
+    return this->find(str.data(), pos);
+  }
+
+  constexpr size_type find(CharT ch, size_type pos = 0) const noexcept {
+    auto *p = traits_type::find(this->data(), this->size(), ch);
+    return p ? (p-this->data()) : npos;
+  }
+
+  constexpr
+  size_type find(const CharT *s, size_type pos, size_type count) const noexcept
+  {
+    const size_type size = this->size();
+
+    if (count == 0)
+      return pos <= size ? pos : npos;
+    if (pos >= size)
+      return npos;
+
+    const CharT       elem0 = s[0];
+    const CharT* const data = this->data();
+    const CharT*      first = data + pos;
+    const CharT* const last = data + size;
+    size_type           len = size - pos;
+
+    while (len >= count)
+    {
+      first = traits_type::find(first, len - count + 1, elem0);
+      if (!first)
+        return npos;
+      if (traits_type::compare(first, s, count) == 0)
+        return first - data;
+      len = last - ++first;
+    }
+
+    return npos;
+  }
+
+  constexpr size_type find(const CharT *s, size_type pos = 0) const noexcept {
+     return this->find(s, pos, traits_type::length(s));
+  }
+
   constexpr void push_back(const value_type &value) {
     if (0 == m_capacity) {
       reserve(1);

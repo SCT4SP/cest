@@ -137,10 +137,16 @@ public:
         traits_type::copy(this->data() + this->size(), s, count);
     }
     else {
-      this->reserve(len+1);
-      traits_type::copy(this->data() + this->size(), s, count);
-      
-//      this->_M_mutate(this->size(), size_type(0), s, count);
+      value_type *p = m_alloc.allocate(len+1);
+      traits_type::copy(p, m_p, m_size);
+      traits_type::copy(p + m_size, s, count);
+      if (m_capacity) {
+        std::destroy_n(m_p, m_size);
+        m_alloc.deallocate(m_p, m_capacity);
+      }
+      m_p = p;
+      m_size = len;
+      m_capacity = len+1;
     }
 
     traits_type::assign(this->data()[m_size = len], CharT());

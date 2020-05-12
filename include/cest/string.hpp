@@ -41,12 +41,12 @@ public:
   constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
     size_type sz = traits_type::length(s);
     reserve(sz+1); // +1: null terminator \0 leads to an efficient c_str()
-    std::copy_n(s,sz+1,m_p); // traits_type::copy(m_p,s,sz+1); constexpr GCC?
+    traits_type::copy(m_p, s, sz+1); // traits_type supports user customisation
     m_size = sz;
   }
   constexpr ~basic_string() {
     std::destroy_n(m_p,m_size);
-    if (0 != m_capacity) m_alloc.deallocate(m_p,m_capacity);
+    if (m_capacity) m_alloc.deallocate(m_p,m_capacity);
   }
 
   constexpr size_type        size() const { return m_size;       }
@@ -160,10 +160,10 @@ public:
     if (new_cap > m_capacity)
     {
       value_type *p = m_alloc.allocate(new_cap);
-      std::copy_n(m_p,m_size,p);
-      if (0 != m_capacity) {
-        std::destroy_n(m_p,m_size);
-        m_alloc.deallocate(m_p,m_capacity);
+      traits_type::copy(p, m_p, m_size);
+      if (m_capacity) {
+        std::destroy_n(m_p, m_size);
+        m_alloc.deallocate(m_p, m_capacity);
       }
       m_p = p;
       m_capacity = new_cap;

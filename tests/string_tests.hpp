@@ -15,11 +15,12 @@ constexpr auto string_test1()
   typename S::size_type s1 = str.size();
 
   str.push_back('q');
+  typename S::value_type nt = str.c_str()[str.length()];
   bool b2 = str.empty();
   typename S::size_type s2 = str.size();
   auto q = str[0];
   
-  return std::tuple{b1,s1,b2,s2,q};
+  return std::tuple{b1,s1,b2,s2,q,nt};
 }
 
 template <typename S>
@@ -76,7 +77,7 @@ constexpr auto string_test5()
 
 void string_tests()
 {
-  constexpr const auto tup1 = std::tuple{true,0,false,1,'q'};
+  constexpr const auto tup1 = std::tuple{true,0,false,1,'q','\0'};
   constexpr const auto tup2 = std::tuple{true,2,2,'O','k','\0','\0',true,'!'};
   constexpr const auto tup3 = std::tuple{false,false,false,false};
   constexpr const auto tup4 = std::tuple{'b',true,2,true,2,true,true};

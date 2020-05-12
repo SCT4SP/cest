@@ -120,11 +120,12 @@ public:
 
   constexpr void push_back(const value_type &value) {
     if (0 == m_capacity) {
-      reserve(1);
+      reserve(1 + 1);
     } else if (m_capacity == m_size) {
-      reserve(m_capacity * 2);
+      reserve(m_capacity * 2 + 1);
     }
     std::construct_at(&m_p[m_size++],value);
+    traits_type::assign(this->data()[m_size], CharT());
   }
 
   constexpr basic_string& append(const CharT* s, size_type count) {
@@ -136,7 +137,7 @@ public:
         traits_type::copy(this->data() + this->size(), s, count);
     }
     else {
-      this->reserve(len);
+      this->reserve(len+1);
       traits_type::copy(this->data() + this->size(), s, count);
       
 //      this->_M_mutate(this->size(), size_type(0), s, count);

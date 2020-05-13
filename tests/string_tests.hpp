@@ -70,6 +70,8 @@ constexpr auto string_test4()
 template <typename S>
 constexpr auto string_test5()
 {
+  S str0("");
+  bool b0 = str0.capacity() > 0;
   S str("abc");
   bool b1 = (str += 'd') == "abcd";
   bool b2 = str == "abcd";
@@ -77,7 +79,7 @@ constexpr auto string_test5()
   bool b3 = str == "abcdabcd";
   typename S::size_type len = str.length();
   auto nt = str.c_str()[str.length()];
-  return std::tuple{b1,b2,b3,len,nt};
+  return std::tuple{b0,b1,b2,b3,len,nt};
 }
 
 void string_tests()
@@ -86,7 +88,7 @@ void string_tests()
   constexpr const auto tup2 = std::tuple{2,2,'O','k','\0','\0',true,'!'};
   constexpr const auto tup3 = std::tuple{false,false,false,false};
   constexpr const auto tup4 = std::tuple{'b',true,2,true,2,true,true};
-  constexpr const auto tup5 = std::tuple{true,true,true,8,'\0'};
+  constexpr const auto tup5 = std::tuple{true,true,true,true,8,'\0'};
 
 #ifndef NO_STATIC_TESTS
   static_assert((string_test1<cest::string>()) == tup1);

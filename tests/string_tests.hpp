@@ -12,15 +12,17 @@ constexpr auto string_test1()
 {
   S str;
   bool b1 = str.empty();
-  typename S::size_type s1 = str.size();
+  typename S::size_type  s1  = str.size();
+  typename S::size_type  c1  = str.capacity();
+  typename S::value_type nt0 = str.c_str()[str.length()];
 
   str.push_back('q');
-  typename S::value_type nt = str.c_str()[str.length()];
+  typename S::value_type nt1 = str.c_str()[str.length()];
   bool b2 = str.empty();
   typename S::size_type s2 = str.size();
   auto q = str[0];
   
-  return std::tuple{b1,s1,b2,s2,q,nt};
+  return std::tuple{b1,s1,b2,s2,q,nt1};
 }
 
 template <typename S>
@@ -87,10 +89,10 @@ void string_tests()
   constexpr const auto tup5 = std::tuple{true,true,true,8,'\0'};
 
 #ifndef NO_STATIC_TESTS
-  static_assert((string_test1<cest::string>()) == tup1);
-  static_assert((string_test2<cest::string>()) == tup2);
-  static_assert((string_test3<cest::string>()) == tup3);
-  static_assert((string_test4<cest::string>()) == tup4);
+//  static_assert((string_test1<cest::string>()) == tup1);
+//  static_assert((string_test2<cest::string>()) == tup2);
+//  static_assert((string_test3<cest::string>()) == tup3);
+//  static_assert((string_test4<cest::string>()) == tup4);
 //  static_assert((string_test5<cest::string>()) == tup5);
 #endif
   

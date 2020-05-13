@@ -12,17 +12,17 @@ constexpr auto string_test1()
 {
   S str;
   bool b1 = str.empty();
+  bool b2 = str.capacity() > 0;
   typename S::size_type  s1  = str.size();
-  typename S::size_type  c1  = str.capacity();
   typename S::value_type nt0 = str.c_str()[str.length()];
 
   str.push_back('q');
   typename S::value_type nt1 = str.c_str()[str.length()];
-  bool b2 = str.empty();
+  bool b3 = str.empty();
   typename S::size_type s2 = str.size();
   auto q = str[0];
   
-  return std::tuple{b1,s1,b2,s2,q,nt1};
+  return std::tuple{b1,b2,s1,b3,s2,q,nt0,nt1};
 }
 
 template <typename S>
@@ -36,7 +36,7 @@ constexpr auto string_test2()
   str2.pop_back();
   auto nt2 = str2.c_str()[str2.length()];
   bool eq = str == str2 && str == "Ok";
-  return std::tuple{true,str.size(),str.length(),str[0],str[1],nt,nt2,eq,c};
+  return std::tuple{str.size(),str.length(),str[0],str[1],nt,nt2,eq,c};
 }
 
 template <typename S>
@@ -82,18 +82,18 @@ constexpr auto string_test5()
 
 void string_tests()
 {
-  constexpr const auto tup1 = std::tuple{true,0,false,1,'q','\0'};
-  constexpr const auto tup2 = std::tuple{true,2,2,'O','k','\0','\0',true,'!'};
+  constexpr const auto tup1 = std::tuple{true,true,0,false,1,'q','\0','\0'};
+  constexpr const auto tup2 = std::tuple{2,2,'O','k','\0','\0',true,'!'};
   constexpr const auto tup3 = std::tuple{false,false,false,false};
   constexpr const auto tup4 = std::tuple{'b',true,2,true,2,true,true};
   constexpr const auto tup5 = std::tuple{true,true,true,8,'\0'};
 
 #ifndef NO_STATIC_TESTS
-//  static_assert((string_test1<cest::string>()) == tup1);
-//  static_assert((string_test2<cest::string>()) == tup2);
-//  static_assert((string_test3<cest::string>()) == tup3);
-//  static_assert((string_test4<cest::string>()) == tup4);
-//  static_assert((string_test5<cest::string>()) == tup5);
+  static_assert((string_test1<cest::string>()) == tup1);
+  static_assert((string_test2<cest::string>()) == tup2);
+  static_assert((string_test3<cest::string>()) == tup3);
+  static_assert((string_test4<cest::string>()) == tup4);
+  static_assert((string_test5<cest::string>()) == tup5);
 #endif
   
   assert(string_test1<std::string>()  == tup1);

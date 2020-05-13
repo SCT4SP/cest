@@ -37,33 +37,39 @@ public:
 
   explicit constexpr
   basic_string(const Allocator& alloc) noexcept : m_alloc(alloc) {
-    m_p = m_alloc.allocate(0+1); // for the null terminator
-//    reserve(0); // space for null terminator \0 is used by an efficient c_str()
-    traits_type::assign(this->data()[0], CharT());              // m_p[0] = \0;
+    m_capacity = 1;                                // Unlike 0, a scalable value
+    m_p = m_alloc.allocate(m_capacity+1);          // for the null terminator
+    traits_type::assign(this->data()[0], CharT()); // m_p[0] = \0;
   }
 
   constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
     const size_type sz = traits_type::length(s);
-    reserve(sz);
-    traits_type::copy(m_p, s, sz); // traits_type supports user customisation
+    m_capacity = sz+1;                    // ensure m_capacity is not 0
+    m_p = m_alloc.allocate(m_capacity+1); // for the null terminator
+    traits_type::copy(m_p, s, sz+1); // traits_type supports user customisation
     m_size = sz;
   }
 
-  constexpr ~basic_string() {
-    //std::destroy_n(m_p,m_size);
-    if (m_capacity) m_alloc.deallocate(m_p,m_capacity+1);
-  }
+  constexpr ~basic_string() { m_alloc.deallocate(m_p,m_capacity+1); }
 
-  constexpr size_type        size() const { return m_size;       }
-  constexpr size_type      length() const { return m_size;       }
-  constexpr size_type    capacity() const { return m_capacity;   }
-  constexpr iterator        begin()       { return m_p;          }
-  constexpr const_iterator  begin() const { return m_p;          }
-  constexpr const_iterator cbegin() const { return m_p;          }
+  constexpr size_type        size() const          { return m_size;        }
+  constexpr size_type      length() const          { return m_size;        }
+  constexpr size_type    capacity() const          { return m_capacity;    }
+  constexpr iterator        begin()                { return m_p;           }
+  constexpr const_iterator  begin() const          { return m_p;           }
+  constexpr const_iterator cbegin() const          { return m_p;           }
   constexpr iterator          end()       noexcept { return m_p + m_size;  }
   constexpr const_iterator    end() const noexcept { return m_p + m_size;  }
   constexpr const_iterator   cend() const noexcept { return m_p + m_size;  }
   constexpr bool            empty() const          { return m_size == 0;   }
+  constexpr const CharT*    c_str() const noexcept { return m_p;           }
+  constexpr const CharT*     data() const noexcept { return m_p;           }
+  constexpr       CharT*     data()       noexcept { return m_p;           }
+  constexpr       CharT&    front()                { return m_p[0];        }
+  constexpr const CharT&    front() const          { return m_p[0];        }
+  constexpr       CharT&     back()                { return m_p[m_size-1]; }
+  constexpr const CharT&     back() const          { return m_p[m_size-1]; }
+
   constexpr void            clear()       noexcept {
     traits_type::assign(this->data()[m_size = 0], CharT());
   }
@@ -72,13 +78,6 @@ public:
   }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
-  constexpr const CharT*    c_str() const noexcept { return m_p; }
-  constexpr const CharT*     data() const noexcept { return m_p; }
-  constexpr       CharT*     data()       noexcept { return m_p; }
-  constexpr       CharT&    front()                { return m_p[0]; }
-  constexpr const CharT&    front() const          { return m_p[0]; }
-  constexpr       CharT&     back()                { return m_p[m_size-1]; }
-  constexpr const CharT&     back() const          { return m_p[m_size-1]; }
 
   constexpr
   size_type find(const basic_string &str, size_type pos = 0) const noexcept {
@@ -124,14 +123,8 @@ public:
   }
 
   constexpr void push_back(const value_type &value) {
-//    if (0 == m_capacity) { // never?
-//      reserve(1 + 1);
-//    } else if ((m_capacity - 1) == m_size) {
-//      reserve(m_capacity * 2 + 1);
-//    }
     if (m_size + 1 > m_capacity)
       reserve(m_capacity * 2);
-//    std::construct_at(&m_p[m_size],value);
     traits_type::assign(this->data()[  m_size], value);
     traits_type::assign(this->data()[++m_size], CharT()); // null terminator
   }
@@ -148,10 +141,7 @@ public:
       value_type *p = m_alloc.allocate(len+1);
       traits_type::copy(p, m_p, m_size);
       traits_type::copy(p + m_size, s, count);
-      if (m_capacity) {
-//        std::destroy_n(m_p, m_size);
-        m_alloc.deallocate(m_p, m_capacity+1);
-      }
+      m_alloc.deallocate(m_p, m_capacity+1);
       m_p = p;
       m_size = len;
       m_capacity = len;
@@ -175,10 +165,7 @@ public:
     {
       value_type *p = m_alloc.allocate(new_cap+1); // for the null terminator
       traits_type::copy(p, m_p, m_size);
-      if (m_capacity) {
-//        std::destroy_n(m_p, m_size);
-        m_alloc.deallocate(m_p, m_capacity+1);
-      }
+      m_alloc.deallocate(m_p, m_capacity+1);
       m_p = p;
       m_capacity = new_cap;
     }

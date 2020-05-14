@@ -38,16 +38,16 @@ public:
   explicit constexpr
   basic_string(const Allocator& alloc) noexcept : m_alloc(alloc) {
     m_capacity = 1;                                // Unlike 0, a scalable value
-    m_p = m_alloc.allocate(m_capacity+1);          // for the null terminator
+    m_p = m_alloc.allocate(m_capacity+1);          // +1 for the null terminator
     traits_type::assign(this->data()[0], CharT()); // m_p[0] = \0;
   }
 
   constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
     const size_type sz = traits_type::length(s);
     m_capacity = sz+1;                    // ensure m_capacity is not 0
-    m_p = m_alloc.allocate(m_capacity+1); // for the null terminator
-    traits_type::copy(m_p, s, sz+1); // traits_type supports user customisation
-    m_size = sz;
+    m_p = m_alloc.allocate(m_capacity+1); // +1 for the null terminator
+    traits_type::copy(m_p, s, sz); // traits_type supports user customisation
+    traits_type::assign(this->data()[m_size = sz], CharT());
   }
 
   constexpr ~basic_string() { m_alloc.deallocate(m_p,m_capacity+1); }

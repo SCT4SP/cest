@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
   string_tests();
   iterator_tests();
   algorithm_tests();
-  iostream_tests();
   cctype_tests();
+  iostream_tests();
 
   return 0;
 }

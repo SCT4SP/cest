@@ -1,5 +1,6 @@
 // #define NO_STATIC_TESTS
 // uncomment above to build a debuggable program with failing constexpr stuff
+
 #include "vector_tests.hpp"
 #include "forward_list_tests.hpp"
 #include "list_tests.hpp"
@@ -8,6 +9,8 @@
 #include "string_tests.hpp"
 #include "iterator_tests.hpp"
 #include "algorithm_tests.hpp"
+#include "cctype_tests.hpp"
+#include "iostream_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -19,5 +22,8 @@ int main(int argc, char *argv[])
   string_tests();
   iterator_tests();
   algorithm_tests();
+  iostream_tests();
+  cctype_tests();
+
   return 0;
 }

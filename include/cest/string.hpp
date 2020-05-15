@@ -3,6 +3,7 @@
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/string_tests.hpp
 
+#include "ostream.hpp"
 #include <string>   // std::char_traits
 #include <memory>   // std::allocator
 #include <iterator> // std::reverse_iterator
@@ -188,6 +189,13 @@ public:
   size_type       m_capacity = 0;
   value_type     *m_p        = nullptr;
 };
+
+template <class CharT, class Traits, class Allocator>
+constexpr basic_ostream<CharT, Traits>&
+operator<<(
+  basic_ostream<CharT, Traits>& os,
+  const basic_string<CharT, Traits, Allocator>& str
+) { return os; }
 
 using string    = basic_string<char>;
 using wstring   = basic_string<wchar_t>;

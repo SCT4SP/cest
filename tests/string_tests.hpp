@@ -2,7 +2,9 @@
 #define _CEST_STRING_TESTS_HPP_
 
 #include "cest/string.hpp"
+#include "cest/iostream.hpp"
 #include <string>
+#include <iostream>
 #include <vector>
 #include <tuple>
 #include <cassert>
@@ -82,6 +84,13 @@ constexpr auto string_test5()
   return std::tuple{b0,b1,b2,b3,len,nt};
 }
 
+template <typename S>
+constexpr auto string_test6(auto &cout) {
+  S str("Zod");
+  cout << str;
+  return std::tuple{true};
+}
+
 void string_tests()
 {
   constexpr const auto tup1 = std::tuple{true,true,0,false,1,'q','\0','\0'};
@@ -89,6 +98,7 @@ void string_tests()
   constexpr const auto tup3 = std::tuple{false,false,false,false};
   constexpr const auto tup4 = std::tuple{'b',true,2,true,2,true,true};
   constexpr const auto tup5 = std::tuple{true,true,true,true,8,'\0'};
+  constexpr const auto tup6 = std::tuple{true};
 
 #ifndef NO_STATIC_TESTS
   static_assert((string_test1<cest::string>()) == tup1);
@@ -96,18 +106,21 @@ void string_tests()
   static_assert((string_test3<cest::string>()) == tup3);
   static_assert((string_test4<cest::string>()) == tup4);
   static_assert((string_test5<cest::string>()) == tup5);
+  static_assert(string_test6<cest::string>(cest::cout) == tup6);
 #endif
   
-  assert(string_test1<std::string>()  == tup1);
+  assert(string_test1< std::string>() == tup1);
   assert(string_test1<cest::string>() == tup1);
-  assert(string_test2<std::string>()  == tup2);
+  assert(string_test2< std::string>() == tup2);
   assert(string_test2<cest::string>() == tup2);
-  assert(string_test3<std::string>()  == tup3);
+  assert(string_test3< std::string>() == tup3);
   assert(string_test3<cest::string>() == tup3);
-  assert(string_test4<std::string>()  == tup4);
+  assert(string_test4< std::string>() == tup4);
   assert(string_test4<cest::string>() == tup4);
-  assert(string_test5<std::string>()  == tup5);
+  assert(string_test5< std::string>() == tup5);
   assert(string_test5<cest::string>() == tup5);
+  assert(string_test6< std::string>( std::cout) == tup6);
+  assert(string_test6<cest::string>(cest::cout) == tup6);
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

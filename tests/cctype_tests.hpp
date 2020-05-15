@@ -3,7 +3,6 @@
 
 #include "cest/cctype.hpp"
 #include <cctype>
-#include <tuple>
 #include <cassert>
 #include <limits>
 
@@ -29,6 +28,11 @@ void cctype_tests()
   assert(cest::isupper('a') == 0);
   assert( std::isupper('!') == 0);
   assert(cest::isupper('!') == 0);
+
+  for (auto c = std::numeric_limits<char>::lowest(); ; ++c) {
+    assert(std::isalnum(c) == cest::isalnum(c));
+    if (c == std::numeric_limits<char>::max()) break;
+  }
 }
 
 #endif // _CEST_CCTYPE_TESTS_HPP_

@@ -8,17 +8,18 @@
 
 namespace cest {
 
+// returns 8 (non-zero) on a successful find; as do libstdc++ and libc++
 constexpr int isalnum(int ch) {
-//  const char sz[] = "0123456789"
   string str("0123456789"
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
              "abcdefghijklmnopqrstuvwxyz"); // a raw string array includes \0
-  return std::find(str.cbegin(), str.cend(), ch) != str.cend();
+  return std::find(str.cbegin(), str.cend(), ch) != str.cend() ? 8 : 0;
 }
 
+// returns 256 (non-zero) on a successful find; as do libstdc++ and libc++
 constexpr int isupper(int ch) {
   string str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-  return std::find(str.cbegin(), str.cend(), ch) != str.cend();
+  return std::find(str.cbegin(), str.cend(), ch) != str.cend() ? 256 : 0;
 }
 
 } // namespace cest

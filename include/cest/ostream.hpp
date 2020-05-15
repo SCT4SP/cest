@@ -13,9 +13,6 @@ template <
   class Traits = std::char_traits<CharT>
 > struct basic_ostream : virtual public basic_ios<CharT, Traits>
 {
-//  template <typename T>
-//  basic_ostream &operator<<(const T&);
-
   // for endl
   constexpr basic_ostream& operator<<(basic_ostream& (*pf)(basic_ostream&))  {
     return *this;

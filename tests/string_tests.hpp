@@ -85,9 +85,9 @@ constexpr auto string_test5()
 }
 
 template <typename S>
-constexpr auto string_test6(auto &cout) {
+constexpr auto string_test6(auto &cout, auto &endl) {
   S str("Zod");
-  cout << str;
+  cout << str << endl;
   return std::tuple{true};
 }
 
@@ -100,13 +100,21 @@ void string_tests()
   constexpr const auto tup5 = std::tuple{true,true,true,true,8,'\0'};
   constexpr const auto tup6 = std::tuple{true};
 
+  using std_char_type    = decltype(std::cout)::char_type;
+  using std_traits_type  = decltype(std::cout)::traits_type;
+  auto  &std_endl = std::endl<std_char_type,std_traits_type>;
+
+  using cest_char_type   = decltype(cest::cout)::char_type;
+  using cest_traits_type = decltype(cest::cout)::traits_type;
+  auto &cest_endl = cest::endl<cest_char_type,cest_traits_type>;
+
 #ifndef NO_STATIC_TESTS
   static_assert((string_test1<cest::string>()) == tup1);
   static_assert((string_test2<cest::string>()) == tup2);
   static_assert((string_test3<cest::string>()) == tup3);
   static_assert((string_test4<cest::string>()) == tup4);
   static_assert((string_test5<cest::string>()) == tup5);
-  static_assert(string_test6<cest::string>(cest::cout) == tup6);
+  static_assert(string_test6<cest::string>(cest::cout, cest_endl) == tup6);
 #endif
   
   assert(string_test1< std::string>() == tup1);
@@ -119,8 +127,8 @@ void string_tests()
   assert(string_test4<cest::string>() == tup4);
   assert(string_test5< std::string>() == tup5);
   assert(string_test5<cest::string>() == tup5);
-  assert(string_test6< std::string>( std::cout) == tup6);
-  assert(string_test6<cest::string>(cest::cout) == tup6);
+  assert(string_test6< std::string>( std::cout,  std_endl) == tup6);
+  assert(string_test6<cest::string>(cest::cout, cest_endl) == tup6);
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

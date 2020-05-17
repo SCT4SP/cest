@@ -13,16 +13,23 @@ template <
 >
 class forward_list {
 public:
-  struct node;
   struct iter;
 
   using value_type      = T;
   using allocator_type  = Allocator;
+  using size_type       = std::size_t;
+  using difference_type = std::ptrdiff_t;
   using reference       =       value_type&;
   using const_reference = const value_type&;
+  using pointer         = std::allocator_traits<Allocator>::pointer;
+  using const_pointer   = std::allocator_traits<Allocator>::const_pointer;
   using iterator        =       iter;
   using const_iterator  = const iter;
-  using size_type       = std::size_t;
+
+  struct node {
+    value_type value;
+    node      *next_node;
+  };
 
   struct iter {
     constexpr reference operator*()  { return curr_node->value;  }
@@ -41,11 +48,6 @@ public:
     node *curr_node;
   };
 
-  struct node {
-    value_type value;
-    node      *next_node;
-  };
-
   constexpr  forward_list() : m_front(nullptr) {}
   constexpr ~forward_list() {
     node *curr_node = m_front;
@@ -56,6 +58,7 @@ public:
       curr_node = next_node;
     };
   }
+
   constexpr       iterator  begin()       noexcept { return iter(m_front); }
   constexpr const_iterator  begin() const noexcept { return iter(m_front); }
   constexpr const_iterator cbegin() const noexcept { return iter(m_front); }

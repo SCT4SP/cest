@@ -64,9 +64,7 @@ struct list {
   constexpr list() : m_alloc(allocator_type{}), m_front(nullptr), 
                      m_back(nullptr) {}
 
-  ~list() {
-    this.clear();
-  }
+  constexpr ~list() {}
 
   constexpr allocator_type get_allocator() const { return m_alloc; }
   

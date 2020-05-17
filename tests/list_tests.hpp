@@ -5,8 +5,15 @@
 //#include <list>
 #include <cassert>
 
+template <typename L>
+constexpr void list_test1()
+{
+  cest::list<int> l;
+}
+
 void list_tests()
 {
+  list_test1<cest::list<int>>();
 }
 
 //list<_Tp, _Alloc>::emplace_back(_Args&&... __args)

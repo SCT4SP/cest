@@ -48,7 +48,7 @@ public:
     node *curr_node;
   };
 
-  constexpr  forward_list() : m_front(nullptr) {}
+  constexpr  forward_list()  = default;
   constexpr ~forward_list() {
     node *curr_node = m_front;
     while (curr_node) {
@@ -78,7 +78,7 @@ public:
   constexpr reference       front()         { return m_front->value; }
   constexpr const_reference front() const   { return m_front->value; }
 
-  node *m_front;
+  node *m_front = nullptr;
   allocator_type m_alloc;
   std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };

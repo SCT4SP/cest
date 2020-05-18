@@ -61,9 +61,7 @@ struct list {
     node *curr_node;
   };
   
-  constexpr list() : m_alloc(allocator_type{}), m_front(nullptr), 
-                     m_back(nullptr) {}
-
+  constexpr list() = default;
   constexpr ~list() {}
 
   constexpr allocator_type get_allocator() const { return m_alloc; }
@@ -329,11 +327,10 @@ void
 __list_imp<_Tp, _Alloc>::swap(__list_imp& __c)
   */
   constexpr void swap(list& other) noexcept {
-  
   }
   
-  node *m_front;
-  node *m_back;
+  node *m_front = nullptr;
+  node *m_back  = nullptr;
   allocator_type m_alloc;
   std::allocator_traits<allocator_type>::template 
       rebind_alloc<node> m_node_alloc;

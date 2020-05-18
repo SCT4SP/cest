@@ -61,37 +61,45 @@ struct list {
     node *curr_node;
   };
   
-  constexpr list() = default;
-  constexpr ~list() {}
+  constexpr  list() = default;
+  constexpr ~list() {
+    node *curr_node = m_front;
+    while (curr_node) {
+      node *next_node = curr_node->next_node;
+      std::destroy_at(curr_node);
+      m_node_alloc.deallocate(curr_node, 1);
+      curr_node = next_node;
+    };
+  }
 
-  constexpr allocator_type get_allocator() const { return m_alloc; }
+  constexpr allocator_type get_allocator() const   { return m_alloc;          }
   
-  constexpr       reference front()       { return m_front->value; }
-  constexpr const_reference front() const { return m_front->value; }
+  constexpr       reference front()                { return m_front->value;   }
+  constexpr const_reference front() const          { return m_front->value;   }
 
-  constexpr       reference back()       { return m_back->value; }
-  constexpr const_reference back() const { return m_back->value; }
+  constexpr       reference back()                 { return m_back->value;    }
+  constexpr const_reference back()  const          { return m_back->value;    }
   
   /* Iterators */
-  constexpr       iterator  begin()       noexcept { return iter(m_front); }
-  constexpr const_iterator  begin() const noexcept { return iter(m_front); }
-  constexpr const_iterator cbegin() const noexcept { return iter(m_front); }
-  constexpr       iterator    end()       noexcept { return iter(nullptr); }
-  constexpr const_iterator    end() const noexcept { return iter(nullptr); }
-  constexpr const_iterator   cend() const noexcept { return iter(nullptr); }
+  constexpr       iterator  begin()       noexcept { return iter(m_front);    }
+  constexpr const_iterator  begin() const noexcept { return iter(m_front);    }
+  constexpr const_iterator cbegin() const noexcept { return iter(m_front);    }
+  constexpr       iterator    end()       noexcept { return iter(nullptr);    }
+  constexpr const_iterator    end() const noexcept { return iter(nullptr);    }
+  constexpr const_iterator   cend() const noexcept { return iter(nullptr);    }
   
-  constexpr bool empty() const { return begin() == end(); }
+  [[nodiscard]] bool empty()        const noexcept { return begin() == end(); }
   
   constexpr size_type size() const noexcept { 
-      return std::distance(begin(), end());
+    return std::distance(begin(), end());
   }
   
   // Borrowing a little from libcxx with the min between allocator max size and 
   // difference_type
   constexpr size_type max_size() const noexcept { 
-        return std::min<size_type>(
-                  std::allocator_traits<Allocator>::max_size(m_alloc),
-                  std::numeric_limits<difference_type>::max());
+    return std::min<size_type>(
+             std::allocator_traits<Allocator>::max_size(m_alloc),
+             std::numeric_limits<difference_type>::max());
   }
   
   constexpr void clear() noexcept {
@@ -267,7 +275,7 @@ struct list {
     std::construct_at(new_node, value, m_front, nullptr);
     
     if (m_front) {
-      m_front.prev_node = new_node;
+      m_front->prev_node = new_node;
       m_front = new_node;
     } else
       m_front = m_back = new_node;
@@ -278,7 +286,7 @@ struct list {
     std::construct_at(new_node, std::move(value), m_front, nullptr);
     
     if (m_front) {
-      m_front.prev_node = new_node;
+      m_front->prev_node = new_node;
       m_front = new_node;
     } else
       m_front = m_back = new_node;
@@ -289,11 +297,11 @@ struct list {
     node *new_node = m_node_alloc.allocate(1);
     std::construct_at(new_node, value_type(std::forward<Args>(args)...), 
                       m_front, nullptr);
-    m_front.prev_node = new_node;
+    m_front->prev_node = new_node;
     m_front = new_node;
     
     if (m_front) {
-      m_front.prev_node = new_node;
+      m_front->prev_node = new_node;
       m_front = new_node;
     } else
       m_front = m_back = new_node;

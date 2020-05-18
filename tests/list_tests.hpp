@@ -2,18 +2,30 @@
 #define _CEST_LIST_TESTS_HPP_
 
 #include "cest/list.hpp"
-//#include <list>
+#include <list>
+#include <tuple>
 #include <cassert>
 
 template <typename L>
-constexpr void list_test1()
+constexpr auto list_test1()
 {
-  cest::list<int> l;
+  L l;
+  l.push_front(42);
+  auto x = l.front();
+  l.push_front(43);
+  return std::tuple{l.front(), x};
 }
 
 void list_tests()
 {
-  list_test1<cest::list<int>>();
+  constexpr const auto tup1 = std::tuple{43,42};
+
+#ifndef NO_STATIC_TESTS
+  static_assert(list_test1<cest::list<int>>() == tup1);
+#endif
+
+  assert(list_test1<cest::list<int>>() == tup1);
+  assert(list_test1<std::list<int>>()  == tup1);
 }
 
 //list<_Tp, _Alloc>::emplace_back(_Args&&... __args)

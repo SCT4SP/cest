@@ -54,27 +54,33 @@ public:
     while (curr_node) {
       node *next_node = curr_node->next_node;
       std::destroy_at(curr_node);
-      m_node_alloc.deallocate(curr_node,1);
+      m_node_alloc.deallocate(curr_node, 1);
       curr_node = next_node;
     };
   }
 
-  constexpr       iterator  begin()       noexcept { return iter(m_front); }
-  constexpr const_iterator  begin() const noexcept { return iter(m_front); }
-  constexpr const_iterator cbegin() const noexcept { return iter(m_front); }
-  constexpr       iterator    end()       noexcept { return iter(nullptr); }
-  constexpr const_iterator    end() const noexcept { return iter(nullptr); }
-  constexpr const_iterator   cend() const noexcept { return iter(nullptr); }
+  constexpr allocator_type get_allocator() const   { return m_alloc;          }
+  constexpr       iterator  begin()       noexcept { return iter(m_front);    }
+  constexpr const_iterator  begin() const noexcept { return iter(m_front);    }
+  constexpr const_iterator cbegin() const noexcept { return iter(m_front);    }
+  constexpr       iterator    end()       noexcept { return iter(nullptr);    }
+  constexpr const_iterator    end() const noexcept { return iter(nullptr);    }
+  constexpr const_iterator   cend() const noexcept { return iter(nullptr);    }
+
+  [[nodiscard]] bool empty()        const noexcept { return begin() == end(); }
+
   constexpr void push_front(const T &value) {
     node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node,value,m_front);
+    std::construct_at(new_node, value, m_front);
     m_front = new_node;
   }
+
   constexpr void push_front(T &&value)      {
     node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node,std::forward<T>(value),m_front);
+    std::construct_at(new_node, std::move(value), m_front);
     m_front = new_node;
   }
+
   constexpr reference       front()         { return m_front->value; }
   constexpr const_reference front() const   { return m_front->value; }
 

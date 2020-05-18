@@ -12,13 +12,14 @@ constexpr auto list_test1()
   L l;
   l.push_front(42);
   auto x = l.front();
+  auto s = l.size();
   l.push_front(43);
-  return std::tuple{l.front(), x};
+  return std::tuple{x, s, l.front(), l.size()};
 }
 
 void list_tests()
 {
-  constexpr const auto tup1 = std::tuple{43,42};
+  constexpr const auto tup1 = std::tuple{42,1,43,2};
 
 #ifndef NO_STATIC_TESTS
   static_assert(list_test1<cest::list<int>>() == tup1);

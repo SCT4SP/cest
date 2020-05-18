@@ -32,6 +32,13 @@ public:
   };
 
   struct iter {
+
+    using iterator_category = std::forward_iterator_tag;
+    using value_type        = forward_list::value_type;
+    using difference_type   = ptrdiff_t;
+    using reference         = const value_type&;
+    using pointer           = const value_type*;
+
     constexpr reference operator*()  { return curr_node->value;  }
     constexpr iter&     operator++()    {        // pre-increment
       curr_node = curr_node->next_node;

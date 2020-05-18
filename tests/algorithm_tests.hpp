@@ -62,7 +62,15 @@ constexpr auto algorithm_test2() {
   return tuple{e,b,ve,vb,sze,szb};
 }
 
-template <typename V, typename S, typename L>
+template <typename It1, typename It2>
+constexpr auto iterator_ok() {
+  using it1_cat_t = typename It1::iterator_category;
+  using it2_cat_t = typename It2::iterator_category;
+  bool b1 = std::is_same<it1_cat_t, it2_cat_t>{};
+  return b1;
+}
+
+template <typename V, typename S, typename L, typename FL>
 constexpr auto algorithm_test3() {
   using namespace std;
   using arr_t = array<int,5>;
@@ -76,25 +84,30 @@ constexpr auto algorithm_test3() {
   L l;
   copy(a.begin(),a.end(),back_inserter(l));
   auto sz3 = distance(l.begin(), l.end());
-  return std::tuple{sz1,sz2,sz3};
+
+  FL fl;
+  copy(a.begin(),a.end(),front_inserter(fl));
+  auto sz4 = distance(fl.begin(), fl.end());
+  return std::tuple{sz1,sz2,sz3,sz4};
 }
 
 template <
   template <typename...> typename S,
   template <typename...> typename V,
-  template <typename...> typename L
+  template <typename...> typename L,
+  template <typename...> typename FL
 >
 void rt_algorithm_tests(auto tup1, auto tup2, auto tup3) {
-  assert((algorithm_test1<S<int>,V<int>>())        == tup1);
-  assert((algorithm_test2<S<int>,V<int>>())        == tup2);
-  assert((algorithm_test3<S<int>,V<int>,L<int>>()) == tup3);
+  assert((algorithm_test1<S<int>,V<int>>())                == tup1);
+  assert((algorithm_test2<S<int>,V<int>>())                == tup2);
+  assert((algorithm_test3<S<int>,V<int>,L<int>,FL<int>>()) == tup3);
 }
 
 void algorithm_tests()
 {
   constexpr const auto tup1 = std::tuple{12,12,12}; // 3+4+5 == 12
   constexpr const auto tup2 = std::tuple{4,true,4,true,'c',true};
-  constexpr const auto tup3 = std::tuple{5,5,5};
+  constexpr const auto tup3 = std::tuple{5,5,5,5};
 
 #ifndef NO_STATIC_TESTS
   static_assert((algorithm_test1<cest::vector<int>,cest::set<int>>()) == tup1);
@@ -102,19 +115,22 @@ void algorithm_tests()
   static_assert((algorithm_test3<
                    cest::vector<int>,
                    cest::set<int>,
-                   cest::list<int>
+                   cest::list<int>,
+                   cest::forward_list<int>
                  >()) == tup3);
 #endif
   
   rt_algorithm_tests<
     std::vector,
     std::set,
-    std::list
+    std::list,
+    std::forward_list
   >(tup1, tup2, tup3);
   rt_algorithm_tests<
     cest::vector,
     cest::set,
-    cest::list
+    cest::list,
+    cest::forward_list
   >(tup1, tup2, tup3);
 }
 

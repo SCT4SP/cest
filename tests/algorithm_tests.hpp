@@ -3,8 +3,10 @@
 
 #include "cest/vector.hpp"
 #include "cest/set.hpp"
+#include "cest/list.hpp"
 #include <vector>
 #include <set>
+#include <list>
 #include <array>
 #include <numeric>
 #include <algorithm>
@@ -60,26 +62,60 @@ constexpr auto algorithm_test2() {
   return tuple{e,b,ve,vb,sze,szb};
 }
 
+template <typename V, typename S, typename L>
+constexpr auto algorithm_test3() {
+  using namespace std;
+  using arr_t = array<int,5>;
+  arr_t a{1,2,3,4,5};
+  auto sz1 = distance(a.begin(), a.end());
+
+  V v;
+  copy(a.begin(),a.end(),back_inserter(v));
+  auto sz2 = distance(a.begin(), a.end());
+
+  L l;
+  copy(a.begin(),a.end(),back_inserter(l));
+  auto sz3 = distance(l.begin(), l.end());
+  return std::tuple{sz1,sz2,sz3};
+}
+
 template <
   template <typename...> typename S,
-  template <typename...> typename V
+  template <typename...> typename V,
+  template <typename...> typename L
 >
-void rt_algorithm_tests(auto tup1, auto tup2) {
-  assert((algorithm_test1<S<int>,V<int>>()) == tup1);
-  assert((algorithm_test2<S<int>,V<int>>()) == tup2);
+void rt_algorithm_tests(auto tup1, auto tup2, auto tup3) {
+  assert((algorithm_test1<S<int>,V<int>>())        == tup1);
+  assert((algorithm_test2<S<int>,V<int>>())        == tup2);
+  assert((algorithm_test3<S<int>,V<int>,L<int>>()) == tup3);
 }
 
 void algorithm_tests()
 {
   constexpr const auto tup1 = std::tuple{12,12,12}; // 3+4+5 == 12
   constexpr const auto tup2 = std::tuple{4,true,4,true,'c',true};
+  constexpr const auto tup3 = std::tuple{5,5,5};
 
 #ifndef NO_STATIC_TESTS
   static_assert((algorithm_test1<cest::vector<int>,cest::set<int>>()) == tup1);
+  static_assert((algorithm_test2<cest::vector<int>,cest::set<int>>()) == tup2);
+  static_assert((algorithm_test3<
+                   cest::vector<int>,
+                   cest::set<int>,
+                   cest::list<int>
+                 >()) == tup3);
 #endif
   
-//  rt_algorithm_tests<std::vector,std::set>(tup1, tup2);
-  rt_algorithm_tests<cest::vector,cest::set>(tup1, tup2);
+  rt_algorithm_tests<
+    std::vector,
+    std::set,
+    std::list
+  >(tup1, tup2, tup3);
+  rt_algorithm_tests<
+    cest::vector,
+    cest::set,
+    cest::list
+  >(tup1, tup2, tup3);
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

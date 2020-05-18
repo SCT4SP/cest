@@ -35,6 +35,13 @@ struct list {
   };
 
   struct iter {
+
+    using iterator_category = std::bidirectional_iterator_tag;
+    using value_type        = list::value_type;
+    using difference_type   = ptrdiff_t;
+    using reference         = const value_type&;
+    using pointer           = const value_type*;
+
     constexpr reference operator*()  { return curr_node->value;  }
     constexpr iter&     operator++()    {        // pre-increment
       curr_node = curr_node->next_node;
@@ -218,7 +225,7 @@ struct list {
     std::construct_at(new_node, value, nullptr, m_back);
     
     if (m_back) {
-      m_back.next_node = new_node;
+      m_back->next_node = new_node;
       m_back = new_node;
     } else
       m_front = m_back = new_node;
@@ -233,7 +240,7 @@ struct list {
     
     // TODO: Can this and its other equivelants be encapsulated in someway?
     if (m_back) {
-      m_back.next_node = new_node;
+      m_back->next_node = new_node;
       m_back = new_node;
     } else
       m_front = m_back = new_node;
@@ -246,7 +253,7 @@ struct list {
                       nullptr, m_back);
 
     if (m_back) {
-      m_back.next_node = new_node;
+      m_back->next_node = new_node;
       m_back = new_node;
     } else
       m_front = m_back = new_node;

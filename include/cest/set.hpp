@@ -31,8 +31,8 @@ public:
   using const_reference       = const value_type&;
   using pointer               = std::allocator_traits<Allocator>::pointer;
   using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
-  using iterator              = const_tree_iter;
-  using const_iterator        = const_tree_iter;
+  using iterator              = const_tree_iter; // both are const_tree_iter
+  using const_iterator        = const_tree_iter; // as specified cppreference
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
   using node_type             = node;

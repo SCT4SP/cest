@@ -123,8 +123,8 @@ struct list {
 
   constexpr iterator insert(const_iterator pos, const T& value) {
     node *new_node = m_node_alloc.allocate(1);
-    node* prev = pos->curr_node->prev_node;
-    node* next = pos->curr_node;
+    node* prev = pos.curr_node->prev_node;
+    node* next = pos.curr_node;
     std::construct_at(new_node, value, next, prev);
     next->prev_node = new_node;
     
@@ -138,8 +138,8 @@ struct list {
   
   constexpr iterator insert(const_iterator pos, T&& value) {
     node *new_node = m_node_alloc.allocate(1);
-    node* prev = pos->curr_node->prev_node;
-    node* next = pos->curr_node;
+    node* prev = pos.curr_node->prev_node;
+    node* next = pos.curr_node;
     std::construct_at(new_node, std::move(value), next, prev);
     next->prev_node = new_node;
     
@@ -169,8 +169,8 @@ struct list {
   template <class... Args>
   constexpr iterator emplace(const_iterator pos, Args&&... args) {
     node *new_node = m_node_alloc.allocate(1);
-    node* prev = pos->curr_node->prev_node;
-    node* next = pos->curr_node;
+    node* prev = pos.curr_node->prev_node;
+    node* next = pos.curr_node;
     std::construct_at(new_node, value_type(std::forward<Args>(args)...), next, 
                       prev);
     next->prev_node = new_node;
@@ -191,7 +191,7 @@ struct list {
   // if we know the element we're removing is in the back or front of the list
   // but that may just make the functon longer
   constexpr iterator erase(const_iterator pos) {
-    node* tmp = pos->curr_node;
+    node* tmp = pos.curr_node;
     node* next = tmp->next_node;
     node* prev = tmp->prev_node;
     node* ret = nullptr;
@@ -238,7 +238,7 @@ struct list {
     node *new_node = m_node_alloc.allocate(1);
     std::construct_at(new_node, std::move(value), nullptr, m_back);
     
-    // TODO: Can this and its other equivelants be encapsulated in someway?
+    // TODO: Can this and its other equivalents be encapsulated in someway?
     if (m_back) {
       m_back->next_node = new_node;
       m_back = new_node;

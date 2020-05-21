@@ -261,7 +261,6 @@ struct list {
 
   // TODO: Handle case where we pop off the last or second last element..  
   constexpr void pop_back() {
-    static_assert(!this.empty(), "empty list, cannot pop");
     node* tmp = m_back;
     
     if (m_back->prev_node) {
@@ -315,7 +314,6 @@ struct list {
   }
   
   constexpr void pop_front() {
-    static_assert(!this.empty(), "empty list, cannot pop");
     node* tmp = m_front;
     
     if (m_front->next_node) {

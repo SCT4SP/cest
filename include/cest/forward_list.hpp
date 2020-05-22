@@ -7,6 +7,30 @@
 
 namespace cest {
 
+/*template <typename T, typename Node>
+struct fwd_list_iter {
+  using value_type       = T;
+  using pointer          = T*;
+  using reference        = T&;
+  using difference_type  = std::ptrdiff_t;
+  using iterator_catgory = std::forward_iterator_tag;
+
+  constexpr reference operator*()  { return curr_node->value;  }
+  constexpr fwd_list_iter&     operator++()    {        // pre-increment
+    curr_node = curr_node->next_node;
+    return *this;
+  }
+  constexpr fwd_list_iter      operator++(int) {        // post-increment
+    fwd_list_iter tmp(curr_node);
+    ++(*this);
+    return tmp; 
+  }
+  constexpr bool      operator==(const fwd_list_iter &other) {
+    return this->curr_node == other.curr_node;
+  }
+  Node *curr_node;
+};*/
+
 template <
   class T,
   class Allocator = std::allocator<T>
@@ -33,11 +57,11 @@ public:
 
   struct iter {
 
-    using iterator_category = std::forward_iterator_tag;
     using value_type        = forward_list::value_type;
-    using difference_type   = ptrdiff_t;
+    using difference_type   = std::ptrdiff_t;
     using reference         = value_type&;
     using pointer           = value_type*;
+    using iterator_category = std::forward_iterator_tag;
 
     constexpr reference operator*()  { return curr_node->value;  }
     constexpr iter&     operator++()    {        // pre-increment
@@ -66,13 +90,13 @@ public:
     };
   }
 
-  constexpr allocator_type get_allocator() const   { return m_alloc;          }
-  constexpr       iterator  begin()       noexcept { return iter(m_front);    }
-  constexpr const_iterator  begin() const noexcept { return iter(m_front);    }
-  constexpr const_iterator cbegin() const noexcept { return iter(m_front);    }
-  constexpr       iterator    end()       noexcept { return iter(nullptr);    }
-  constexpr const_iterator    end() const noexcept { return iter(nullptr);    }
-  constexpr const_iterator   cend() const noexcept { return iter(nullptr);    }
+  constexpr allocator_type get_allocator() const   { return  m_alloc;        }
+  constexpr       iterator  begin()       noexcept { return {m_front};       }
+  constexpr const_iterator  begin() const noexcept { return {m_front};       }
+  constexpr const_iterator cbegin() const noexcept { return {m_front};       }
+  constexpr       iterator    end()       noexcept { return {nullptr};       }
+  constexpr const_iterator    end() const noexcept { return {nullptr};       }
+  constexpr const_iterator   cend() const noexcept { return {nullptr};       }
 
   [[nodiscard]] bool empty()        const noexcept { return begin() == end(); }
 

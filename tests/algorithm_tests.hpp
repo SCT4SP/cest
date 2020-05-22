@@ -3,9 +3,11 @@
 
 #include "cest/vector.hpp"
 #include "cest/set.hpp"
+#include "cest/forward_list.hpp"
 #include "cest/list.hpp"
 #include <vector>
 #include <set>
+#include <forward_list>
 #include <list>
 #include <array>
 #include <numeric>

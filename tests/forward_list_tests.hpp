@@ -37,8 +37,11 @@ constexpr auto forward_list_test4() {
     sum1 += *it;
 
   using cit_t = typename FL<int>::const_iterator;
-  for (cit_t it = l.cbegin(); it != l.cend(); ++it) // 1 + 2 + 3
+  cit_t it = l.cbegin();
+  for (; it != l.cend(); ++it) // 1 + 2 + 3
     sum2 += *it;
+
+  //bool b = it == l.end(); // todo
   return std::tuple{sum1,sum2};
 }
 

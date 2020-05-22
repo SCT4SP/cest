@@ -7,30 +7,6 @@
 
 namespace cest {
 
-/*template <typename T, typename Node>
-struct fwd_list_iter {
-  using value_type       = T;
-  using pointer          = T*;
-  using reference        = T&;
-  using difference_type  = std::ptrdiff_t;
-  using iterator_catgory = std::forward_iterator_tag;
-
-  constexpr reference operator*()  { return curr_node->value;  }
-  constexpr fwd_list_iter&     operator++()    {        // pre-increment
-    curr_node = curr_node->next_node;
-    return *this;
-  }
-  constexpr fwd_list_iter      operator++(int) {        // post-increment
-    fwd_list_iter tmp(curr_node);
-    ++(*this);
-    return tmp; 
-  }
-  constexpr bool      operator==(const fwd_list_iter &other) {
-    return this->curr_node == other.curr_node;
-  }
-  Node *curr_node;
-};*/
-
 template <
   class T,
   class Allocator = std::allocator<T>
@@ -38,6 +14,7 @@ template <
 class forward_list {
 public:
   struct iter;
+  struct const_iter;
 
   using value_type      = T;
   using allocator_type  = Allocator;
@@ -48,7 +25,7 @@ public:
   using pointer         = std::allocator_traits<Allocator>::pointer;
   using const_pointer   = std::allocator_traits<Allocator>::const_pointer;
   using iterator        =       iter;
-  using const_iterator  = const iter;
+  using const_iterator  = const_iter;
 
   struct node {
     value_type value;
@@ -64,16 +41,40 @@ public:
     using iterator_category = std::forward_iterator_tag;
 
     constexpr reference operator*()  { return curr_node->value;  }
-    constexpr iter&     operator++()    {        // pre-increment
+    constexpr auto&     operator++()    {        // pre-increment
       curr_node = curr_node->next_node;
       return *this;
     }
-    constexpr iter      operator++(int) {        // post-increment
-      iter tmp(curr_node);
+    constexpr auto      operator++(int) {        // post-increment
+      auto tmp(curr_node);
       ++(*this);
       return tmp; 
     }
-    constexpr bool      operator==(const iter &other) {
+    constexpr bool      operator==(const auto &other) {
+      return this->curr_node == other.curr_node;
+    }
+    node *curr_node;
+  };
+
+  struct const_iter {
+
+    using value_type        = forward_list::value_type;
+    using difference_type   = std::ptrdiff_t;
+    using reference         = const value_type&;
+    using pointer           = const value_type*;
+    using iterator_category = std::forward_iterator_tag;
+
+    constexpr reference operator*()  { return curr_node->value;  }
+    constexpr auto&     operator++()    {        // pre-increment
+      curr_node = curr_node->next_node;
+      return *this;
+    }
+    constexpr auto      operator++(int) {        // post-increment
+      auto tmp(curr_node);
+      ++(*this);
+      return tmp; 
+    }
+    constexpr bool      operator==(const auto &other) {
       return this->curr_node == other.curr_node;
     }
     node *curr_node;

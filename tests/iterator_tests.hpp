@@ -49,7 +49,7 @@ constexpr void static_iterator_test() {
   using cit1_t = typename T1::const_iterator;
   using cit2_t = typename T2::const_iterator;
   iterator_test_helper< it1_t, it2_t>();
-//  iterator_test_helper<cit1_t,cit2_t>(); // pointer and reference: not yet
+  iterator_test_helper<cit1_t,cit2_t>();
 }
 
 void iterator_tests()

@@ -33,13 +33,13 @@ constexpr auto forward_list_test4() {
   l.push_front(2);
   l.push_front(3);
   int sum1 = 0, sum2 = 0;
-  for (auto it = l.begin(); it != l.end(); it++)
+  for (auto it = l.begin(); it != l.end(); it++)    // 1 + 2 + 3
     sum1 += *it;
-// todo
-//  using cit_t = typename FL<int>::const_iterator;
-//  for (cit_t it = l.cbegin(); it != l.end(); ++it)  // 1 + 2 + 3
-//    sum2 += *it;
-  return std::tuple{sum1,6};
+
+  using cit_t = typename FL<int>::const_iterator;
+  for (cit_t it = l.cbegin(); it != l.cend(); ++it) // 1 + 2 + 3
+    sum2 += *it;
+  return std::tuple{sum1,sum2};
 }
 
 template <template <typename...> typename FL>

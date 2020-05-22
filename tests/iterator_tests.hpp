@@ -48,7 +48,8 @@ constexpr void static_iterator_test() {
   using it2_t  = typename T2::iterator;
   using cit1_t = typename T1::const_iterator;
   using cit2_t = typename T2::const_iterator;
-  iterator_test_helper<it1_t,it2_t>();
+  iterator_test_helper< it1_t, it2_t>();
+//  iterator_test_helper<cit1_t,cit2_t>(); // pointer and reference: not yet
 }
 
 void iterator_tests()
@@ -57,6 +58,8 @@ void iterator_tests()
   static_assert(iterator_test1<cest::vector>());
   static_iterator_test<std::vector<int>,      cest::vector<int>>();
   static_iterator_test<std::forward_list<int>,cest::forward_list<int>>();
+//  static_iterator_test<std::set,cest::set>());
+//  static_iterator_test<std::map<int,char>,cest::map<int,char>>());
 #endif
 
   assert(iterator_test1<std::vector>());

@@ -41,8 +41,9 @@ constexpr auto forward_list_test4() {
   for (; it != l.cend(); ++it) // 1 + 2 + 3
     sum2 += *it;
 
-  //bool b = it == l.end(); // todo
-  return std::tuple{sum1,sum2};
+  bool b1 = it == l.end();
+  bool b2 = l.end() == it;
+  return std::tuple{sum1,sum2,b1,b2};
 }
 
 template <template <typename...> typename FL>
@@ -50,7 +51,7 @@ constexpr void rt_forward_list_tests() {
          assert(forward_list_test1<FL>() == 0);
          assert(forward_list_test2<FL>() == 42);
          assert(forward_list_test3<FL>() == 1);
-         assert(forward_list_test4<FL>() == (std::tuple{6,6}));
+         assert(forward_list_test4<FL>() == (std::tuple{6,6,true,true}));
 }
 
 template <template <typename...> typename FL>
@@ -59,7 +60,7 @@ constexpr void ct_forward_list_tests() {
   static_assert(forward_list_test1<FL>() == 0);
   static_assert(forward_list_test2<FL>() == 42);
   static_assert(forward_list_test3<FL>() == 1);
-  static_assert(forward_list_test4<FL>() == std::tuple{6,6});
+  static_assert(forward_list_test4<FL>() == std::tuple{6,6,true,true});
 #endif
 }
 

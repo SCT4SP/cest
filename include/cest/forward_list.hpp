@@ -50,7 +50,7 @@ public:
       ++(*this);
       return tmp; 
     }
-    constexpr bool      operator==(const auto &other) {
+    constexpr bool      operator==(const iter &other) {
       return this->curr_node == other.curr_node;
     }
     node *curr_node;
@@ -64,6 +64,8 @@ public:
     using pointer           = const value_type*;
     using iterator_category = std::forward_iterator_tag;
 
+    constexpr const_iter(      node  *n) : curr_node(n)            {}
+    constexpr const_iter(const iter &it) : curr_node(it.curr_node) {}
     constexpr reference operator*()  { return curr_node->value;  }
     constexpr auto&     operator++()    {        // pre-increment
       curr_node = curr_node->next_node;
@@ -74,7 +76,7 @@ public:
       ++(*this);
       return tmp; 
     }
-    constexpr bool      operator==(const auto &other) {
+    constexpr bool      operator==(const const_iter &other) {
       return this->curr_node == other.curr_node;
     }
     node *curr_node;

@@ -39,7 +39,9 @@ public:
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
   using node_type             = node;
 
-  struct tree_iter {
+  struct tree_iter
+  {
+    using value_type        = map::value_type;
     using reference         = value_type&;
     using pointer           = value_type*;
     using iterator_category = std::bidirectional_iterator_tag;
@@ -89,7 +91,9 @@ public:
     key_compare m_comp; // needed above due to illegal constexpr ptr compare
   };
 
-  struct const_tree_iter {
+  struct const_tree_iter
+  {
+    using value_type        = map::value_type;
     using reference         = const value_type&;
     using pointer           = const value_type*;
     using iterator_category = std::bidirectional_iterator_tag;

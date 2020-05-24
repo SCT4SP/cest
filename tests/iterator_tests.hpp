@@ -61,7 +61,8 @@ void iterator_tests()
   static_assert(iterator_test1<vector>());
   static_assert(static_iterator_test<std::vector<int>,vector<int>>());
   static_assert(static_iterator_test<std::forward_list<int>,forward_list<int>>());
-//  static_iterator_test<std::set<int>,set<int>>();
+  
+  static_assert(static_iterator_test<std::set<int>,set<int>>());
 //  static_iterator_test<std::map<int,char>,map<int,char>>());
 #endif
 

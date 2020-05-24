@@ -32,10 +32,10 @@ public:
     node      *next_node;
   };
 
-  struct iter {
-
-    using value_type        = forward_list::value_type;
+  struct iter
+  {
     using difference_type   = std::ptrdiff_t;
+    using value_type        = forward_list::value_type;
     using reference         = value_type&;
     using pointer           = value_type*;
     using iterator_category = std::forward_iterator_tag;

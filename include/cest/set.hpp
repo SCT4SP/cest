@@ -37,11 +37,13 @@ public:
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
   using node_type             = node;
 
-  struct const_tree_iter {
+  struct const_tree_iter
+  {
+    using difference_type   = std::ptrdiff_t;
+    using value_type        = set::value_type;
     using reference         = const value_type&;
     using pointer           = const value_type*;
     using iterator_category = std::bidirectional_iterator_tag;
-    using difference_type   = ptrdiff_t;
 
     constexpr reference operator*()  const { return  curr_node->x; }
     constexpr pointer   operator->() const { return &curr_node->x; }

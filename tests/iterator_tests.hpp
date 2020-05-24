@@ -24,7 +24,7 @@ constexpr auto iterator_test1() {
 }
 
 template <typename It1, typename It2>
-constexpr void iterator_test_helper() {
+constexpr bool iterator_test_helper() {
   using dt1_t = typename std::iterator_traits<It1>::difference_type;
   using dt2_t = typename std::iterator_traits<It2>::difference_type;
   using vt1_t = typename std::iterator_traits<It1>::value_type;
@@ -35,35 +35,38 @@ constexpr void iterator_test_helper() {
   using r2_t  = typename std::iterator_traits<It2>::reference;
   using ic1_t = typename std::iterator_traits<It1>::iterator_category;
   using ic2_t = typename std::iterator_traits<It2>::iterator_category;
-  static_assert(std::is_same_v<dt1_t,dt2_t>);
-  static_assert(std::is_same_v<vt1_t,vt2_t>);
-  static_assert(std::is_same_v< p1_t, p2_t>);
-  static_assert(std::is_same_v< r1_t, r2_t>);
-  static_assert(std::is_same_v<ic1_t,ic2_t>);
+  bool b1 = std::is_same_v<dt1_t,dt2_t>;
+  bool b2 = std::is_same_v<vt1_t,vt2_t>;
+  bool b3 = std::is_same_v< p1_t, p2_t>;
+  bool b4 = std::is_same_v< r1_t, r2_t>;
+  bool b5 = std::is_same_v<ic1_t,ic2_t>;
+  return b1&&b2&&b3&&b4&&b5;
 }
 
 template <typename T1, typename T2>
-constexpr void static_iterator_test() {
+constexpr bool static_iterator_test() {
   using it1_t  = typename T1::iterator;
   using it2_t  = typename T2::iterator;
   using cit1_t = typename T1::const_iterator;
   using cit2_t = typename T2::const_iterator;
-  iterator_test_helper< it1_t, it2_t>();
-  iterator_test_helper<cit1_t,cit2_t>();
+  bool b1 = iterator_test_helper< it1_t, it2_t>();
+  bool b2 = iterator_test_helper<cit1_t,cit2_t>();
+  return b1&&b2;
 }
 
 void iterator_tests()
 {
+  using namespace cest;
 #ifndef NO_STATIC_TESTS
-  static_assert(iterator_test1<cest::vector>());
-  static_iterator_test<std::vector<int>,      cest::vector<int>>();
-  static_iterator_test<std::forward_list<int>,cest::forward_list<int>>();
-//  static_iterator_test<std::set,cest::set>());
-//  static_iterator_test<std::map<int,char>,cest::map<int,char>>());
+  static_assert(iterator_test1<vector>());
+  static_assert(static_iterator_test<std::vector<int>,vector<int>>());
+  static_assert(static_iterator_test<std::forward_list<int>,forward_list<int>>());
+//  static_iterator_test<std::set<int>,set<int>>();
+//  static_iterator_test<std::map<int,char>,map<int,char>>());
 #endif
 
   assert(iterator_test1<std::vector>());
-  assert(iterator_test1<cest::vector>());
+  assert(iterator_test1<vector>());
 }
 
 #endif // _CEST_ITERATOR_TESTS_HPP_

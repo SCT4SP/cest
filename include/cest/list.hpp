@@ -125,12 +125,12 @@ struct list {
   constexpr const_reference back()  const          { return m_back->value;    }
   
   /* Iterators */
-  constexpr       iterator  begin()       noexcept { return iter(m_front);    }
-  constexpr const_iterator  begin() const noexcept { return iter(m_front);    }
-  constexpr const_iterator cbegin() const noexcept { return iter(m_front);    }
-  constexpr       iterator    end()       noexcept { return iter(nullptr);    }
-  constexpr const_iterator    end() const noexcept { return iter(nullptr);    }
-  constexpr const_iterator   cend() const noexcept { return iter(nullptr);    }
+  constexpr       iterator  begin()       noexcept { return {m_front};        }
+  constexpr const_iterator  begin() const noexcept { return {m_front};        }
+  constexpr const_iterator cbegin() const noexcept { return {m_front};        }
+  constexpr       iterator    end()       noexcept { return {nullptr};        }
+  constexpr const_iterator    end() const noexcept { return {nullptr};        }
+  constexpr const_iterator   cend() const noexcept { return {nullptr};        }
   
   [[nodiscard]] bool empty()        const noexcept { return begin() == end(); }
   
@@ -160,8 +160,8 @@ struct list {
 
   constexpr iterator insert(const_iterator pos, const T& value) {
     node *new_node = m_node_alloc.allocate(1);
-    node* prev = pos.curr_node->prev_node;
-    node* next = pos.curr_node;
+    node *prev = pos.curr_node->prev_node;
+    node *next = pos.curr_node;
     std::construct_at(new_node, value, next, prev);
     next->prev_node = new_node;
     
@@ -175,8 +175,8 @@ struct list {
   
   constexpr iterator insert(const_iterator pos, T&& value) {
     node *new_node = m_node_alloc.allocate(1);
-    node* prev = pos.curr_node->prev_node;
-    node* next = pos.curr_node;
+    node *prev = pos.curr_node->prev_node;
+    node *next = pos.curr_node;
     std::construct_at(new_node, std::move(value), next, prev);
     next->prev_node = new_node;
     

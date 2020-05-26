@@ -13,7 +13,7 @@ template <
 >
 class forward_list {
 public:
-  struct iter;
+  struct       iter;
   struct const_iter;
 
   using value_type      = T;
@@ -40,7 +40,7 @@ public:
     using pointer           = value_type*;
     using iterator_category = std::forward_iterator_tag;
 
-    constexpr reference operator*()  { return curr_node->value;  }
+    constexpr reference operator*()     { return curr_node->value;  }
     constexpr auto&     operator++()    {        // pre-increment
       curr_node = curr_node->next_node;
       return *this;
@@ -56,8 +56,8 @@ public:
     node *curr_node;
   };
 
-  struct const_iter {
-
+  struct const_iter
+  {
     using value_type        = forward_list::value_type;
     using difference_type   = std::ptrdiff_t;
     using reference         = const value_type&;
@@ -66,7 +66,7 @@ public:
 
     constexpr const_iter(      node  *n) : curr_node(n)            {}
     constexpr const_iter(const iter &it) : curr_node(it.curr_node) {}
-    constexpr reference operator*()  { return curr_node->value;  }
+    constexpr reference operator*()     { return curr_node->value;  }
     constexpr auto&     operator++()    {        // pre-increment
       curr_node = curr_node->next_node;
       return *this;

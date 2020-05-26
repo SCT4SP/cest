@@ -13,19 +13,20 @@ template <
   typename Allocator = std::allocator<T>
  >
 struct list {
-  struct iter;
+  struct       iter;
+  struct const_iter;
   
-  using value_type =      T;
-  using allocator_type =  Allocator;
-  using size_type =       std::size_t;
-  using difference_type = std::ptrdiff_t;
-  using reference =       value_type&;
-  using const_reference = const value_type&;
-  using pointer =         std::allocator_traits<Allocator>::pointer;
-  using const_pointer =   std::allocator_traits<Allocator>::const_pointer;
-  using iterator =        iter;
-  using const_iterator =  const iter;
-  using reverse_iterator = std::reverse_iterator<iterator>;
+  using value_type            = T;
+  using allocator_type        = Allocator;
+  using size_type             = std::size_t;
+  using difference_type       = std::ptrdiff_t;
+  using reference             =       value_type&;
+  using const_reference       = const value_type&;
+  using pointer               = std::allocator_traits<Allocator>::pointer;
+  using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
+  using iterator              =       iter;
+  using const_iterator        = const_iter;
+  using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   struct node {
@@ -34,34 +35,70 @@ struct list {
     node      *prev_node;
   };
 
-  struct iter {
-
-    using iterator_category = std::bidirectional_iterator_tag;
+  struct iter
+  {
+    using difference_type   = std::ptrdiff_t;
     using value_type        = list::value_type;
-    using difference_type   = ptrdiff_t;
-    using reference         = const value_type&;
-    using pointer           = const value_type*;
+    using reference         = value_type&;
+    using pointer           = value_type*;
+    using iterator_category = std::bidirectional_iterator_tag;
 
-    constexpr reference operator*()  { return curr_node->value;  }
-    constexpr iter&     operator++()    {        // pre-increment
+    constexpr reference operator*()     { return curr_node->value;  }
+    constexpr auto&     operator++()    {        // pre-increment
       curr_node = curr_node->next_node;
       return *this;
     }
-    constexpr iter      operator++(int) {        // post-increment
+    constexpr auto      operator++(int) {        // post-increment
       iter tmp(curr_node);
       ++(*this);
       return tmp; 
     }
-    constexpr iter&     operator--()    {        // pre-decrement
+    constexpr auto&     operator--()    {        // pre-decrement
       curr_node = curr_node->prev_node;
       return *this;
     }
-    constexpr iter      operator--(int) {        // post-decrement
+    constexpr auto      operator--(int) {        // post-decrement
       iter tmp(curr_node);
       --(*this);
       return tmp; 
     }
     constexpr bool      operator==(const iter &other) {
+      return this->curr_node == other.curr_node;
+    }
+    
+    node *curr_node;
+  };
+
+  struct const_iter
+  {
+    using difference_type   = std::ptrdiff_t;
+    using value_type        = list::value_type;
+    using reference         = const value_type&;
+    using pointer           = const value_type*;
+    using iterator_category = std::bidirectional_iterator_tag;
+
+    constexpr const_iter(      node  *n) : curr_node(n)            {}
+    constexpr const_iter(const iter &it) : curr_node(it.curr_node) {}
+    constexpr reference operator*()     { return curr_node->value;  }
+    constexpr auto&     operator++()    {        // pre-increment
+      curr_node = curr_node->next_node;
+      return *this;
+    }
+    constexpr auto      operator++(int) {        // post-increment
+      iter tmp(curr_node);
+      ++(*this);
+      return tmp; 
+    }
+    constexpr auto&     operator--()    {        // pre-decrement
+      curr_node = curr_node->prev_node;
+      return *this;
+    }
+    constexpr auto      operator--(int) {        // post-decrement
+      iter tmp(curr_node);
+      --(*this);
+      return tmp; 
+    }
+    constexpr bool      operator==(const const_iter &other) {
       return this->curr_node == other.curr_node;
     }
     

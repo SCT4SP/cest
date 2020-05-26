@@ -4,12 +4,14 @@
 #include "cest/iterator.hpp"
 #include "cest/vector.hpp"
 #include "cest/forward_list.hpp"
+#include "cest/list.hpp"
 #include "cest/set.hpp"
 #include "cest/map.hpp"
 #include <cassert>
 #include <iterator>
 #include <vector>
 #include <forward_list>
+#include <list>
 #include <set>
 #include <map>
 
@@ -63,6 +65,7 @@ void iterator_tests()
   static_assert(static_iterator_test<std::forward_list<int>,forward_list<int>>());
   static_assert(static_iterator_test<std::set<int>,set<int>>());
   static_assert(static_iterator_test<std::map<int,char>,map<int,char>>());
+  static_assert(static_iterator_test<std::list<int>,list<int>>());
 #endif
 
   assert(iterator_test1<std::vector>());

@@ -26,9 +26,9 @@ struct forward_list {
   using iterator        =       iter;
   using const_iterator  = const_iter;
 
-  struct        node_base { node_base *next = nullptr; };
+  struct        node_base { node_base* next = nullptr; };
   struct node : node_base {
-    constexpr node(const value_type &v, node_base *n = nullptr)
+    constexpr node(const value_type &v, node_base* n = nullptr)
                                                   : node_base(n), value(v) {}
     value_type value;
   };
@@ -53,11 +53,11 @@ struct forward_list {
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const iter &other) {
+    constexpr bool      operator==(const iter& other) {
       return m_node == other.m_node;
     }
 
-    node_base *m_node;
+    node_base* m_node;
   };
 
   struct const_iter

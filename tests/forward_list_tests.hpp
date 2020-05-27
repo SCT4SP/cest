@@ -31,14 +31,17 @@ constexpr auto forward_list_test4() {
   FL<int> l;
   l.push_front(1);
   l.push_front(2);
+  l.push_front(123);
   l.push_front(3);
+  l.erase_after(l.begin()); // 3 123 2 1 -> 3 2 1
+
   int sum1 = 0, sum2 = 0;
-  for (auto it = l.begin(); it != l.end(); it++)    // 1 + 2 + 3
+  for (auto it = l.begin(); it != l.end(); it++)    // 3 + 2 + 1
     sum1 += *it;
 
   using cit_t = typename FL<int>::const_iterator;
   cit_t it = l.cbegin();
-  for (; it != l.cend(); ++it) // 1 + 2 + 3
+  for (; it != l.cend(); ++it) // 3 + 2 + 1
     sum2 += *it;
 
   bool b1 = it == l.end();
@@ -47,11 +50,34 @@ constexpr auto forward_list_test4() {
 }
 
 template <template <typename...> typename FL>
+constexpr auto forward_list_test5() {
+  FL<int> *p1 = new FL<int>;
+  FL<int> *p2 = new FL<int>;
+
+  int a = 17, b = 18;
+  p1->push_front(b);
+  p1->push_front(a);
+
+  FL<int> l(*p1); // copy ctor
+  *p2 = *p1;      // copy assignment
+
+  bool b1 = a == p1->front();
+  bool b2 = a == p2->front();
+  bool b3 = a ==   l.front();
+
+  delete p1;
+  delete p2;
+
+  return std::tuple{b1&&b2&&b3};
+}
+
+template <template <typename...> typename FL>
 constexpr void rt_forward_list_tests() {
          assert(forward_list_test1<FL>() == 0);
          assert(forward_list_test2<FL>() == 42);
          assert(forward_list_test3<FL>() == 1);
          assert(forward_list_test4<FL>() == (std::tuple{6,6,true,true}));
+         assert(forward_list_test5<FL>() == (std::tuple{true}));
 }
 
 template <template <typename...> typename FL>
@@ -61,6 +87,7 @@ constexpr void ct_forward_list_tests() {
   static_assert(forward_list_test2<FL>() == 42);
   static_assert(forward_list_test3<FL>() == 1);
   static_assert(forward_list_test4<FL>() == std::tuple{6,6,true,true});
+  static_assert(forward_list_test5<FL>() == std::tuple{true});
 #endif
 }
 

@@ -27,7 +27,11 @@ struct forward_list {
   using const_iterator  = const_iter;
 
   struct        node_base { node_base *next = nullptr; };
-  struct node : node_base { value_type value;          };
+  struct node : node_base {
+    constexpr node(const value_type &v, node_base *n = nullptr)
+                                                  : node_base(n), value(v) {}
+    value_type value;
+  };
 
   struct iter
   {
@@ -87,31 +91,31 @@ struct forward_list {
     node_base *m_node;
   };
 
-  constexpr forward_list() { m_front.next = nullptr; }
-  constexpr forward_list(const forward_list& x) : m_front()
+  constexpr forward_list() = default;
+  constexpr forward_list(const forward_list& x)
   {
     const node_base* from = &x.m_front;
           node_base*   to = &this->m_front;
     while (from->next) {
       const node *nextf = static_cast<node*>(from->next);
-      to->next = new node{nullptr,*nextf};
-      from = from->next;
-        to =   to->next;
+      to->next = std::construct_at(m_node_alloc.allocate(1), nextf->value);
+      from     = from->next;
+        to     =   to->next;
     }
   }
 
-  constexpr forward_list& operator=(const forward_list& x) {
-    if (&x != this) { // test this
-      forward_list tmp(x);
-      this->swap(tmp);
-    }
+  constexpr forward_list& operator=(const forward_list& x)
+  {
+    forward_list tmp(x);
+    this->swap(tmp);
     return *this;
   }
 
-  constexpr ~forward_list() {
-    node_base *p = m_front.next;
+  constexpr ~forward_list()
+  {
+    node_base* p = m_front.next;
     while (p) {
-      node *tmp = static_cast<node*>(p);
+      node* tmp = static_cast<node*>(p);
       p = p->next;
       m_node_alloc.deallocate(tmp, 1);
     }
@@ -122,37 +126,33 @@ struct forward_list {
   }
 
   constexpr allocator_type get_allocator() const noexcept { return m_alloc;   }
-  constexpr iterator       begin()        noexcept { return {m_front.next};   }
-  constexpr const_iterator begin()  const noexcept { return {m_front.next};   }
+  constexpr iterator        begin()       noexcept { return {m_front.next};   }
+  constexpr const_iterator  begin() const noexcept { return {m_front.next};   }
   constexpr const_iterator cbegin() const noexcept { return {m_front.next};   }
-  constexpr iterator       end()          noexcept { return {nullptr};        }
-  constexpr const_iterator end()    const noexcept { return {nullptr};        }
-  constexpr const_iterator cend()   const noexcept { return {nullptr};        }
-  constexpr iterator       before_begin() noexcept { return {&m_front};       }
+  constexpr iterator          end()       noexcept { return {nullptr};        }
+  constexpr const_iterator    end() const noexcept { return {nullptr};        }
+  constexpr const_iterator   cend() const noexcept { return {nullptr};        }
+  constexpr iterator before_begin()       noexcept { return {&m_front};       }
 
   [[nodiscard]] bool empty()        const noexcept { return begin() == end(); }
 
   constexpr iterator insert_after(iterator it, const T& value) {
-    node *new_node  = m_node_alloc.allocate(1);
-    new_node->next  = it.m_node->next;
-    new_node->value = value;
-    it.m_node->next = new_node;
-    return {new_node};
+    node* p = m_node_alloc.allocate(1);
+    it.m_node->next = std::construct_at(p,           value,  it.m_node->next);
+    return {p};
   }
 
-  constexpr iterator insert_after(iterator it, T&& value) {
-    node *new_node  = m_node_alloc.allocate(1);
-    new_node->next  = it.m_node->next;
-    new_node->value = std::move(value);
-    it.m_node->next = new_node;
-    return {new_node};
+  constexpr iterator insert_after(iterator it,      T&& value) {
+    node* p  = m_node_alloc.allocate(1);
+    it.m_node->next = std::construct_at(p, std::move(value), it.m_node->next);
+    return {p};
   }
 
   constexpr iterator erase_after(iterator it) {
-    node* p = static_cast<node*>(it.node->next);
-    it.node->next = p->next;
-    delete *p;
-    return {it.node->next};
+    node* p = static_cast<node*>(it.m_node->next);
+    it.m_node->next = p->next;
+    m_node_alloc.deallocate(p, 1);
+    return {it.m_node->next};
   }
 
   constexpr void push_front(const value_type &value) {
@@ -168,7 +168,7 @@ struct forward_list {
   }
 
   constexpr const_reference front() const   {
-    return static_cast<node *>(m_front.next)->value;
+    return static_cast<node*>(m_front.next)->value;
   }
 
   node_base m_front;

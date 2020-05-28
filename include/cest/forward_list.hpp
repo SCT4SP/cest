@@ -53,11 +53,11 @@ struct forward_list {
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const iter& other) {
-      return m_node == other.m_node;
+    constexpr bool      operator==(const iter& rhs) {
+      return m_node == rhs.m_node;
     }
 
-    node_base* m_node;
+    node_base* m_node = nullptr;
   };
 
   struct const_iter
@@ -68,12 +68,11 @@ struct forward_list {
     using pointer           = const value_type*;
     using iterator_category = std::forward_iterator_tag;
 
-    constexpr const_iter(node_base  *n)  : m_node(n)         {}
-
-    constexpr const_iter(const iter &it) : m_node(it.m_node) {}
+    constexpr const_iter(const node_base *n) : m_node(n)         {}
+    constexpr const_iter(const iter&     it) : m_node(it.m_node) {}
 
     constexpr reference operator*() const {
-      return static_cast<node*>(m_node)->value;
+      return static_cast<const node*>(m_node)->value;
     }
 
     constexpr auto&     operator++()    {        // pre-increment
@@ -84,11 +83,11 @@ struct forward_list {
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const const_iter &other) {
-      return m_node == other.m_node;
+    constexpr bool      operator==(const const_iter &rhs) {
+      return m_node == rhs.m_node;
     }
 
-    node_base *m_node;
+    const node_base *m_node = nullptr;
   };
 
   constexpr forward_list() = default;
@@ -134,25 +133,26 @@ struct forward_list {
   constexpr const_iterator   cend() const noexcept { return {nullptr};        }
   constexpr iterator before_begin()       noexcept { return {&m_front};       }
 
-  [[nodiscard]] bool empty()        const noexcept { return begin() == end(); }
+  [[nodiscard]]
+  constexpr bool            empty() const noexcept { return begin() == end(); }
 
-  constexpr iterator insert_after(iterator it, const T& value) {
+  constexpr iterator insert_after(iterator pos, const value_type& value) {
     node* p = m_node_alloc.allocate(1);
-    it.m_node->next = std::construct_at(p,           value,  it.m_node->next);
+    pos.m_node->next = std::construct_at(p,           value,  pos.m_node->next);
     return {p};
   }
 
-  constexpr iterator insert_after(iterator it,      T&& value) {
+  constexpr iterator insert_after(iterator pos,      value_type&& value) {
     node* p  = m_node_alloc.allocate(1);
-    it.m_node->next = std::construct_at(p, std::move(value), it.m_node->next);
+    pos.m_node->next = std::construct_at(p, std::move(value), pos.m_node->next);
     return {p};
   }
 
-  constexpr iterator erase_after(iterator it) {
-    node* p = static_cast<node*>(it.m_node->next);
-    it.m_node->next = p->next;
+  constexpr iterator erase_after(iterator pos) {
+    node* p = static_cast<node*>(pos.m_node->next);
+    pos.m_node->next = p->next;
     m_node_alloc.deallocate(p, 1);
-    return {it.m_node->next};
+    return {pos.m_node->next};
   }
 
   constexpr void push_front(const value_type &value) {

@@ -8,7 +8,7 @@
 template <template <typename...> typename FL>
 constexpr auto forward_list_test1() {
   FL<int> l;
-  return 0;
+  return l.empty();
 }
 
 template <template <typename...> typename FL>
@@ -29,11 +29,11 @@ constexpr auto forward_list_test3() {
 template <template <typename...> typename FL>
 constexpr auto forward_list_test4() {
   FL<int> l;
-  l.push_front(1);
-  l.push_front(2);
-  l.push_front(123);
-  l.push_front(3);
-  l.erase_after(l.begin()); // 3 123 2 1 -> 3 2 1
+  l.insert_after(l.before_begin(),123);  // l.begin() here is an error
+  l.insert_after(l.begin(),1); // 123     -> 123 1
+  l.push_front(2);             // 123 1   -> 2 123 1
+  l.erase_after(l.begin());    // 2 123 1 -> 2 1
+  l.insert_after(l.before_begin(),3); // same as l.push_front(3)
 
   int sum1 = 0, sum2 = 0;
   for (auto it = l.begin(); it != l.end(); it++)    // 3 + 2 + 1
@@ -46,7 +46,7 @@ constexpr auto forward_list_test4() {
 
   bool b1 = it == l.end();
   bool b2 = l.end() == it;
-  return std::tuple{sum1,sum2,b1,b2};
+  return std::tuple{l.front(),sum1,sum2,b1,b2};
 }
 
 template <template <typename...> typename FL>
@@ -73,20 +73,20 @@ constexpr auto forward_list_test5() {
 
 template <template <typename...> typename FL>
 constexpr void rt_forward_list_tests() {
-         assert(forward_list_test1<FL>() == 0);
+         assert(forward_list_test1<FL>() == true);
          assert(forward_list_test2<FL>() == 42);
          assert(forward_list_test3<FL>() == 1);
-         assert(forward_list_test4<FL>() == (std::tuple{6,6,true,true}));
+         assert(forward_list_test4<FL>() == (std::tuple{3,6,6,true,true}));
          assert(forward_list_test5<FL>() == (std::tuple{true}));
 }
 
 template <template <typename...> typename FL>
 constexpr void ct_forward_list_tests() {
 #ifndef NO_STATIC_TESTS
-  static_assert(forward_list_test1<FL>() == 0);
+  static_assert(forward_list_test1<FL>() == true);
   static_assert(forward_list_test2<FL>() == 42);
   static_assert(forward_list_test3<FL>() == 1);
-  static_assert(forward_list_test4<FL>() == std::tuple{6,6,true,true});
+  static_assert(forward_list_test4<FL>() == std::tuple{3,6,6,true,true});
   static_assert(forward_list_test5<FL>() == std::tuple{true});
 #endif
 }
@@ -94,8 +94,8 @@ constexpr void ct_forward_list_tests() {
 void forward_list_tests()
 {
   ct_forward_list_tests<cest::forward_list>();
-  rt_forward_list_tests<cest::forward_list>();
   rt_forward_list_tests<std::forward_list>();
+  rt_forward_list_tests<cest::forward_list>();
 }
 
 #endif // _CEST_FORWARD_LIST_TESTS_HPP_

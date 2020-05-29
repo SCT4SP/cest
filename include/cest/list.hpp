@@ -29,7 +29,7 @@ struct list {
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  struct node_base { node_base* next = this; node_base* prev = this; };
+  struct        node_base { node_base* next = this; node_base* prev = this; };
   struct node : node_base {
     constexpr node(const value_type &v) : value(v) {}
     constexpr node(const value_type &v, node_base* n, node_base* p)

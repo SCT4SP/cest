@@ -12,13 +12,14 @@ constexpr auto list_test1()
   L l;
   auto s0 = l.size();
   auto b0 = l.empty();
-  int x = 123;
+/*  int x = 123;
   l.insert(l.begin(), x);
   l.insert(l.begin(), 42);
   l.push_front(x);
   l.push_front(42);
   l.push_back(x);
   l.push_back(42);
+*/
 
 #if 0
   auto x = l.front();
@@ -88,7 +89,7 @@ void list_tests()
 #endif
 
   assert(list_test1< std::list<int>>() == tup1);
-  assert(list_test1<cest::list<int>>() == tup1);
+//  assert(list_test1<cest::list<int>>() == tup1);
 //  assert(list_test2< std::list<int>>() == tup2);
 //  assert(list_test2<cest::list<int>>() == tup2);
 //  assert(list_test3< std::list<int>>() == tup3);

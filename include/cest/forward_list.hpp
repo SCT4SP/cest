@@ -41,19 +41,23 @@ struct forward_list {
     using pointer           = value_type*;
     using iterator_category = std::forward_iterator_tag;
 
-    constexpr reference operator*() const {
-      return static_cast<node*>(m_node)->value;
+    constexpr reference operator*()           const noexcept {
+      return  static_cast<node*>(m_node)->value;
     }
 
-    constexpr auto&     operator++()    {        // pre-increment
+    constexpr pointer   operator->()          const noexcept {
+      return &static_cast<node*>(m_node)->value;
+    }
+
+    constexpr auto&     operator++()                noexcept { // pre-increment
       m_node = m_node->next; return *this;
     }
 
-    constexpr auto      operator++(int) {        // post-increment
+    constexpr auto      operator++(int)             noexcept { // post-increment
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const iter& rhs) {
+    constexpr bool      operator==(const iter& rhs) noexcept {
       return m_node == rhs.m_node;
     }
 
@@ -71,19 +75,23 @@ struct forward_list {
     constexpr const_iter(const node_base *n) : m_node(n)         {}
     constexpr const_iter(const iter&     it) : m_node(it.m_node) {}
 
-    constexpr reference operator*() const {
-      return static_cast<const node*>(m_node)->value;
+    constexpr reference operator*()                 const noexcept {
+      return  static_cast<const node*>(m_node)->value;
     }
 
-    constexpr auto&     operator++()    {        // pre-increment
+    constexpr pointer   operator->()                const noexcept {
+      return &static_cast<const node*>(m_node)->value;
+    }
+
+    constexpr auto&     operator++()                      noexcept {
       m_node = m_node->next; return *this;
     }
 
-    constexpr auto      operator++(int) {        // post-increment
+    constexpr auto      operator++(int)                   noexcept {
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const const_iter &rhs) {
+    constexpr bool      operator==(const const_iter& rhs) noexcept {
       return m_node == rhs.m_node;
     }
 
@@ -124,7 +132,9 @@ struct forward_list {
     std::swap(this->m_front.next, x.m_front.next);
   }
 
-  constexpr allocator_type get_allocator() const noexcept { return m_alloc;   }
+  constexpr allocator_type get_allocator() const noexcept {
+    return m_node_alloc;
+  }
   constexpr iterator        begin()       noexcept { return {m_front.next};   }
   constexpr const_iterator  begin() const noexcept { return {m_front.next};   }
   constexpr const_iterator cbegin() const noexcept { return {m_front.next};   }
@@ -148,11 +158,16 @@ struct forward_list {
     return {p};
   }
 
-  constexpr iterator erase_after(iterator pos) {
-    node* p = static_cast<node*>(pos.m_node->next);
-    pos.m_node->next = p->next;
-    m_node_alloc.deallocate(p, 1);
-    return {pos.m_node->next};
+  constexpr void clear() noexcept {
+  }
+
+  constexpr iterator erase_after(const_iterator pos) {
+    node_base* p = const_cast<node_base*>(pos.m_node);
+    node*   curr = static_cast<node*>(p->next);
+    p->next = curr->next;
+    std::destroy_at(&curr->value);
+    m_node_alloc.deallocate(curr, 1);
+    return {p->next};
   }
 
   constexpr void push_front(const value_type &value) {
@@ -172,7 +187,6 @@ struct forward_list {
   }
 
   node_base m_front;
-  allocator_type m_alloc;
   std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 

@@ -161,13 +161,56 @@ struct forward_list {
   constexpr void clear() noexcept {
   }
 
-  constexpr iterator erase_after(const_iterator pos) {
+  constexpr iterator erase_after(const_iterator first, const_iterator last)
+  {
+/*{
+    node_base* p = m_front.next;
+    while (p) {
+      node* tmp = static_cast<node*>(p);
+      p = p->next;
+      m_node_alloc.deallocate(tmp, 1);
+    }
+}*/
+
+    node_base* p = const_cast<node_base*>(first.m_node);
+    node_base* l = const_cast<node_base*>(last.m_node);
+
+    node* curr = static_cast<node*>(p->next);
+    while (curr != l) {
+      node* tmp  = curr;
+      node* curr = static_cast<node*>(curr->next);
+      std::destroy_at(&tmp->value);
+      m_node_alloc.deallocate(tmp, 1);
+    }
+
+    p->next = l;
+    return {l};
+  }
+
+  constexpr iterator erase_after(const_iterator pos)
+  {
     node_base* p = const_cast<node_base*>(pos.m_node);
     node*   curr = static_cast<node*>(p->next);
+
     p->next = curr->next;
     std::destroy_at(&curr->value);
     m_node_alloc.deallocate(curr, 1);
+
     return {p->next};
+
+
+//    const node_base *curr = pos.m_node->next;
+//    std::destroy_at(&curr->value);
+//    m_node_alloc.deallocate(curr, 1);
+//    return end();
+
+//    ++pos;
+//    std::destroy_at(pos.operator->());
+//return end();
+
+//    const node* curr = static_cast<const node *>(pos.m_node);
+//    m_node_alloc.deallocate(curr, 1);
+//    return end();
   }
 
   constexpr void push_front(const value_type &value) {

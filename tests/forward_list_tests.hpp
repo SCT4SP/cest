@@ -86,12 +86,10 @@ constexpr auto forward_list_test6() {
   Foo *fp = fl.get_allocator().allocate(1);
   fl.get_allocator().deallocate(fp,1);
 
-/*  Foo o{3,4};
+  Foo o{3,4};
   fl.push_front(o);
   fl.erase_after(fl.before_begin(), fl.end()); // remove all elements
   bool b3 = fl.empty();
-*/
-
 
 /*  fl.erase_after(fl.before_begin(), fl.end()); // do it again!
   bool b4 = fl.empty();

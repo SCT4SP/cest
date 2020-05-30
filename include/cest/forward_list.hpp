@@ -7,6 +7,26 @@
 
 namespace cest {
 
+template <typename T, typename U>
+constexpr T const_cast2(U *p) {
+  return p ? const_cast<T>(p) : nullptr;
+}
+
+template <typename T, typename U>
+constexpr T const_cast2(U &&x) {
+  return const_cast<T>(std::forward<decltype(x)>(x));
+}
+
+template <typename T, typename U>
+constexpr T static_cast2(U *p) {
+  return p ? static_cast<T>(p) : nullptr;
+}
+
+template <typename T, typename U>
+constexpr T static_cast2(U &&x) {
+  return static_cast<T>(std::forward<decltype(x)>(x));
+}
+
 template <
   class T,
   class Allocator = std::allocator<T>
@@ -173,12 +193,12 @@ struct forward_list {
 }*/
 
     node_base* p = const_cast<node_base*>(first.m_node);
-    node_base* l = const_cast<node_base*>(last.m_node);
+    node_base* l = const_cast2<node_base*>(last.m_node);
 
     node* curr = static_cast<node*>(p->next);
     while (curr != l) {
       node* tmp  = curr;
-      node* curr = static_cast<node*>(curr->next);
+      curr = static_cast2<node*>(curr->next);
       std::destroy_at(&tmp->value);
       m_node_alloc.deallocate(tmp, 1);
     }

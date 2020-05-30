@@ -91,15 +91,14 @@ constexpr auto forward_list_test6() {
   fl.erase_after(fl.before_begin(), fl.end()); // remove all elements
   bool b3 = fl.empty();
 
-/*  fl.erase_after(fl.before_begin(), fl.end()); // do it again!
+  fl.erase_after(fl.before_begin(), fl.end()); // do it again!
   bool b4 = fl.empty();
 
   fl.push_front(Foo{1,2});
   fl.clear();
   bool b5 = fl.empty();
+
   return b1 && b2 && b3 && b4 && b5;
-*/
-  return b1 && b2;// && b3;
 }
 
 template <template <typename...> typename FL>

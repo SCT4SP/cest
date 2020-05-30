@@ -138,15 +138,7 @@ struct forward_list {
     return *this;
   }
 
-  constexpr ~forward_list()
-  {
-    node_base* p = m_front.next;
-    while (p) {
-      node* tmp = static_cast<node*>(p);
-      p = p->next;
-      m_node_alloc.deallocate(tmp, 1);
-    }
-  }
+  constexpr ~forward_list() { erase_after(before_begin(), end()); }
 
   constexpr void swap(forward_list& x) {
     std::swap(this->m_front.next, x.m_front.next);
@@ -178,24 +170,14 @@ struct forward_list {
     return {p};
   }
 
-  constexpr void clear() noexcept {
-  }
+  constexpr void clear() noexcept { erase_after(before_begin(), end()); }
 
   constexpr iterator erase_after(const_iterator first, const_iterator last)
   {
-/*{
-    node_base* p = m_front.next;
-    while (p) {
-      node* tmp = static_cast<node*>(p);
-      p = p->next;
-      m_node_alloc.deallocate(tmp, 1);
-    }
-}*/
-
     node_base* p = const_cast<node_base*>(first.m_node);
     node_base* l = const_cast2<node_base*>(last.m_node);
 
-    node* curr = static_cast<node*>(p->next);
+    node* curr = static_cast2<node*>(p->next);
     while (curr != l) {
       node* tmp  = curr;
       curr = static_cast2<node*>(curr->next);
@@ -217,20 +199,6 @@ struct forward_list {
     m_node_alloc.deallocate(curr, 1);
 
     return {p->next};
-
-
-//    const node_base *curr = pos.m_node->next;
-//    std::destroy_at(&curr->value);
-//    m_node_alloc.deallocate(curr, 1);
-//    return end();
-
-//    ++pos;
-//    std::destroy_at(pos.operator->());
-//return end();
-
-//    const node* curr = static_cast<const node *>(pos.m_node);
-//    m_node_alloc.deallocate(curr, 1);
-//    return end();
   }
 
   constexpr void push_front(const value_type &value) {

@@ -69,11 +69,11 @@ struct forward_list {
       return &static_cast<node*>(m_node)->value;
     }
 
-    constexpr auto&     operator++()                noexcept { // pre-increment
+    constexpr auto&     operator++()                noexcept { // pre-incr
       m_node = m_node->next; return *this;
     }
 
-    constexpr auto      operator++(int)             noexcept { // post-increment
+    constexpr auto      operator++(int)             noexcept { // post-incr
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
@@ -158,16 +158,20 @@ struct forward_list {
   [[nodiscard]]
   constexpr bool            empty() const noexcept { return begin() == end(); }
 
-  constexpr iterator insert_after(iterator pos, const value_type& value) {
-    node* p = m_node_alloc.allocate(1);
-    pos.m_node->next = std::construct_at(p,           value,  pos.m_node->next);
-    return {p};
+  constexpr
+  iterator insert_after(const_iterator pos, const value_type& value) {
+    node_base*   p = const_cast<node_base*>(pos.m_node);
+    node* new_node = m_node_alloc.allocate(1);
+    p->next        = std::construct_at(new_node,           value, p->next);
+    return {new_node};
   }
 
-  constexpr iterator insert_after(iterator pos,      value_type&& value) {
-    node* p  = m_node_alloc.allocate(1);
-    pos.m_node->next = std::construct_at(p, std::move(value), pos.m_node->next);
-    return {p};
+  constexpr
+  iterator insert_after(const_iterator pos,      value_type&& value) {
+    node_base*   p  = const_cast<node_base*>(pos.m_node);
+    node* new_node  = m_node_alloc.allocate(1);
+    p->next         = std::construct_at(new_node, std::move(value), p->next);
+    return {new_node};
   }
 
   constexpr void clear() noexcept { erase_after(before_begin(), end()); }

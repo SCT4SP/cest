@@ -45,28 +45,32 @@ struct list {
     using pointer           = value_type*;
     using iterator_category = std::bidirectional_iterator_tag;
 
-    constexpr reference operator*() const {
+    constexpr reference operator*() const noexcept {
       return static_cast<node*>(m_node)->value;
     }
 
-    constexpr auto&     operator++()    {        // pre-increment
+    constexpr pointer   operator->()          const noexcept {
+      return &static_cast<node*>(m_node)->value;
+    }
+
+    constexpr auto&     operator++()                noexcept { // pre-incr
       m_node = m_node->next; return *this;
     }
 
-    constexpr auto      operator++(int) {        // post-increment
+    constexpr auto      operator++(int)             noexcept { // post-incr
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr auto&     operator--()    {        // pre-decrement
+    constexpr auto&     operator--()                noexcept {
       m_node = m_node->prev; return *this;
     }
 
-    constexpr auto      operator--(int) {        // post-decrement
+    constexpr auto      operator--(int)             noexcept {
       auto tmp(m_node); --(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const iter& other) {
-      return m_node == other.m_node;
+    constexpr bool      operator==(const iter& rhs) noexcept {
+      return m_node == rhs.m_node;
     }
     
     node_base* m_node = nullptr;
@@ -83,28 +87,32 @@ struct list {
     constexpr const_iter(const node_base *n) : m_node(n)         {}
     constexpr const_iter(const iter&     it) : m_node(it.m_node) {}
     
-    constexpr reference operator*() const {
+    constexpr reference operator*()                 const noexcept {
       return static_cast<const node*>(m_node)->value;
     }
 
-    constexpr auto&     operator++()    {        // pre-increment
+    constexpr pointer   operator->()                const noexcept {
+      return &static_cast<const node*>(m_node)->value;
+    }
+
+    constexpr auto&     operator++()                      noexcept {
       m_node = m_node->next; return *this;
     }
 
-    constexpr auto      operator++(int) {        // post-increment
+    constexpr auto      operator++(int)                   noexcept {
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr auto&     operator--()    {        // pre-decrement
+    constexpr auto&     operator--()                      noexcept {
       m_node = m_node->prev; return *this;
     }
 
-    constexpr auto      operator--(int) {        // post-decrement
+    constexpr auto      operator--(int)                   noexcept {
       auto tmp(m_node); --(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const const_iter& other) {
-      return m_node == other.m_node;
+    constexpr bool      operator==(const const_iter& rhs) noexcept {
+      return m_node == rhs.m_node;
     }
     
     const node_base* m_node = nullptr;
@@ -112,6 +120,15 @@ struct list {
   
   constexpr  list() = default;
   constexpr ~list() {
+    node_base* curr = m_front.next;
+    while (curr != &m_front) {
+      node* tmp = static_cast<node*>(curr);
+      curr = curr->next;
+      std::destroy_at(&tmp->value);
+      m_node_alloc.deallocate(tmp, 1);
+    }
+
+    
     /*node *curr_node = m_front;
     while (curr_node) {
       node *next_node = curr_node->next_node;
@@ -120,13 +137,13 @@ struct list {
       curr_node = next_node;
     };*/
 
-    node_base* p = m_front.next;
+    /*node_base* p = m_front.next;
     while (p) {
       node* tmp = static_cast<node*>(p);
       p = p->next;
       //std::destroy_at(tmp);
       m_node_alloc.deallocate(tmp, 1);
-    }
+    }*/
   }
 
   constexpr allocator_type get_allocator() const   { return m_alloc;          }
@@ -207,16 +224,28 @@ struct list {
   constexpr void push_front(value_type&& value)      {
   }
   constexpr iterator insert(const_iterator pos, const T& value) {
+    node_base*   p = const_cast<node_base*>(pos.m_node);
+    node* new_node = m_node_alloc.allocate(1);
+    p->prev        = std::construct_at(new_node, value, new_node, p->prev);
+    return {new_node};
+//    node* p = m_node_alloc.allocate(1);
+//    pos.m_node->next = std::construct_at(p, value, pos.m_node->next, pos.m_node->prev);
+//    return {p};
+
 //    node *new_node = m_node_alloc.allocate(1);
 //    iterator before_begin{&m_front};
     //insert_after(before_begin(), value);
 //    node* p = m_node_alloc.allocate(1);
 //    pos.m_node->prev = std::construct_at(p, value, pos.m_node->next, pos.m_node->prev);
 //    return {p};
-    return begin();
+//    return begin();
   }
   
   constexpr iterator insert(const_iterator pos, value_type&& value) {
+    node_base*   p = const_cast<node_base*>(pos.m_node);
+    node* new_node = m_node_alloc.allocate(1);
+    p->prev = std::construct_at(new_node, std::move(value), new_node, p->prev);
+    return {new_node};
 #if 0
     node *new_node = m_node_alloc.allocate(1);
     node *prev = pos.curr_node->prev_node;
@@ -231,7 +260,6 @@ struct list {
       
     return iter(new_node);
 #endif
-    return begin();
   }
 
 #if 0

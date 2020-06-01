@@ -226,7 +226,20 @@ struct list {
   constexpr iterator insert(const_iterator pos, const T& value) {
     node_base*   p = const_cast<node_base*>(pos.m_node);
     node* new_node = m_node_alloc.allocate(1);
-    p->prev        = std::construct_at(new_node, value, new_node, p->prev);
+//    p->prev        = std::construct_at(new_node, value, new_node, p->prev);
+    std::construct_at(new_node, value);//, new_node, p->prev);
+
+    // List_node_base::_M_hook
+    // __tmp->_M_hook(__position._M_const_cast()._M_node);
+//    this->_M_next = __position;
+//    this->_M_prev = __position->_M_prev;
+//    __position->_M_prev->_M_next = this;
+//    __position->_M_prev = this;
+    new_node->next = p;
+    new_node->prev = p->prev;
+    p->prev->next = new_node;
+    p->prev->prev = new_node;
+
     return {new_node};
 //    node* p = m_node_alloc.allocate(1);
 //    pos.m_node->next = std::construct_at(p, value, pos.m_node->next, pos.m_node->prev);

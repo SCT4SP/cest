@@ -13,8 +13,10 @@ constexpr auto list_test1()
   auto s0 = l.size();
   auto b0 = l.empty();
   int x = 123;
+  int y = 42;
   auto it0 = l.insert(l.begin(), x);
-  auto it1 = l.insert(l.begin(), 42);
+  auto it1 = l.insert(l.begin(), y);
+//  auto it1 = l.insert(l.begin(), 42);
 /*  l.push_front(x);
   l.push_front(42);
   l.push_back(x);
@@ -83,7 +85,7 @@ void list_tests()
   constexpr const auto tup3 = std::tuple{1,1,3};
 
 #ifndef NO_STATIC_TESTS
-//  static_assert(list_test1<cest::list<int>>() == tup1);
+  static_assert(list_test1<cest::list<int>>() == tup1);
 //  static_assert(list_test2<cest::list<int>>() == tup2);
 //  static_assert(list_test3<cest::list<int>>() == tup3);
 #endif

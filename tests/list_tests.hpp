@@ -12,11 +12,11 @@ constexpr auto list_test1()
   L l;
   auto s0 = l.size();
   auto b0 = l.empty();
-  int x = 123;
-  int y = 42;
+  const int x = 123;
   auto it0 = l.insert(l.begin(), x);
-  auto it1 = l.insert(l.begin(), y);
-//  auto it1 = l.insert(l.begin(), 42);
+  auto it1 = l.insert(l.begin(), 42);
+  auto it2 = l.insert(l.end(), 43);
+  auto bk  = l.back();
 /*  l.push_front(x);
   l.push_front(42);
   l.push_back(x);
@@ -29,7 +29,8 @@ constexpr auto list_test1()
   l.push_front(43);
   return std::tuple{x, s, l.front(), l.size()};
 #endif
-  return s0 == 0 && b0 && *it0 == x && *it1 == 42;
+  bool res = s0 == 0 && b0 && *it0 == x && *it1 == 42 && *it2 == 43 && bk == 43;
+  return res;
 }
 
 #if 0

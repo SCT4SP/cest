@@ -120,8 +120,8 @@ struct list {
   
   constexpr  list() = default;
   constexpr ~list() {
-    node_base* curr = m_front.next;
-    while (curr != &m_front) {
+    node_base* curr = m_node.next;
+    while (curr != &m_node) {
       node* tmp = static_cast<node*>(curr);
       curr = curr->next;
       std::destroy_at(&tmp->value);
@@ -129,7 +129,7 @@ struct list {
     }
 
     
-    /*node *curr_node = m_front;
+    /*node *curr_node = m_node;
     while (curr_node) {
       node *next_node = curr_node->next_node;
       std::destroy_at(curr_node);
@@ -137,7 +137,7 @@ struct list {
       curr_node = next_node;
     };*/
 
-    /*node_base* p = m_front.next;
+    /*node_base* p = m_node.next;
     while (p) {
       node* tmp = static_cast<node*>(p);
       p = p->next;
@@ -146,10 +146,12 @@ struct list {
     }*/
   }
 
-  constexpr allocator_type get_allocator() const   { return m_alloc;          }
+  constexpr allocator_type get_allocator() const noexcept {
+    return m_node_alloc;
+  }
   
-  constexpr       reference front()                { return *begin();   }
-  constexpr const_reference front() const          { return *begin();   }
+  constexpr       reference front()                { return *begin();        }
+  constexpr const_reference front() const          { return *begin();        }
 
   constexpr       reference back()                 {
 	        iterator tmp = end(); --tmp; return *tmp;
@@ -158,37 +160,27 @@ struct list {
 	  const_iterator tmp = end(); --tmp; return *tmp;
   }
   
-  /* Iterators */
-//constexpr       iterator  begin()       noexcept { return {m_front};        }
-//constexpr const_iterator  begin() const noexcept { return {m_front};        }
-//constexpr const_iterator cbegin() const noexcept { return {m_front};        }
+  constexpr iterator        begin()       noexcept { return {m_node.next};   }
+  constexpr const_iterator  begin() const noexcept { return {m_node.next};   }
+  constexpr const_iterator cbegin() const noexcept { return {m_node.next};   }
 
-  constexpr iterator        begin()       noexcept { return {m_front.next};   }
-  constexpr const_iterator  begin() const noexcept { return {m_front.next};   }
-  constexpr const_iterator cbegin() const noexcept { return {m_front.next};   }
-
-  constexpr       iterator    end()       noexcept { return {&m_front};       }
-  constexpr const_iterator    end() const noexcept { return {&m_front};       }
-  constexpr const_iterator   cend() const noexcept { return {&m_front};       }
+  constexpr       iterator    end()       noexcept { return {&m_node};       }
+  constexpr const_iterator    end() const noexcept { return {&m_node};       }
+  constexpr const_iterator   cend() const noexcept { return {&m_node};       }
   
   [[nodiscard]]
-  constexpr bool            empty() const noexcept { return begin() == end(); }
+  constexpr bool            empty() const noexcept { return m_size == 0;     }
   
-  constexpr size_type size() const noexcept { 
-    return std::distance(begin(), end());
-  }
+  constexpr size_type        size() const noexcept { return m_size;          }
   
-  // Borrowing a little from libcxx with the min between allocator max size and 
-  // difference_type
-  constexpr size_type max_size() const noexcept { 
-    return std::min<size_type>(
-             std::allocator_traits<Allocator>::max_size(m_alloc),
-             std::numeric_limits<difference_type>::max());
+  constexpr size_type    max_size() const noexcept {
+    return std::allocator_traits<decltype(m_node_alloc)>::
+             max_size(m_node_alloc);
   }
   
 #if 0
   constexpr void clear() noexcept {
-    node *curr_node = m_front;
+    node *curr_node = m_node;
     while (curr_node) {
       node *next_node = curr_node->next_node;
       std::destroy_at(curr_node);
@@ -196,7 +188,7 @@ struct list {
       curr_node = next_node;
     }
     
-    m_back = m_front = nullptr;
+    m_back = m_node = nullptr;
   }
 
   constexpr iterator insert(const_iterator pos, const T& value) {
@@ -206,8 +198,8 @@ struct list {
     std::construct_at(new_node, value, next, prev);
     next->prev_node = new_node;
     
-    if (next == m_front)
-      m_front = new_node;
+    if (next == m_node)
+      m_node = new_node;
     else 
       prev->next_node = new_node;
       
@@ -236,6 +228,7 @@ struct list {
     p->prev->next = new_node;
     p->prev       = new_node;
 
+    m_size++;
     return {new_node};
   }
   
@@ -251,6 +244,7 @@ struct list {
     p->prev->next = new_node;
     p->prev       = new_node;
 
+    m_size++;
     return {new_node};
   }
 
@@ -279,8 +273,8 @@ struct list {
                       prev);
     next->prev_node = new_node;
     
-    if (next == m_front)
-      m_front = new_node;
+    if (next == m_node)
+      m_node = new_node;
     else 
       prev->next_node = new_node;
 
@@ -310,10 +304,10 @@ struct list {
       ret = prev;
     } else if (next && !prev) { // front of list
       next->prev_node = nullptr;
-      m_front = next;
+      m_node = next;
       ret = next;
     } else { // empty list
-      m_back = m_front = nullptr;
+      m_back = m_node = nullptr;
     }
 
     std::destroy_at(tmp);
@@ -332,7 +326,7 @@ struct list {
       m_back->next_node = new_node;
       m_back = new_node;
     } else
-      m_front = m_back = new_node;
+      m_node = m_back = new_node;
   }
   
   // The difference between push_back and emplace new seems to be that one 
@@ -347,7 +341,7 @@ struct list {
       m_back->next_node = new_node;
       m_back = new_node;
     } else
-      m_front = m_back = new_node;
+      m_node = m_back = new_node;
   }
   
   template<class... Args>
@@ -360,7 +354,7 @@ struct list {
       m_back->next_node = new_node;
       m_back = new_node;
     } else
-      m_front = m_back = new_node;
+      m_node = m_back = new_node;
   }
 
   // TODO: Handle case where we pop off the last or second last element..  
@@ -373,7 +367,7 @@ struct list {
     } else { 
       // assumption that this is the last element in the list or somethings 
       // went wrong and we've lost a node
-      m_front = m_back = nullptr;
+      m_node = m_back = nullptr;
     }
     
     std::destroy_at(tmp);
@@ -382,51 +376,51 @@ struct list {
   
   constexpr void push_front(const T &value) {
     node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, value, m_front, nullptr);
+    std::construct_at(new_node, value, m_node, nullptr);
     
-    if (m_front) {
-      m_front->prev_node = new_node;
-      m_front = new_node;
+    if (m_node) {
+      m_node->prev_node = new_node;
+      m_node = new_node;
     } else
-      m_front = m_back = new_node;
+      m_node = m_back = new_node;
   }
   
   constexpr void push_front(T &&value)      {
     node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, std::move(value), m_front, nullptr);
+    std::construct_at(new_node, std::move(value), m_node, nullptr);
     
-    if (m_front) {
-      m_front->prev_node = new_node;
-      m_front = new_node;
+    if (m_node) {
+      m_node->prev_node = new_node;
+      m_node = new_node;
     } else
-      m_front = m_back = new_node;
+      m_node = m_back = new_node;
   }
 
   template<class... Args>
   constexpr reference emplace_front(Args&&... args) { 
     node *new_node = m_node_alloc.allocate(1);
     std::construct_at(new_node, value_type(std::forward<Args>(args)...), 
-                      m_front, nullptr);
-    m_front->prev_node = new_node;
-    m_front = new_node;
+                      m_node, nullptr);
+    m_node->prev_node = new_node;
+    m_node = new_node;
     
-    if (m_front) {
-      m_front->prev_node = new_node;
-      m_front = new_node;
+    if (m_node) {
+      m_node->prev_node = new_node;
+      m_node = new_node;
     } else
-      m_front = m_back = new_node;
+      m_node = m_back = new_node;
   }
   
   constexpr void pop_front() {
-    node* tmp = m_front;
+    node* tmp = m_node;
     
-    if (m_front->next_node) {
-      m_front = m_front->next_node;
-      m_front->prev_node = nullptr;
+    if (m_node->next_node) {
+      m_node = m_node->next_node;
+      m_node->prev_node = nullptr;
     } else
       // assumption that this is the last element in the list or somethings 
       // went wrong and we've lost a node
-      m_front = m_back = nullptr;
+      m_node = m_back = nullptr;
     
 
     std::destroy_at(tmp);
@@ -447,12 +441,9 @@ __list_imp<_Tp, _Alloc>::swap(__list_imp& __c)
   }
 #endif
   
-  node_base m_front;
-//  node *m_front = nullptr;
-//  node *m_back  = nullptr;
-  allocator_type m_alloc;
-  std::allocator_traits<allocator_type>::template 
-      rebind_alloc<node> m_node_alloc;
+  node_base m_node;
+  size_type m_size = 0;
+  std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
 } // namespace cest

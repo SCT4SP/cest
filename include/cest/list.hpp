@@ -119,32 +119,7 @@ struct list {
   };
   
   constexpr  list() = default;
-  constexpr ~list() {
-    node_base* curr = m_node.next;
-    while (curr != &m_node) {
-      node* tmp = static_cast<node*>(curr);
-      curr = curr->next;
-      std::destroy_at(&tmp->value);
-      m_node_alloc.deallocate(tmp, 1);
-    }
-
-    
-    /*node *curr_node = m_node;
-    while (curr_node) {
-      node *next_node = curr_node->next_node;
-      std::destroy_at(curr_node);
-      m_node_alloc.deallocate(curr_node, 1);
-      curr_node = next_node;
-    };*/
-
-    /*node_base* p = m_node.next;
-    while (p) {
-      node* tmp = static_cast<node*>(p);
-      p = p->next;
-      //std::destroy_at(tmp);
-      m_node_alloc.deallocate(tmp, 1);
-    }*/
-  }
+  constexpr ~list() { clear(); }
 
   constexpr allocator_type get_allocator() const noexcept {
     return m_node_alloc;
@@ -178,55 +153,43 @@ struct list {
              max_size(m_node_alloc);
   }
   
-#if 0
-  constexpr void clear() noexcept {
-    node *curr_node = m_node;
-    while (curr_node) {
-      node *next_node = curr_node->next_node;
-      std::destroy_at(curr_node);
-      m_node_alloc.deallocate(curr_node,1);
-      curr_node = next_node;
+  constexpr void clear() noexcept
+  {
+    node_base* curr = m_node.next;
+    while (curr != &m_node) {
+      node* tmp = static_cast<node*>(curr);
+      curr = curr->next;
+      std::destroy_at(&tmp->value);
+      m_node_alloc.deallocate(tmp, 1);
     }
     
-    m_back = m_node = nullptr;
+    m_node.prev = m_node.next = &m_node;
+    m_size = 0;
   }
 
-  constexpr iterator insert(const_iterator pos, const T& value) {
-    node *new_node = m_node_alloc.allocate(1);
-    node *prev = pos.curr_node->prev_node;
-    node *next = pos.curr_node;
-    std::construct_at(new_node, value, next, prev);
-    next->prev_node = new_node;
-    
-    if (next == m_node)
-      m_node = new_node;
-    else 
-      prev->next_node = new_node;
-      
-    return iter(new_node);
+  constexpr void push_back(const value_type &value)  { insert(end(), value);   }
+  constexpr void push_back(value_type&& value)       {
+    insert(end(), std::move(value));
   }
-#endif
-  constexpr void push_back(const value_type &value) {
-  }
-  constexpr void push_back(value_type&& value)      {
-  }
-  constexpr void push_front(const value_type& value) {
-  }
+  constexpr void push_front(const value_type& value) { insert(begin(), value); }
   
   constexpr void push_front(value_type&& value)      {
+    insert(begin(), std::move(value));
   }
 
   constexpr iterator insert(const_iterator pos, const T& value) {
     node_base*   p = const_cast<node_base*>(pos.m_node);
     node* new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, value);//, new_node, p->prev);
+    //std::construct_at(new_node, value);//, new_node, p->prev);
+    p->prev = p->prev->next = std::construct_at(new_node, value, p, p->prev);
 
     // List_node_base::_M_hook
     // __tmp->_M_hook(__position._M_const_cast()._M_node);
-    new_node->next = p;
+/*    new_node->next = p;
     new_node->prev = p->prev;
     p->prev->next = new_node;
     p->prev       = new_node;
+*/
 
     m_size++;
     return {new_node};
@@ -236,16 +199,38 @@ struct list {
     node_base*   p = const_cast<node_base*>(pos.m_node);
     node* new_node = m_node_alloc.allocate(1);
     //p->prev = std::construct_at(new_node, std::move(value), new_node, p->prev);
-    std::construct_at(new_node, std::move(value));//, new_node, p->prev);
+    //std::construct_at(new_node, std::move(value));//, new_node, p->prev);
+    p->prev = p->prev->next =
+      std::construct_at(new_node, std::move(value), p, p->prev);
 
     // List_node_base::_M_hook
-    new_node->next = p;
+    /*new_node->next = p;
     new_node->prev = p->prev;
     p->prev->next = new_node;
     p->prev       = new_node;
+*/
 
     m_size++;
     return {new_node};
+  }
+
+  constexpr iterator erase(const_iterator pos)
+  {
+    m_size--;
+
+    iterator ret{pos.m_node->next};
+    node_base* p = const_cast<node_base*>(pos.m_node);
+
+    node_base* const next_node = p->next;
+    node_base* const prev_node = p->prev;
+    prev_node->next = next_node;
+    next_node->prev = prev_node;
+
+    node* tmp = static_cast<node*>(p);
+    std::destroy_at(&tmp->value);
+    m_node_alloc.deallocate(tmp, 1);
+
+    return ret;
   }
 
 #if 0

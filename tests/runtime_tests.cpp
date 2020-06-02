@@ -8,7 +8,7 @@
 #include "map_tests.hpp"
 #include "string_tests.hpp"
 #include "iterator_tests.hpp"
-//#include "algorithm_tests.hpp"
+#include "algorithm_tests.hpp"
 #include "cctype_tests.hpp"
 #include "iostream_tests.hpp"
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   map_tests();
   string_tests();
   iterator_tests();
-//  algorithm_tests();
+  algorithm_tests();
   cctype_tests();
   iostream_tests();
 

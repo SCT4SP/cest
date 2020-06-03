@@ -69,17 +69,34 @@ constexpr auto list_test2()
   return sum1==15 && sum2==9 && l.size()==3;
 }
 
+template <typename L>
+constexpr auto list_test3()
+{
+  L l;
+  double d{42};
+  const int i{42};
+  const short s{329};
+  l.emplace(l.begin(), i, s, &d);
+  auto e = l.front();
+  return e.i==i && e.s==s;
+}
+
 void list_tests()
 {
+  struct Foo { int i; short s; double *p; };
+
 #ifndef NO_STATIC_TESTS
   static_assert(list_test1<cest::list<int>>());
   static_assert(list_test2<cest::list<int>>());
+  static_assert(list_test3<cest::list<Foo>>());
 #endif
 
   assert(list_test1< std::list<int>>());
   assert(list_test1<cest::list<int>>());
   assert(list_test2< std::list<int>>());
   assert(list_test2<cest::list<int>>());
+  assert(list_test3< std::list<Foo>>());
+  assert(list_test3<cest::list<Foo>>());
 }
 
 #endif // _CEST_LIST_TESTS_HPP_

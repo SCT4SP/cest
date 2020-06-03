@@ -202,33 +202,36 @@ struct list {
     node* new_node = m_node_alloc.allocate(1);
 //    std::construct_at(new_node, value);//, new_node, p->prev);
 //    new_node->m_hook(p);
-    p->prev = p->prev->next = std::construct_at(new_node, value, p, p->prev);
+    //p->prev = p->prev->next = std::construct_at(new_node, value, p, p->prev);
+    std::construct_at(&new_node->value, value);
 
     // List_node_base::_M_hook
     // __tmp->_M_hook(__position._M_const_cast()._M_node);
-//    new_node->next = p;
-//    new_node->prev = p->prev;
-//    p->prev->next = new_node;
-//    p->prev       = new_node;
+    new_node->next = p;
+    new_node->prev = p->prev;
+    p->prev->next = new_node;
+    p->prev       = new_node;
 
     m_size++;
     return {new_node};
   }
   
   constexpr iterator insert(const_iterator pos, value_type&& value) {
+    return emplace(pos, std::move(value));
+  }
+
+  template <class... Args>
+  constexpr iterator emplace(const_iterator pos, Args&&... args) {
     node_base*   p = const_cast<node_base*>(pos.m_node);
     node* new_node = m_node_alloc.allocate(1);
-    //p->prev = std::construct_at(new_node, std::move(value), new_node, p->prev);
-    //std::construct_at(new_node, std::move(value));//, new_node, p->prev);
-    p->prev = p->prev->next =
-      std::construct_at(new_node, std::move(value), p, p->prev);
+
+    std::construct_at(&new_node->value, std::forward<Args>(args)...);
 
     // List_node_base::_M_hook
-    /*new_node->next = p;
+    new_node->next = p;
     new_node->prev = p->prev;
     p->prev->next = new_node;
     p->prev       = new_node;
-*/
 
     m_size++;
     return {new_node};

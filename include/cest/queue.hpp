@@ -1,40 +1,26 @@
 #ifndef _CEST_QUEUE_HPP_
 #define _CEST_QUEUE_HPP_
 
-#include <type_traits>
+#include <functional>
+#include <vector>
+#include <deque>
+#include "libstdc++-v3/include/bits/stl_queue.h"
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/queue_tests.hpp
-
-namespace cest {
-
-template <
-  class T,
-  class Container = cest::list<T> // default to list for now
->
-struct queue
+// specialsation on std::uses_allocator for cest::queue and priority_queue
+namespace std _GLIBCXX_VISIBILITY(default)
 {
-  using container_type  = Container;
-  using value_type      = typename Container::value_type;
-  using size_type       = typename Container::size_type;
-  using reference       = typename Container::reference;
-  using const_reference = typename Container::const_reference;
+_GLIBCXX_BEGIN_NAMESPACE_VERSION
 
-//  template <
-//    typename _Seq = Container,
-//    typename _Requires = typename
-//	       enable_if<std::is_default_constructible<_Seq>::value>::type>
-//	queue() : m_c() { }
+  template<typename _Tp, typename _Seq, typename _Alloc>
+    struct uses_allocator<cest::queue<_Tp, _Seq>, _Alloc>
+    : public uses_allocator<_Seq, _Alloc>::type { };
 
-//  void push( const value_type& value );
-//  void push( value_type&& value );
-//  void pop();
-//  [[nodiscard]] bool empty() const;
-//  reference front();
-//  const_reference front() const;
+  template<typename _Tp, typename _Seq, typename _Compare,
+	   typename _Alloc>
+    struct uses_allocator<cest::priority_queue<_Tp, _Seq, _Compare>, _Alloc>
+    : public uses_allocator<_Seq, _Alloc>::type { };
 
-  container_type m_c;
-};
-
-} // namespace cest
+_GLIBCXX_END_NAMESPACE_VERSION
+} // namespace
 
 #endif // _CEST_QUEUE_HPP_

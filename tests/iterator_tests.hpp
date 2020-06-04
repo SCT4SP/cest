@@ -7,6 +7,7 @@
 #include "cest/list.hpp"
 #include "cest/set.hpp"
 #include "cest/map.hpp"
+#include "cest/queue.hpp" //
 #include <cassert>
 #include <iterator>
 #include <vector>

@@ -2,9 +2,9 @@
 #define _CEST_QUEUE_TESTS_HPP_
 
 #include "cest/queue.hpp"
-#include <deque>
-//#include <queue>
-#include "/home/pkeir/projects/gcc_src/gcc-11-20200531/install/include/c++/11.0.0/bits/stl_queue.h"
+#include "cest/list.hpp"
+//#include <deque>
+#include <queue>
 #include <cassert>
 
 template <typename Q>
@@ -38,10 +38,10 @@ constexpr bool queue_test1()
 void queue_tests()
 {
 #ifndef NO_STATIC_TESTS
-//  static_assert(queue_test1<cest::list<int>>());
+  static_assert(queue_test1<cest::queue<int,cest::list<int>>>());
 #endif
 
-  assert(queue_test1< std::queue<int>>());
-//  assert(queue_test1<cest::list<int>>());
+  assert((queue_test1< std::queue<int,cest::list<int>>>()));
+  assert((queue_test1<cest::queue<int,cest::list<int>>>()));
 }
 #endif // _CEST_QUEUE_TESTS_HPP_

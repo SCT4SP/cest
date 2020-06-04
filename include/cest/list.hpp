@@ -259,6 +259,18 @@ struct list {
     return ret;
   }
 
+  template <typename... Args >
+  constexpr reference emplace_front(Args&&... args) {
+    insert(begin(), value_type(std::forward<Args>(args)...));
+    return front();
+  }
+
+  template <typename... Args >
+  constexpr reference emplace_back(Args&&... args) {
+    insert(end(), value_type(std::forward<Args>(args)...));
+    return back();
+  }
+
 #if 0
   constexpr iterator insert(const_iterator pos, size_type count, 
                             const T& value) { 

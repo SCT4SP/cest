@@ -69,34 +69,47 @@ constexpr auto list_test2()
   return sum1==15 && sum2==9 && l.size()==3;
 }
 
-template <typename L>
+template <template <typename ...> typename L>
 constexpr auto list_test3()
 {
-  L l;
-  double d{42};
+  struct Foo { int i; short s; double *p; };
+
+  L<Foo> l;
   const int i{42};
   const short s{329};
-  l.emplace(l.begin(), i, s, &d);
-  auto e = l.front();
-  return e.i==i && e.s==s;
+  double d{42};
+  Foo f{43,43,&d};
+  auto it = l.emplace(l.begin(), f);
+  auto e1 = *it;
+  l.emplace(it, i, s, &d); // at the front
+  auto e2 = l.front();
+  auto sz = l.size();
+  l.emplace_front(17,1000,&d);
+  l.emplace_back(99,2000,&d);
+  auto e3i = l.front().i;
+  auto e4i = l.back().i;
+  auto sz2 = l.size();
+
+  return e1.i==f.i && e1.s==f.s && e1.p==f.p &&
+         e2.i==i   && e2.s==s   && e2.p==&d  && sz==2 &&
+         e3i==17 && e4i==99 && sz2==4;
 }
 
 void list_tests()
 {
-  struct Foo { int i; short s; double *p; };
 
 #ifndef NO_STATIC_TESTS
   static_assert(list_test1<cest::list<int>>());
   static_assert(list_test2<cest::list<int>>());
-  static_assert(list_test3<cest::list<Foo>>());
+  static_assert(list_test3<cest::list>());
 #endif
 
   assert(list_test1< std::list<int>>());
   assert(list_test1<cest::list<int>>());
   assert(list_test2< std::list<int>>());
   assert(list_test2<cest::list<int>>());
-  assert(list_test3< std::list<Foo>>());
-  assert(list_test3<cest::list<Foo>>());
+  assert(list_test3< std::list>());
+  assert(list_test3<cest::list>());
 }
 
 #endif // _CEST_LIST_TESTS_HPP_

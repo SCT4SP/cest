@@ -3,7 +3,6 @@
 
 #include "cest/list.hpp"
 #include <list>
-#include <tuple>
 #include <cassert>
 
 template <typename L>

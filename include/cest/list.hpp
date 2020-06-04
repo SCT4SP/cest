@@ -197,16 +197,17 @@ struct list {
     insert(begin(), std::move(value));
   }
 
-  constexpr iterator insert(const_iterator pos, const T& value) {
+  constexpr iterator insert(const_iterator pos, const T& value)
+  {
     node_base*   p = const_cast<node_base*>(pos.m_node);
     node* new_node = m_node_alloc.allocate(1);
-//    std::construct_at(new_node, value);//, new_node, p->prev);
-//    new_node->m_hook(p);
-    //p->prev = p->prev->next = std::construct_at(new_node, value, p, p->prev);
+
+    // As an implicit-lifetime type (P0593R6), node construction isn't needed
     std::construct_at(&new_node->value, value);
 
     // List_node_base::_M_hook
     // __tmp->_M_hook(__position._M_const_cast()._M_node);
+    // new_node->m_hook(p);
     new_node->next = p;
     new_node->prev = p->prev;
     p->prev->next = new_node;
@@ -271,199 +272,9 @@ struct list {
     return back();
   }
 
-#if 0
-  constexpr iterator insert(const_iterator pos, size_type count, 
-                            const T& value) { 
-  }
-  
-  template <class InputIt>
-  constexpr iterator insert(const_iterator pos, InputIt first, InputIt last) {
-  }
-  
-  constexpr iterator insert(const_iterator pos, 
-                            std::initializer_list<T> ilist) {
-  }
+  constexpr void pop_back()  { erase({m_node.prev}); }
+  constexpr void pop_front() { erase(begin());       }
 
-  // TODO: Deal with the edge case where the emplaced element is the first 
-  // element in the list, or is it fine to assume that you cannot pass an empty
-  // iterator..?
-  template <class... Args>
-  constexpr iterator emplace(const_iterator pos, Args&&... args) {
-    node *new_node = m_node_alloc.allocate(1);
-    node* prev = pos.curr_node->prev_node;
-    node* next = pos.curr_node;
-    std::construct_at(new_node, value_type(std::forward<Args>(args)...), next, 
-                      prev);
-    next->prev_node = new_node;
-    
-    if (next == m_node)
-      m_node = new_node;
-    else 
-      prev->next_node = new_node;
-
-    return iter(new_node);
-  }
-
-  // TODO/NOTE: There will likely be a lot of places where I need to check if
-  // something is a nullptr... there's a lot of accessing of members without 
-  // checking things, but perhaps its fine to assume a user is doing the correct
-  // thing
-  // It might be feasible to simplify this with some calls to pop_back/pop_front
-  // if we know the element we're removing is in the back or front of the list
-  // but that may just make the functon longer
-  constexpr iterator erase(const_iterator pos) {
-    node* tmp = pos.curr_node;
-    node* next = tmp->next_node;
-    node* prev = tmp->prev_node;
-    node* ret = nullptr;
-    
-    if (next && prev) {
-      next->prev_node = prev;
-      prev->next_node = next;
-      ret = next;
-    } else if (!next && prev) { // end of list
-      prev->next_node = nullptr;
-      m_back = prev;
-      ret = prev;
-    } else if (next && !prev) { // front of list
-      next->prev_node = nullptr;
-      m_node = next;
-      ret = next;
-    } else { // empty list
-      m_back = m_node = nullptr;
-    }
-
-    std::destroy_at(tmp);
-    m_node_alloc.deallocate(tmp,1);
-    return iter(ret);
-  }
-
-  // TODO
-  constexpr iterator erase(const_iterator first, const_iterator last) {}
-  
-  constexpr void push_back(const T &value) {
-    node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, value, nullptr, m_back);
-    
-    if (m_back) {
-      m_back->next_node = new_node;
-      m_back = new_node;
-    } else
-      m_node = m_back = new_node;
-  }
-  
-  // The difference between push_back and emplace new seems to be that one 
-  // forwards and the other does a move beforehand... you can see an example of 
-  // this in the cppreference for lists emplace_back
-  constexpr void push_back(T &&value)      {
-    node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, std::move(value), nullptr, m_back);
-    
-    // TODO: Can this and its other equivalents be encapsulated in someway?
-    if (m_back) {
-      m_back->next_node = new_node;
-      m_back = new_node;
-    } else
-      m_node = m_back = new_node;
-  }
-  
-  template<class... Args>
-  constexpr reference emplace_back(Args&&... args) {
-    node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, value_type(std::forward<Args>(args)...), 
-                      nullptr, m_back);
-
-    if (m_back) {
-      m_back->next_node = new_node;
-      m_back = new_node;
-    } else
-      m_node = m_back = new_node;
-  }
-
-  // TODO: Handle case where we pop off the last or second last element..  
-  constexpr void pop_back() {
-    node* tmp = m_back;
-    
-    if (m_back->prev_node) {
-      m_back = m_back->prev_node;
-      m_back->next_node = nullptr;
-    } else { 
-      // assumption that this is the last element in the list or somethings 
-      // went wrong and we've lost a node
-      m_node = m_back = nullptr;
-    }
-    
-    std::destroy_at(tmp);
-    m_node_alloc.deallocate(tmp,1);
-  }
-  
-  constexpr void push_front(const T &value) {
-    node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, value, m_node, nullptr);
-    
-    if (m_node) {
-      m_node->prev_node = new_node;
-      m_node = new_node;
-    } else
-      m_node = m_back = new_node;
-  }
-  
-  constexpr void push_front(T &&value)      {
-    node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, std::move(value), m_node, nullptr);
-    
-    if (m_node) {
-      m_node->prev_node = new_node;
-      m_node = new_node;
-    } else
-      m_node = m_back = new_node;
-  }
-
-  template<class... Args>
-  constexpr reference emplace_front(Args&&... args) { 
-    node *new_node = m_node_alloc.allocate(1);
-    std::construct_at(new_node, value_type(std::forward<Args>(args)...), 
-                      m_node, nullptr);
-    m_node->prev_node = new_node;
-    m_node = new_node;
-    
-    if (m_node) {
-      m_node->prev_node = new_node;
-      m_node = new_node;
-    } else
-      m_node = m_back = new_node;
-  }
-  
-  constexpr void pop_front() {
-    node* tmp = m_node;
-    
-    if (m_node->next_node) {
-      m_node = m_node->next_node;
-      m_node->prev_node = nullptr;
-    } else
-      // assumption that this is the last element in the list or somethings 
-      // went wrong and we've lost a node
-      m_node = m_back = nullptr;
-    
-
-    std::destroy_at(tmp);
-    m_node_alloc.deallocate(tmp,1);
-  }
-  
-  // resize
-  
-  // swap 
-  /*
-  check this in list for an idea of how to implement it, although technically
-  there is no need to implement everything...
-  template <class _Tp, class _Alloc>
-void
-__list_imp<_Tp, _Alloc>::swap(__list_imp& __c)
-  */
-  constexpr void swap(list& other) noexcept {
-  }
-#endif
-  
   node_base m_node;
   size_type m_size = 0;
   std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;

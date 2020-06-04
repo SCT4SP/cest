@@ -89,15 +89,19 @@ constexpr auto list_test3()
   auto e3i = l.front().i;
   auto e4i = l.back().i;
   auto sz2 = l.size();
+  l.pop_back();
+  l.pop_front();
+  auto e5  = l.front();
+  auto sz3 = l.size();
 
   return e1.i==f.i && e1.s==f.s && e1.p==f.p &&
          e2.i==i   && e2.s==s   && e2.p==&d  && sz==2 &&
-         e3i==17 && e4i==99 && sz2==4;
+         e3i==17   && e4i==99   && sz2==4    &&
+         e5.i==i   && e5.s==s   && e5.p==&d  && sz3==2;
 }
 
 void list_tests()
 {
-
 #ifndef NO_STATIC_TESTS
   static_assert(list_test1<cest::list<int>>());
   static_assert(list_test2<cest::list<int>>());

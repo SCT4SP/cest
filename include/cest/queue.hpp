@@ -3,7 +3,8 @@
 
 #include <functional>
 #include <vector>
-#include <deque>
+//#include <deque>
+#include "deque.hpp"
 #include "libstdc++-v3/include/bits/stl_queue.h"
 
 // specialisation on std::uses_allocator for cest::queue and priority_queue

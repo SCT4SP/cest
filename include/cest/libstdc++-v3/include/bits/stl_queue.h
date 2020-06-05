@@ -92,7 +92,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
    *  which is a typedef for the second Sequence parameter, and @c push and
    *  @c pop, which are standard %queue/FIFO operations.
   */
-  template<typename _Tp, typename _Sequence = std::deque<_Tp> >
+  template<typename _Tp, typename _Sequence = cest::deque<_Tp> >
     class queue
     {
 #ifdef _GLIBCXX_CONCEPT_CHECKS

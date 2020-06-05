@@ -156,6 +156,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 
   template<typename _Tp, typename _Alloc>
     template<typename... _Args>
+      constexpr
 #if __cplusplus > 201402L
       typename deque<_Tp, _Alloc>::reference
 #else

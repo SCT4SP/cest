@@ -3,7 +3,6 @@
 
 #include "cest/queue.hpp"
 #include "cest/list.hpp"
-//#include <deque>
 #include <queue>
 #include <cassert>
 
@@ -38,9 +37,12 @@ constexpr bool queue_test1()
 void queue_tests()
 {
 #ifndef NO_STATIC_TESTS
+  static_assert(queue_test1<cest::queue<int>>());
   static_assert(queue_test1<cest::queue<int,cest::list<int>>>());
 #endif
 
+  assert((queue_test1< std::queue<int>>()));
+  assert((queue_test1<cest::queue<int>>()));
   assert((queue_test1< std::queue<int,cest::list<int>>>()));
   assert((queue_test1<cest::queue<int,cest::list<int>>>()));
 }

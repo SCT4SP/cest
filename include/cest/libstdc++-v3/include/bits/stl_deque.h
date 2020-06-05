@@ -161,7 +161,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       template<typename _Iter,
 	       typename = std::_Require<std::is_same<_Self, const_iterator>,
 				   std::is_same<_Iter, iterator>>>
-       _Deque_iterator(const _Iter& __x) noexcept
+       constexpr _Deque_iterator(const _Iter& __x) noexcept
        : _M_cur(__x._M_cur), _M_first(__x._M_first),
 	 _M_last(__x._M_last), _M_node(__x._M_node) { }
 
@@ -176,7 +176,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       _M_const_cast() const _GLIBCXX_NOEXCEPT
       { return iterator(_M_cur, _M_node); }
 
-      reference
+      constexpr reference
       operator*() const _GLIBCXX_NOEXCEPT
       { return *_M_cur; }
 
@@ -204,7 +204,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	return __tmp;
       }
 
-      _Self&
+      constexpr _Self&
       operator--() _GLIBCXX_NOEXCEPT
       {
 	if (_M_cur == _M_first)
@@ -264,7 +264,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	_M_last = _M_first + difference_type(_S_buffer_size());
       }
 
-      friend bool
+      constexpr friend bool
       operator==(const _Self& __x, const _Self& __y) _GLIBCXX_NOEXCEPT
       { return __x._M_cur == __y._M_cur; }
 
@@ -349,7 +349,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	{ return !(__x < __y); }
 #endif // three-way comparison
 
-      friend difference_type
+      constexpr friend difference_type
       operator-(const _Self& __x, const _Self& __y) _GLIBCXX_NOEXCEPT
       {
 	return difference_type(_S_buffer_size())
@@ -1227,7 +1227,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 
       // [23.2.1.2] capacity
       /**  Returns the number of elements in the %deque.  */
-      size_type
+      constexpr size_type
       size() const _GLIBCXX_NOEXCEPT
       { return this->_M_impl._M_finish - this->_M_impl._M_start; }
 
@@ -1305,7 +1305,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  Returns true if the %deque is empty.  (Thus begin() would
        *  equal end().)
        */
-      _GLIBCXX_NODISCARD bool
+      _GLIBCXX_NODISCARD constexpr bool
       empty() const _GLIBCXX_NOEXCEPT
       { return this->_M_impl._M_finish == this->_M_impl._M_start; }
 
@@ -1399,7 +1399,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  Returns a read/write reference to the data at the first
        *  element of the %deque.
        */
-      reference
+      constexpr reference
       front() _GLIBCXX_NOEXCEPT
       {
 	__glibcxx_requires_nonempty();
@@ -1421,7 +1421,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  Returns a read/write reference to the data at the last element of the
        *  %deque.
        */
-      reference
+      constexpr reference
       back() _GLIBCXX_NOEXCEPT
       {
 	__glibcxx_requires_nonempty();
@@ -1490,7 +1490,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  to it.  Due to the nature of a %deque this operation can be
        *  done in constant time.
        */
-      void
+      constexpr void
       push_back(const value_type& __x)
       {
 	if (this->_M_impl._M_finish._M_cur
@@ -1505,11 +1505,12 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       }
 
 #if __cplusplus >= 201103L
-      void
+      constexpr void
       push_back(value_type&& __x)
       { emplace_back(std::move(__x)); }
 
       template<typename... _Args>
+  constexpr
 #if __cplusplus > 201402L
 	reference
 #else
@@ -1526,7 +1527,7 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  Note that no data is returned, and if the first element's data is
        *  needed, it should be retrieved before pop_front() is called.
        */
-      void
+      constexpr void
       pop_front() _GLIBCXX_NOEXCEPT
       {
 	__glibcxx_requires_nonempty();

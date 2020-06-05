@@ -44,4 +44,5 @@ void queue_tests()
   assert((queue_test1< std::queue<int,cest::list<int>>>()));
   assert((queue_test1<cest::queue<int,cest::list<int>>>()));
 }
+
 #endif // _CEST_QUEUE_TESTS_HPP_

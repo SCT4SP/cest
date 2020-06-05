@@ -6,7 +6,7 @@
 #include <deque>
 #include "libstdc++-v3/include/bits/stl_queue.h"
 
-// specialsation on std::uses_allocator for cest::queue and priority_queue
+// specialisation on std::uses_allocator for cest::queue and priority_queue
 namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION

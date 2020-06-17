@@ -11,6 +11,7 @@ namespace cea {
 template <typename T>
 struct mba_base
 {
+  constexpr mba_base() : m_cap(0), m_size(), m_p() {} // no
   constexpr mba_base(const std::size_t cap) : m_cap(cap), m_size(), m_p()
   {
 #ifdef CE_DEBUG
@@ -46,8 +47,16 @@ struct mono_block_alloc : mba_base<T>
   constexpr
   mono_block_alloc(const std::size_t capacity = 1024) : mba_base<T>(capacity) {}
 
+  // this needs more thought:
   template <class U>
-  constexpr mono_block_alloc(const mono_block_alloc <U>&) noexcept {}
+  constexpr mono_block_alloc(const mono_block_alloc <U>&) noexcept :
+    mba_base<T>() {
+#ifdef CE_DEBUG
+      std::cout << "mono_block_alloc<" <<
+         typeid(T).name() << ">::mono_block_alloc(const mono_block_alloc <" <<
+         typeid(U).name() << ">&)\n";
+#endif
+  }
  
   [[nodiscard]]
   constexpr T* allocate(std::size_t n)

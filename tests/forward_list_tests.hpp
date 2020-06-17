@@ -105,45 +105,6 @@ constexpr bool forward_list_test6() {
   return b1 && b2 && b3 && b4 && b5;
 }
 
-template <bool SA, class V0, class V1, class V2, class V3,
-                   class V4, class V5, class V6, class V7, class V8>
-constexpr void doit()
-{
-  if constexpr (SA) {
-#ifndef NO_STATIC_TESTS
-#endif
-  }
-}
-
-template <template <typename...> typename FL>
-constexpr void rt_forward_list_tests() {
-  using FL1 = FL<int>;
-  using FL2 = FL<int>;
-  using FL3 = FL<int>;
-  using FL4 = FL<int>;
-  using FL5 = FL<int>;
-  using FL6 = FL<Foo>;
-         assert(forward_list_test1<FL1>());
-         assert(forward_list_test2<FL>());
-         assert(forward_list_test3<FL>());
-         assert(forward_list_test4<FL>());
-         assert(forward_list_test5<FL>());
-         assert(forward_list_test6<FL>());
-}
-
-template <template <typename...> typename FL>
-constexpr void ct_forward_list_tests() {
-  using FL1 = FL<int>;
-#ifndef NO_STATIC_TESTS
-  static_assert(forward_list_test1<FL1>());
-  static_assert(forward_list_test2<FL>());
-  static_assert(forward_list_test3<FL>());
-  static_assert(forward_list_test4<FL>());
-  static_assert(forward_list_test5<FL>());
-  static_assert(forward_list_test6<FL>());
-#endif
-}
-
 template <bool SA, class F1, class F2, class F3,
                    class F4, class F5, class F6>
 constexpr void doit()
@@ -167,7 +128,6 @@ constexpr void doit()
   }
 }
 
-
 template <bool SA, template <class...> class TT>
 constexpr void tests_helper()
 {
@@ -178,30 +138,26 @@ constexpr void tests_helper()
   using FL5  = TT<int>;
   using FL6  = TT<Foo>;
 
-  using FLa1 = TT<int>;
-  using FLa2 = TT<int>;
-  using FLa3 = TT<int>;
-  using FLa4 = TT<int>;
-  using FLa5 = TT<int>;
-  using FLa6 = TT<Foo>;
+  using FLa1 = TT<int, cea::mono_block_alloc<int>>;
+  using FLa2 = TT<int, cea::mono_block_alloc<int>>;
+  using FLa3 = TT<int, cea::mono_block_alloc<int>>;
+  using FLa4 = TT<int, cea::mono_block_alloc<int>>;
+  using FLa5 = TT<int, cea::mono_block_alloc<int>>;
+  using FLa6 = TT<Foo, cea::mono_block_alloc<Foo>>;
 
   doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6>();
+  //doit<SA, FLa1, FLa2, FLa3, FLa4, FLa5, FLa6>();
 }
 
 } // namespace fl_tests
 
 void forward_list_tests()
 {
-//  fl_tests::ct_forward_list_tests<cest::forward_list>();
-//  fl_tests::rt_forward_list_tests<std::forward_list>();
-//  fl_tests::rt_forward_list_tests<cest::forward_list>();
-
   using namespace fl_tests;
 
   tests_helper<true,cest::forward_list>();
 #ifdef USE_CONSTEXPR_STDLIB
-  tests_helper<false,std::forward_list>();  // true: constexpr tests
-//  tests_helper<true,std::forward_list>();  // true: constexpr tests
+  tests_helper<false,std::forward_list>();  // constexpr tests not yet
 #else
   tests_helper<false,std::forward_list>(); // false: no constexpr tests
 #endif

@@ -117,7 +117,7 @@ constexpr bool vec_test8() {
 
 template <bool SA, class V0, class V1, class V2, class V3,
                    class V4, class V5, class V6, class V7, class V8>
-constexpr bool doit()
+constexpr void doit()
 {
   assert(vec_test0<V0>());
   assert(vec_test1<V1>());
@@ -142,10 +142,7 @@ constexpr bool doit()
     static_assert(vec_test8<V8>());
 #endif
   }
-
-  return true;
 }
-
 
 template <bool SA, template <class...> class Vt>
 constexpr void tests_helper()

@@ -2,6 +2,8 @@
 #define _CEST_FORWARD_LIST_HPP_
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/forward_list_tests.hpp
+// or
+// make -C ../../tests/build/
 
 #include <memory>
 

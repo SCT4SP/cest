@@ -6,25 +6,25 @@
 #include <vector>
 
 template <template <typename> typename V>
-constexpr auto vec_test0() {
+constexpr bool vec_test0() {
   V<double> v;
-  return v.size();
+  return 0==v.size();
 }
 
 template <template <typename> typename V>
-constexpr auto vec_test1() {
+constexpr bool vec_test1() {
   V<int> v;
   v.push_back(123);
-  return std::tuple{*v.begin(),v.empty(),v.size(),v.capacity()};
+  return 123==*v.begin() && !v.empty() && 1==v.size() && 1==v.capacity();
 }
 
 template <template <typename> typename V>
-constexpr auto vec_test2() {
+constexpr bool vec_test2() {
   V<double> v;
   double d = 2 * 3.142;
   v.push_back(3.142);
   v.push_back(d);
-  return std::tuple{v.size(),v.capacity()};
+  return 2==v.size() && 2==v.capacity();
 }
 
 struct Bar {
@@ -36,25 +36,25 @@ struct Bar {
 };
 
 template <template <typename> typename V>
-constexpr auto vec_test2b() {
+constexpr bool vec_test2b() {
   V<Bar> v;
   Bar f(42);
   v.push_back(f);
   v.push_back(f);
-  return std::tuple{v.begin()->m_x,v.size(),v.capacity()};
+  return 42==v.begin()->m_x && 2==v.size() && 2==v.capacity();
 }
 
 template <template <typename> typename V>
-constexpr auto vec_test3() {
+constexpr bool vec_test3() {
   V<float> v;
   v.push_back(3.142f);
   v.push_back(3.142f);
   v.push_back(3.142f);
-  return std::tuple{v.size(),v.capacity()};
+  return 3==v.size() && 4==v.capacity();
 }
 
 template <template <typename> typename V>
-constexpr auto vec_test4() {
+constexpr bool vec_test4() {
   V<int> v;
   v.push_back(1);
   v.push_back(2);
@@ -62,21 +62,21 @@ constexpr auto vec_test4() {
   int sum = 0;
   for (auto it = v.begin(); it != v.end(); it++)
     sum += *it;
-  return sum;
+  return 6==sum;
 }
 
 template <template <typename> typename V>
-constexpr auto vec_test5() {
+constexpr bool vec_test5() {
   V<double> v;
   v.push_back(3.142);
   v.push_back(3.142);
   v.pop_back();
   v.pop_back();
-  return std::tuple{v.empty(),v.size(),v.capacity()};
+  return v.empty() && 0==v.size() && 2==v.capacity();
 }
 
 template <template <typename> typename V>
-constexpr auto vec_test6() {
+constexpr bool vec_test6() {
   V<int> v;
   v.push_back(1);
   v.push_back(2);
@@ -92,12 +92,12 @@ constexpr auto vec_test6() {
   using cit_t = typename V<int>::const_iterator;
   for (cit_t it = v.cbegin(); it != it_erase; ++it)  // 1 + 2
     sum2 += *it;
-  return std::tuple{v.empty(),v.size(),sum1,sum2};
+  return !v.empty() && 4==v.size() && 3==sum1 && 3==sum2;
 }
 
 // tests reserve
 template <template <typename> typename V>
-constexpr auto vec_test7() {
+constexpr bool vec_test7() {
   V<int> v;
   auto sz0 = v.size();
   v.reserve(3);
@@ -107,43 +107,50 @@ constexpr auto vec_test7() {
   v[2] = 3;
   auto sz2 = v.size();
   int sum = v[0] + v[1] + v[2];
-  return std::tuple{sz0,sz1,sz2,sum};
+  return 0==sz0 && 0==sz1 && 0==sz2 && 6==sum;
 }
 
 template <template <typename...> typename V>
 constexpr void rt_vector_tests() {
-  assert(vec_test0<V>()      == 0);
-  assert(vec_test1<V>()      == (std::tuple{123,false,1,1}));
-  assert(vec_test2<V>()      == (std::tuple{2,2}));
-  assert(vec_test2b<V>()     == (std::tuple{42,2,2}));
-  assert(vec_test3<V>()      == (std::tuple{3,4}));
-  assert(vec_test4<V>()      == 6);
-  assert(vec_test5<V>()      == (std::tuple{true,0,2}));
-  assert(vec_test6<V>()      == (std::tuple{false,4,3,3}));
-  assert(vec_test7<V>()      == (std::tuple{0,0,0,6}));
+  assert(vec_test0<V>());
+  assert(vec_test1<V>());
+  assert(vec_test2<V>());
+  assert(vec_test2b<V>());
+  assert(vec_test3<V>());
+  assert(vec_test4<V>());
+  assert(vec_test5<V>());
+  assert(vec_test6<V>());
+  assert(vec_test7<V>());
 }
 
-template <template <typename...> typename V>
-constexpr void ct_vector_tests() {
-  static_assert(vec_test0<V>()      == 0);
-  static_assert(vec_test1<V>()      == (std::tuple{123,false,1,1}));
-  static_assert(vec_test2<V>()      == (std::tuple{2,2}));
-  static_assert(vec_test2b<V>()     == (std::tuple{42,2,2}));
-  static_assert(vec_test3<V>()      == (std::tuple{3,4}));
-  static_assert(vec_test4<V>()      == 6);
-  static_assert(vec_test5<V>()      == (std::tuple{true,0,2}));
-  static_assert(vec_test6<V>()      == (std::tuple{false,4,3,3}));
-  static_assert(vec_test7<V>()      == (std::tuple{0,0,0,6}));
-}
-
-void vector_tests()
+template <template <class...> class Cv, template <class...> class Sv>
+void vector_tests_helper()
 {
+  using v0_t  = Cv<double>;
+  using v1_t  = Cv<int>;
+  using v2_t  = Cv<double>;
+  using v2b_t = Cv<Bar>;
+  using v3_t  = Cv<float>;
+  using v4_t  = Cv<int>;
+  using v5_t  = Cv<double>;
+  using v6_t  = Cv<int>;
+
 #ifndef NO_STATIC_TESTS
-  ct_vector_tests<cest::vector>();
+  static_assert(vec_test0<Cv>());
+  static_assert(vec_test1<Cv>());
+  static_assert(vec_test2<Cv>());
+  static_assert(vec_test2b<Cv>());
+  static_assert(vec_test3<Cv>());
+  static_assert(vec_test4<Cv>());
+  static_assert(vec_test5<Cv>());
+  static_assert(vec_test6<Cv>());
+  static_assert(vec_test7<Cv>());
 #endif
 
-  rt_vector_tests<cest::vector>();
-  rt_vector_tests<std::vector>();
+  rt_vector_tests<Cv>();
+  rt_vector_tests<Sv>();
 }
+
+void vector_tests() { vector_tests_helper<cest::vector, std::vector>(); }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

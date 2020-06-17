@@ -14,8 +14,9 @@ struct mba_base
   constexpr mba_base(const std::size_t cap) : m_cap(cap), m_size(), m_p()
   {
 #ifdef CE_DEBUG
-    std::cout << "mba_base<" <<
-       typeid(T).name() << ">::mba_base()\n";
+    if (!std::is_constant_evaluated())
+      std::cout << "mba_base<" <<
+         typeid(T).name() << ">::mba_base(" << cap << ")\n";
 #endif
     if (cap > std::numeric_limits<std::size_t>::max() / sizeof(T))
       throw std::bad_alloc();
@@ -58,8 +59,9 @@ struct mono_block_alloc : mba_base<T>
     mba_base<T>::m_size += n;
 
 #ifdef CE_DEBUG
-    std::cout << "mono_block_alloc<" << typeid(T).name() <<
-      ">::allocate(" << n << ") " << ret << ' ' << sizeof(T) << '\n';
+    if (!std::is_constant_evaluated())
+      std::cout << "mono_block_alloc<" << typeid(T).name() <<
+        ">::allocate(" << n << ") " << ret << ' ' << n*sizeof(T) << " bytes\n";
 #endif
 
     return ret;

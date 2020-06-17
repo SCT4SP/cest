@@ -1,5 +1,8 @@
 // #define NO_STATIC_TESTS
 // uncomment above to build a debuggable program with failing constexpr stuff
+#define USE_CONSTEXPR_STDLIB
+// uncomment above if the C++ standard library has constexpr support
+#define CE_DEBUG
 
 #include "vector_tests.hpp"
 #include "forward_list_tests.hpp"

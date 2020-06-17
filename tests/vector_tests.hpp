@@ -173,7 +173,11 @@ constexpr void vector_tests_helper()
 
 void vector_tests() {
   vector_tests_helper<true,cest::vector>();
+#ifdef USE_CONSTEXPR_STDLIB
+  vector_tests_helper<true,std::vector>();  // true: constexpr tests
+#else
   vector_tests_helper<false,std::vector>(); // false: no constexpr tests
+#endif
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

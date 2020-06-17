@@ -109,13 +109,13 @@ constexpr bool vec_test8() {
   v[1] = 2;
   v[2] = 3;
   auto sz2 = v.size();
-  int sum = v[0] + v[1] + v[2];
+  auto sum = v[0] + v[1] + v[2];
   return 0==sz0 && 0==sz1 && 0==sz2 && 6==sum;
 }
 
-template <class V0, class V1, class V2, class V3, class V4,
-          class V5, class V6, class V7, class V8>
-constexpr void doit()
+template <bool SA, class V0, class V1, class V2, class V3,
+                   class V4, class V5, class V6, class V7, class V8>
+constexpr bool doit()
 {
   assert(vec_test0<V0>());
   assert(vec_test1<V1>());
@@ -127,37 +127,53 @@ constexpr void doit()
   assert(vec_test7<V7>());
   assert(vec_test8<V8>());
 
+  if constexpr (SA) {
 #ifndef NO_STATIC_TESTS
-  static_assert(vec_test0<V0>());
-  static_assert(vec_test1<V1>());
-  static_assert(vec_test1<V2>());
-  static_assert(vec_test3<V3>());
-  static_assert(vec_test4<V4>());
-  static_assert(vec_test5<V5>());
-  static_assert(vec_test6<V6>());
-  static_assert(vec_test7<V7>());
-  static_assert(vec_test8<V8>());
+    static_assert(vec_test0<V0>());
+    static_assert(vec_test1<V1>());
+    static_assert(vec_test1<V2>());
+    static_assert(vec_test3<V3>());
+    static_assert(vec_test4<V4>());
+    static_assert(vec_test5<V5>());
+    static_assert(vec_test6<V6>());
+    static_assert(vec_test7<V7>());
+    static_assert(vec_test8<V8>());
 #endif
+  }
+
+  return true;
 }
 
-template <template <class...> class Vt>
-void vector_tests_helper()
+template <bool SA, template <class...> class Vt>
+constexpr void vector_tests_helper()
 {
-  using V0 = Vt<double>;
-  using V1 = Vt<int>;
-  using V2 = Vt<double>;
-  using V3 = Vt<Bar>;
-  using V4 = Vt<float>;
-  using V5 = Vt<int>;
-  using V6 = Vt<double>;
-  using V7 = Vt<int>;
+  using V0  = Vt<double>;
+  using V1  = Vt<int>;
+  using V2  = Vt<double>;
+  using V3  = Vt<Bar>;
+  using V4  = Vt<float>;
+  using V5  = Vt<int>;
+  using V6  = Vt<double>;
+  using V7  = Vt<int>;
+  using V8  = Vt<int>;
 
-  doit<V0, V1, V2, V3, V4, V5, V6, V7>();
+  using Va0 = Vt<double, cea::mono_block_alloc<double>>;
+  using Va1 = Vt<int,    cea::mono_block_alloc<int>>;
+  using Va2 = Vt<double, cea::mono_block_alloc<double>>;
+  using Va3 = Vt<Bar,    cea::mono_block_alloc<Bar>>;
+  using Va4 = Vt<float,  cea::mono_block_alloc<float>>;
+  using Va5 = Vt<int,    cea::mono_block_alloc<int>>;
+  using Va6 = Vt<double, cea::mono_block_alloc<double>>;
+  using Va7 = Vt<int,    cea::mono_block_alloc<int>>;
+  using Va8 = Vt<int,    cea::mono_block_alloc<int>>;
+
+  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8>();
+  doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8>();
 }
 
 void vector_tests() {
-  vector_tests_helper<cest::vector>();
-  vector_tests_helper<std::vector>();
+  vector_tests_helper<true,cest::vector>();
+  vector_tests_helper<false,std::vector>(); // false: no constexpr tests
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

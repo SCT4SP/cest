@@ -13,7 +13,7 @@ struct mba_base
 {
   constexpr mba_base(const std::size_t cap) : m_cap(cap), m_size(), m_p()
   {
-#ifndef CE
+#ifdef CE_DEBUG
     std::cout << "mba_base<" <<
        typeid(T).name() << ">::mba_base()\n";
 #endif
@@ -57,7 +57,7 @@ struct mono_block_alloc : mba_base<T>
     T* ret = mba_base<T>::m_p + mba_base<T>::m_size;
     mba_base<T>::m_size += n;
 
-#ifndef CE
+#ifdef CE_DEBUG
     std::cout << "mono_block_alloc<" << typeid(T).name() <<
       ">::allocate(" << n << ") " << ret << ' ' << sizeof(T) << '\n';
 #endif

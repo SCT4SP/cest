@@ -6,6 +6,8 @@
 #include <cassert>
 #include <vector>
 
+namespace v_tests {
+
 template <typename V>
 constexpr bool vec_test0() {
   V v;
@@ -144,8 +146,9 @@ constexpr bool doit()
   return true;
 }
 
+
 template <bool SA, template <class...> class Vt>
-constexpr void vector_tests_helper()
+constexpr void tests_helper()
 {
   using V0  = Vt<double>;
   using V1  = Vt<int>;
@@ -171,12 +174,17 @@ constexpr void vector_tests_helper()
   doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8>();
 }
 
-void vector_tests() {
-  vector_tests_helper<true,cest::vector>();
+} // namespace v_tests
+
+void vector_tests()
+{
+  using namespace v_tests;
+
+  tests_helper<true,cest::vector>();
 #ifdef USE_CONSTEXPR_STDLIB
-  vector_tests_helper<true,std::vector>();  // true: constexpr tests
+  tests_helper<true,std::vector>();  // true: constexpr tests
 #else
-  vector_tests_helper<false,std::vector>(); // false: no constexpr tests
+  tests_helper<false,std::vector>(); // false: no constexpr tests
 #endif
 }
 

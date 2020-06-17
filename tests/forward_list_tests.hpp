@@ -2,33 +2,36 @@
 #define _CEST_FORWARD_LIST_TESTS_HPP_
 
 #include "cest/forward_list.hpp"
+#include "cest/mono_block_alloc.hpp"
 #include <forward_list>
 #include <cassert>
 
-template <template <typename...> typename FL>
-constexpr auto forward_list_test1() {
-  FL<int> fl;
+namespace fl_tests {
+
+template <typename FL>
+constexpr bool forward_list_test1() {
+  FL fl;
   return fl.empty();
 }
 
-template <template <typename...> typename FL>
-constexpr auto forward_list_test2() {
-  FL<int> fl;
+template <typename FL>
+constexpr bool forward_list_test2() {
+  FL fl;
   fl.push_front(42);
-  return fl.front();
+  return 42==fl.front();
 }
 
-template <template <typename...> typename FL>
-constexpr auto forward_list_test3() {
-  FL<int> fl;
+template <typename FL>
+constexpr bool forward_list_test3() {
+  FL fl;
   fl.push_front(2);
   fl.push_front(1);
-  return fl.front();
+  return 1==fl.front();
 }
 
-template <template <typename...> typename FL>
-constexpr auto forward_list_test4() {
-  FL<int> fl;
+template <typename FL>
+constexpr bool forward_list_test4() {
+  FL fl;
   fl.insert_after(fl.before_begin(),123);  // l.begin() here is an error
   fl.insert_after(fl.begin(),1); // 123     -> 123 1
   fl.push_front(2);             // 123 1   -> 2 123 1
@@ -39,26 +42,26 @@ constexpr auto forward_list_test4() {
   for (auto it = fl.begin(); it != fl.end(); it++)    // 3 + 2 + 1
     sum1 += *it;
 
-  using cit_t = typename FL<int>::const_iterator;
+  using cit_t = FL::const_iterator;
   cit_t it = fl.cbegin();
   for (; it != fl.cend(); ++it) // 3 + 2 + 1
     sum2 += *it;
 
   bool b1 = it == fl.end();
   bool b2 = fl.end() == it;
-  return std::tuple{fl.front(),sum1,sum2,b1,b2,*it0};
+  return 3==fl.front() && 6==sum1 && 6==sum2 && b1 && b2 && 3==*it0;
 }
 
-template <template <typename...> typename FL>
-constexpr auto forward_list_test5() {
-  FL<int> *p1 = new FL<int>;
-  FL<int> *p2 = new FL<int>;
+template <typename FL>
+constexpr bool forward_list_test5() {
+  FL *p1 = new FL;
+  FL *p2 = new FL;
 
   int a = 17, b = 18;
   p1->push_front(b);
   p1->push_front(a);
 
-  FL<int> l(*p1); // copy ctor
+  FL l(*p1); // copy ctor
   *p2 = *p1;      // copy assignment
 
   bool b1 = a == p1->front();
@@ -68,13 +71,14 @@ constexpr auto forward_list_test5() {
   delete p1;
   delete p2;
 
-  return std::tuple{b1&&b2&&b3};
+  return b1 && b2 && b3;
 }
 
-template <template <typename...> typename FL>
-constexpr auto forward_list_test6() {
-  struct Foo { int x; int y; };
-  FL<Foo> fl;
+struct Foo { int x; int y; };
+
+template <typename FL>
+constexpr bool forward_list_test6() {
+  FL fl;
 
   fl.push_front(Foo{1,2});
   auto it1 = fl.begin();
@@ -101,33 +105,106 @@ constexpr auto forward_list_test6() {
   return b1 && b2 && b3 && b4 && b5;
 }
 
+template <bool SA, class V0, class V1, class V2, class V3,
+                   class V4, class V5, class V6, class V7, class V8>
+constexpr void doit()
+{
+  if constexpr (SA) {
+#ifndef NO_STATIC_TESTS
+#endif
+  }
+}
+
 template <template <typename...> typename FL>
 constexpr void rt_forward_list_tests() {
-         assert(forward_list_test1<FL>() == true);
-         assert(forward_list_test2<FL>() == 42);
-         assert(forward_list_test3<FL>() == 1);
-         assert(forward_list_test4<FL>() == (std::tuple{3,6,6,true,true,3}));
-         assert(forward_list_test5<FL>() == (std::tuple{true}));
+  using FL1 = FL<int>;
+  using FL2 = FL<int>;
+  using FL3 = FL<int>;
+  using FL4 = FL<int>;
+  using FL5 = FL<int>;
+  using FL6 = FL<Foo>;
+         assert(forward_list_test1<FL1>());
+         assert(forward_list_test2<FL>());
+         assert(forward_list_test3<FL>());
+         assert(forward_list_test4<FL>());
+         assert(forward_list_test5<FL>());
          assert(forward_list_test6<FL>());
 }
 
 template <template <typename...> typename FL>
 constexpr void ct_forward_list_tests() {
+  using FL1 = FL<int>;
 #ifndef NO_STATIC_TESTS
-  static_assert(forward_list_test1<FL>() == true);
-  static_assert(forward_list_test2<FL>() == 42);
-  static_assert(forward_list_test3<FL>() == 1);
-  static_assert(forward_list_test4<FL>() == std::tuple{3,6,6,true,true,3});
-  static_assert(forward_list_test5<FL>() == std::tuple{true});
+  static_assert(forward_list_test1<FL1>());
+  static_assert(forward_list_test2<FL>());
+  static_assert(forward_list_test3<FL>());
+  static_assert(forward_list_test4<FL>());
+  static_assert(forward_list_test5<FL>());
   static_assert(forward_list_test6<FL>());
 #endif
 }
 
+template <bool SA, class F1, class F2, class F3,
+                   class F4, class F5, class F6>
+constexpr void doit()
+{
+          assert(forward_list_test1<F1>());
+          assert(forward_list_test2<F2>());
+          assert(forward_list_test3<F3>());
+          assert(forward_list_test4<F4>());
+          assert(forward_list_test5<F5>());
+          assert(forward_list_test6<F6>());
+
+  if constexpr (SA) {
+#ifndef NO_STATIC_TESTS
+    static_assert(forward_list_test1<F1>());
+    static_assert(forward_list_test2<F2>());
+    static_assert(forward_list_test3<F3>());
+    static_assert(forward_list_test4<F4>());
+    static_assert(forward_list_test5<F5>());
+    static_assert(forward_list_test6<F6>());
+#endif
+  }
+}
+
+
+template <bool SA, template <class...> class TT>
+constexpr void tests_helper()
+{
+  using FL1  = TT<int>;
+  using FL2  = TT<int>;
+  using FL3  = TT<int>;
+  using FL4  = TT<int>;
+  using FL5  = TT<int>;
+  using FL6  = TT<Foo>;
+
+  using FLa1 = TT<int>;
+  using FLa2 = TT<int>;
+  using FLa3 = TT<int>;
+  using FLa4 = TT<int>;
+  using FLa5 = TT<int>;
+  using FLa6 = TT<Foo>;
+
+  doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6>();
+}
+
+} // namespace fl_tests
+
 void forward_list_tests()
 {
-  ct_forward_list_tests<cest::forward_list>();
-  rt_forward_list_tests<std::forward_list>();
-  rt_forward_list_tests<cest::forward_list>();
+//  fl_tests::ct_forward_list_tests<cest::forward_list>();
+//  fl_tests::rt_forward_list_tests<std::forward_list>();
+//  fl_tests::rt_forward_list_tests<cest::forward_list>();
+
+  using namespace fl_tests;
+
+  tests_helper<true,cest::forward_list>();
+#ifdef USE_CONSTEXPR_STDLIB
+  tests_helper<false,std::forward_list>();  // true: constexpr tests
+//  tests_helper<true,std::forward_list>();  // true: constexpr tests
+#else
+  tests_helper<false,std::forward_list>(); // false: no constexpr tests
+#endif
 }
 
 #endif // _CEST_FORWARD_LIST_TESTS_HPP_

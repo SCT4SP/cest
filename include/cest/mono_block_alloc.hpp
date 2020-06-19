@@ -12,7 +12,11 @@ template <typename T>
 struct mba_base
 {
   constexpr mba_base() : m_cap(0), m_size(), m_p() {} // no
-  constexpr mba_base(const std::size_t cap) : m_cap(cap), m_size(), m_p()
+  constexpr mba_base(const mba_base &a) :
+    m_cap(a.m_cap), m_size(a.m_size), m_refcount(a.m_refcount), m_p(a.m_p) {}
+
+  constexpr mba_base(const std::size_t cap) :
+    m_cap(cap), m_size(), m_refcount(m_tally), m_p()
   {
 #ifdef CE_DEBUG
     if (!std::is_constant_evaluated())
@@ -30,12 +34,16 @@ struct mba_base
 
   constexpr ~mba_base()
   {
-    std::allocator<T> alloc;
-    alloc.deallocate(m_p, m_cap);
+    if (!m_refcount--) {
+      std::allocator<T> alloc;
+      alloc.deallocate(m_p, m_cap);
+    }
   }
 
   const std::size_t m_cap;
         std::size_t m_size;
+        std::size_t &m_refcount;
+        std::size_t m_tally = 0;
   T*                m_p;
 };
 
@@ -45,12 +53,20 @@ struct mono_block_alloc : mba_base<T>
   typedef T value_type;
  
   constexpr
-  mono_block_alloc(const std::size_t capacity = 1024) : mba_base<T>(capacity) {}
+  mono_block_alloc(const std::size_t capacity = 1024) : mba_base<T>(capacity) {
+  }
+
+  // marked as noexcept, but it can throw
+  constexpr mono_block_alloc(const mono_block_alloc &a) noexcept :
+    mba_base<T>(a)
+  {
+    mba_base<T>::m_refcount++;
+  }
 
   // this needs more thought:
   template <class U>
-  constexpr mono_block_alloc(const mono_block_alloc <U>&) noexcept :
-    mba_base<T>() {
+  constexpr mono_block_alloc(const mono_block_alloc <U>& a) noexcept :
+    mba_base<T>(a.m_cap) {
 #ifdef CE_DEBUG
       std::cout << "mono_block_alloc<" <<
          typeid(T).name() << ">::mono_block_alloc(const mono_block_alloc <" <<

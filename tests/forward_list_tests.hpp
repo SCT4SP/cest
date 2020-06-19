@@ -157,7 +157,7 @@ void forward_list_tests()
 
   tests_helper<true,cest::forward_list>();
 #ifdef USE_CONSTEXPR_STDLIB
-  tests_helper<false,std::forward_list>();  // constexpr tests not yet
+  tests_helper<true,std::forward_list>();  // constexpr tests not yet
 #else
   tests_helper<false,std::forward_list>(); // false: no constexpr tests
 #endif

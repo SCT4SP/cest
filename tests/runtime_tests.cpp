@@ -2,7 +2,8 @@
 // uncomment above to build a debuggable program with failing constexpr stuff
 #define USE_CONSTEXPR_STDLIB
 // uncomment above if the C++ standard library has constexpr support
-#define CE_DEBUG
+// #define CE_DEBUG
+// uncomment above to see on std::cout when mono_block_alloc is used
 
 #include "vector_tests.hpp"
 #include "forward_list_tests.hpp"
@@ -17,6 +18,7 @@
 #include "cctype_tests.hpp"
 #include "iostream_tests.hpp"
 #include "sstream_tests.hpp"
+#include "allocator_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +35,7 @@ int main(int argc, char *argv[])
   cctype_tests();
   iostream_tests();
   sstream_tests();
+  allocator_tests();
 
   return 0;
 }

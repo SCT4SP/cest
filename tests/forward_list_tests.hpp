@@ -111,19 +111,19 @@ constexpr void doit()
 {
           assert(forward_list_test1<F1>());
           assert(forward_list_test2<F2>());
-          assert(forward_list_test3<F3>());
-          assert(forward_list_test4<F4>());
-          assert(forward_list_test5<F5>());
-          assert(forward_list_test6<F6>());
+//          assert(forward_list_test3<F3>());
+//          assert(forward_list_test4<F4>());
+//          assert(forward_list_test5<F5>());
+//          assert(forward_list_test6<F6>());
 
   if constexpr (SA) {
 #ifndef NO_STATIC_TESTS
     static_assert(forward_list_test1<F1>());
     static_assert(forward_list_test2<F2>());
-    static_assert(forward_list_test3<F3>());
-    static_assert(forward_list_test4<F4>());
-    static_assert(forward_list_test5<F5>());
-    static_assert(forward_list_test6<F6>());
+//    static_assert(forward_list_test3<F3>());
+//    static_assert(forward_list_test4<F4>());
+//    static_assert(forward_list_test5<F5>());
+//    static_assert(forward_list_test6<F6>());
 #endif
   }
 }

@@ -52,6 +52,13 @@ constexpr bool forward_list_test4() {
   return 3==fl.front() && 6==sum1 && 6==sum2 && b1 && b2 && 3==*it0;
 }
 
+// Problematic for the custom allocator: comparing nodes against the this
+// pointer will fail as this is not on the stack; as here we allocate
+// each forward_list using the new operator.
+// Try not doing this? It occurs within copy assignment, on line 149 of
+// forward_list.tcc
+// Would std::vector also have this issue?
+// cest::forward_list also has a problem here, but only with the new allocator
 template <typename FL>
 constexpr bool forward_list_test5() {
   FL *p1 = new FL;
@@ -62,7 +69,7 @@ constexpr bool forward_list_test5() {
   p1->push_front(a);
 
   FL l(*p1); // copy ctor
-  *p2 = *p1;      // copy assignment
+  *p2 = *p1; // copy assignment
 
   bool b1 = a == p1->front();
   bool b2 = a == p2->front();
@@ -111,19 +118,19 @@ constexpr void doit()
 {
           assert(forward_list_test1<F1>());
           assert(forward_list_test2<F2>());
-//          assert(forward_list_test3<F3>());
-//          assert(forward_list_test4<F4>());
-//          assert(forward_list_test5<F5>());
-//          assert(forward_list_test6<F6>());
+          assert(forward_list_test3<F3>());
+          assert(forward_list_test4<F4>());
+          assert(forward_list_test5<F5>());
+          assert(forward_list_test6<F6>());
 
   if constexpr (SA) {
 #ifndef NO_STATIC_TESTS
     static_assert(forward_list_test1<F1>());
     static_assert(forward_list_test2<F2>());
-//    static_assert(forward_list_test3<F3>());
-//    static_assert(forward_list_test4<F4>());
-//    static_assert(forward_list_test5<F5>());
-//    static_assert(forward_list_test6<F6>());
+    static_assert(forward_list_test3<F3>());
+    static_assert(forward_list_test4<F4>());
+//    static_assert(forward_list_test5<F5>()); // stdlib and std::allocator
+    static_assert(forward_list_test6<F6>());
 #endif
   }
 }
@@ -146,7 +153,7 @@ constexpr void tests_helper()
   using FLa6 = TT<Foo, cea::mono_block_alloc<Foo>>;
 
   doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6>();
-  //doit<SA, FLa1, FLa2, FLa3, FLa4, FLa5, FLa6>();
+  doit<SA, FLa1, FLa2, FLa3, FLa4, FLa5, FLa6>();
 }
 
 } // namespace fl_tests

@@ -17,7 +17,6 @@
 #include "algorithm_tests.hpp"
 #include "cctype_tests.hpp"
 #include "iostream_tests.hpp"
-//#include "sstream_tests.hpp"
 #include "allocator_tests.hpp"
 
 int main(int argc, char *argv[])
@@ -34,7 +33,6 @@ int main(int argc, char *argv[])
   algorithm_tests();
   cctype_tests();
   iostream_tests();
-//  sstream_tests();
   allocator_tests();
 
   return 0;

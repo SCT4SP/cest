@@ -40,13 +40,34 @@ constexpr bool alloc_test1()
   return true;
 }
 
+// This is a mystery. It occurs when 3, 2 and 1 are inserted to a std::set
+// which uses the constexpr allocator mono_block_alloc
+template <template <class...> class At>
+constexpr bool alloc_test2()
+{
+  At<int> alloc;
+  int* p1 = alloc.allocate(1);
+  int* p2 = alloc.allocate(1);
+  int i;
+
+  if (&i == p2)  // compile error!
+    return false;
+
+  alloc.deallocate(p2,1);
+  alloc.deallocate(p1,1);
+
+  return true;
+}
+
 template <bool SA, template <class...> class At>
 constexpr void tests_helper()
 {
   assert(alloc_test1<At>());
+  assert(alloc_test2<At>());
   if constexpr (SA) {
 #ifndef NO_STATIC_TESTS
     static_assert(alloc_test1<At>());
+    static_assert(alloc_test2<At>());
 #endif
   }
 }
@@ -58,7 +79,7 @@ void allocator_tests()
   using namespace alloc_tests;
 
   tests_helper<true,std::allocator>();  // true: constexpr tests
-  tests_helper<true,cea::mono_block_alloc>();
+  tests_helper<false,cea::mono_block_alloc>(); // true fails on test2
 }
 
 #endif // _CEST_ALLOCATOR_TESTS_HPP_

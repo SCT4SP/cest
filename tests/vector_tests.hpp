@@ -133,7 +133,7 @@ constexpr void doit()
 #ifndef NO_STATIC_TESTS
     static_assert(vec_test0<V0>());
     static_assert(vec_test1<V1>());
-    static_assert(vec_test1<V2>());
+    static_assert(vec_test2<V2>());
     static_assert(vec_test3<V3>());
     static_assert(vec_test4<V4>());
     static_assert(vec_test5<V5>());

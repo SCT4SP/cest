@@ -11,7 +11,7 @@ namespace cest {
 template <
   class CharT,
   class Traits = std::char_traits<CharT>
-> class basic_istream : virtual public basic_ios<CharT, Traits>
+> class basic_istream : /*virtual*/ public basic_ios<CharT, Traits>
 {
 public:
   using char_type   = CharT;

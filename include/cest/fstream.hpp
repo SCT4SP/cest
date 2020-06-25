@@ -20,8 +20,9 @@ public:
   using pos_type    = typename Traits::pos_type;
   using off_type    = typename Traits::off_type;
 
-  explicit basic_ifstream( const char* filename,
-             ios_base::openmode mode = ios_base::in );
+  explicit constexpr basic_ifstream( const char* filename,
+                                     ios_base::openmode mode = ios_base::in ) {
+  }
 };
 
 using  ifstream = basic_ifstream<char>;

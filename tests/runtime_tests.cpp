@@ -18,6 +18,7 @@
 #include "cctype_tests.hpp"
 #include "iostream_tests.hpp"
 #include "allocator_tests.hpp"
+#include "ifstream_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +35,7 @@ int main(int argc, char *argv[])
   cctype_tests();
   iostream_tests();
   allocator_tests();
+  ifstream_tests();
 
   return 0;
 }

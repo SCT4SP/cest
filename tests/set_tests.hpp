@@ -270,7 +270,7 @@ constexpr void doit()
 #ifndef NO_STATIC_TESTS
     static_assert(set_test1<S1>());     // somehow, the 3rd arg is being
     static_assert(set_test2<S2>());     // found within the set already:
-//    static_assert(set_test3<S3>(3,2,1) == std::tuple{2,3,2,2}); // tup3  !??
+    static_assert(set_test3<S3>(3,2,1) == tup3);//std::tuple{2,3,2,2}); // tup3  !??
     static_assert(set_test3<S3>(1,2,3) == tup4);
     static_assert(set_test3<S3>(1,3,2) == tup5);
 //    static_assert(set_test3<S3>(1,2,2) == std::tuple{3,1,2,2}); // tup6  !??
@@ -299,7 +299,7 @@ void new_set_tests()
   tests_helper<true,cest::set,cea::mono_block_alloc>();
 
   tests_helper<false,std::set,std::allocator>();
-  tests_helper< true,std::set,cea::mono_block_alloc>();
+//  tests_helper< true,std::set,cea::mono_block_alloc>();
 }
 
 } // namespace set_tests_ns

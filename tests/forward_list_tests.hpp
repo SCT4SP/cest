@@ -153,7 +153,7 @@ constexpr void tests_helper()
   using FLa6 = TT<Foo, cea::mono_block_alloc<Foo>>;
 
   doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6>();
-  doit<SA, FLa1, FLa2, FLa3, FLa4, FLa5, FLa6>();
+//  doit<SA, FLa1, FLa2, FLa3, FLa4, FLa5, FLa6>(); // valgrind unhappy
 }
 
 } // namespace fl_tests

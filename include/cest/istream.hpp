@@ -9,19 +9,32 @@
 namespace cest {
 
 template <
-  class CharT,
-  class Traits = std::char_traits<CharT>
-> class basic_istream : /*virtual*/ public basic_ios<CharT, Traits>
+  class _CharT,
+  class _Traits = std::char_traits<_CharT>
+> class basic_istream : /*virtual*/ public basic_ios<_CharT, _Traits>
 {
 public:
-  using char_type   = CharT;
-  using traits_type = Traits;
-  using int_type    = typename Traits::int_type;
-  using pos_type    = typename Traits::pos_type;
-  using off_type    = typename Traits::off_type;
+  using char_type   = _CharT;
+  using traits_type = _Traits;
+  using int_type    = typename traits_type::int_type;
+  using pos_type    = typename traits_type::pos_type;
+  using off_type    = typename traits_type::off_type;
 
-  constexpr basic_istream& get(char_type& ch);
-  constexpr basic_istream& unget();
+  streamsize _M_gcount;
+
+  virtual constexpr ~basic_istream() { /* _M_gcount = streamsize(0); */ }
+
+  protected:
+  constexpr basic_istream() : _M_gcount(streamsize(0))
+  { /*this->init(0);*/ }
+
+  constexpr basic_istream& get(char_type& ch) {
+    return *this;
+  }
+
+  constexpr basic_istream& unget() {
+    return *this;
+  }
 };
 
 using  istream = basic_istream<char>;

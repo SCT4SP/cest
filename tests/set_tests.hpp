@@ -298,7 +298,7 @@ void new_set_tests()
   tests_helper<true,cest::set>();
 //  tests_helper<true,cest::set,cea::mono_block_alloc>(); // ok, but distracting
 
-  tests_helper<true,std::set,std::allocator>();
+  tests_helper<false,std::set,std::allocator>();
 //  tests_helper< true,std::set,cea::mono_block_alloc>();
 }
 

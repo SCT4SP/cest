@@ -4,6 +4,7 @@
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/ios_tests.hpp
 
 #include <string>  // std::char_traits
+#include <ios>     // std::streamsize
 
 namespace cest {
 
@@ -15,6 +16,8 @@ struct ios_base {
 constexpr ios_base& dec(ios_base& str) { return str; }
 constexpr ios_base& hex(ios_base& str) { return str; }
 constexpr ios_base& oct(ios_base& str) { return str; }
+
+using streamsize = std::streamsize;
 
 template <
   class CharT,

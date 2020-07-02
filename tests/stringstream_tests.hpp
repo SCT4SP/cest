@@ -14,8 +14,8 @@ constexpr bool istringstream_test1() {
   S str("def");
 //  Iss s1("abc");
   Iss s2(str);
-//  char c;
-//  s1.get(c);
+  char c;
+  s2.get(c);
   return true;//s1.get() == 'a' && s2.get() == 'd';
 }
 
@@ -29,7 +29,7 @@ void stringstream_tests()
   assert((istringstream_test1<cest::istringstream, cest::string>()));
 
 #ifndef NO_STATIC_TESTS
-//  static_assert(istringstream_test1<cest::istringstream, cest::string>());
+  static_assert(istringstream_test1<cest::istringstream, cest::string>());
 //  static_assert(istringstream_test1<std::istringstream, std::string>());
 #endif
 }

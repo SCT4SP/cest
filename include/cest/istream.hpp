@@ -22,23 +22,64 @@ public:
 
   streamsize _M_gcount;
 
-  virtual constexpr ~basic_istream() { /* _M_gcount = streamsize(0); */ }
+  virtual constexpr ~basic_istream() { _M_gcount = streamsize(0); }
+
+  class sentry;
+  friend class sentry;
+
+  constexpr basic_istream& get(char_type& ch);
+//  { return *this; }
+
+  constexpr basic_istream& unget() {
+    return *this;
+  }
 
   protected:
   constexpr basic_istream() : _M_gcount(streamsize(0))
   { /*this->init(0);*/ }
 
-  constexpr basic_istream& get(char_type& ch) {
-    return *this;
-  }
-
-  constexpr basic_istream& unget() {
-    return *this;
-  }
 };
 
 using  istream = basic_istream<char>;
 using wistream = basic_istream<wchar_t>;
+
+  // from istream.cc
+  template<typename _CharT, typename _Traits>
+    constexpr basic_istream<_CharT, _Traits>&
+    basic_istream<_CharT, _Traits>::
+    get(char_type& __c)
+    {
+      _M_gcount = 0;
+      ios_base::iostate __err = ios_base::goodbit;
+      sentry __cerb(*this, true);
+      if (__cerb)
+  {
+    __try
+      {
+        const int_type __cb = this->rdbuf()->sbumpc();
+        // 27.6.1.1 paragraph 3
+        if (!traits_type::eq_int_type(__cb, traits_type::eof()))
+    {
+      _M_gcount = 1;
+      __c = traits_type::to_char_type(__cb);
+    }
+        else
+    __err |= ios_base::eofbit;
+      }
+    __catch(__cxxabiv1::__forced_unwind&)
+      {
+        this->_M_setstate(ios_base::badbit);
+        __throw_exception_again;
+      }
+    __catch(...)
+      { this->_M_setstate(ios_base::badbit); }
+  }
+      if (!_M_gcount)
+  __err |= ios_base::failbit;
+      if (__err)
+  this->setstate(__err);
+      return *this;
+    }
 
 } // namespace cest
 

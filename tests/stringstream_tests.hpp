@@ -29,7 +29,7 @@ void stringstream_tests()
   assert((istringstream_test1<cest::istringstream, cest::string>()));
 
 #ifndef NO_STATIC_TESTS
-//  static_assert(istringstream_test1<cest::istringstream, cest::string>());
+  static_assert(istringstream_test1<cest::istringstream, cest::string>());
 //  static_assert(istringstream_test1<std::istringstream, std::string>());
 #endif
 }

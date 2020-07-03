@@ -51,6 +51,8 @@ public:
     traits_type::assign(this->data()[m_size = sz], CharT());
   }
 
+  constexpr basic_string(const basic_string& str) : basic_string(str.c_str()) {}
+
   constexpr ~basic_string() { m_alloc.deallocate(m_p,m_capacity+1); }
 
   constexpr size_type        size() const          { return m_size;        }

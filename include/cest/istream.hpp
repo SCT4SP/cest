@@ -49,7 +49,7 @@ using wistream = basic_istream<wchar_t>;
     basic_istream<_CharT, _Traits>::
     get(char_type& __c)
     {
-      _M_gcount = 0;
+      /*_M_gcount = 0;
       ios_base::iostate __err = ios_base::goodbit;
       sentry __cerb(*this, true);
       if (__cerb)
@@ -78,6 +78,7 @@ using wistream = basic_istream<wchar_t>;
   __err |= ios_base::failbit;
       if (__err)
   this->setstate(__err);
+      return *this;*/
       return *this;
     }
 

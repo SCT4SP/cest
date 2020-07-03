@@ -91,6 +91,14 @@ constexpr auto string_test6(auto &cout, auto &endl) {
   return std::tuple{true};
 }
 
+template <typename S>
+constexpr bool string_test7() {
+  S str("Zod");
+  S str2(str);
+  str += '!';
+  return str != str2;
+}
+
 void string_tests()
 {
   constexpr const auto tup1 = std::tuple{true,true,0,false,1,'q','\0','\0'};
@@ -129,6 +137,8 @@ void string_tests()
   assert(string_test5<cest::string>() == tup5);
   assert(string_test6< std::string>( std::cout,  std_endl) == tup6);
   assert(string_test6<cest::string>(cest::cout, cest_endl) == tup6);
+  assert(string_test7< std::string>());
+  assert(string_test7<cest::string>());
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

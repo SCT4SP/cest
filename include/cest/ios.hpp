@@ -3,7 +3,6 @@
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/ios_tests.hpp
 
-#include "cest/string.hpp"
 #include <string>  // std::char_traits
 #include <ios>     // std::streamsize
 
@@ -146,25 +145,6 @@ namespace cest {
 
 struct ios_base {
 
-  class failure : public std::system_error
-  {
-  public:
-    explicit constexpr
-    failure(const cest::string& __str);
-
-    explicit constexpr
-    failure(const string&, const error_code&);
-
-    explicit constexpr
-    failure(const char*, const error_code& = io_errc::stream);
-
-    constexpr virtual
-    ~failure() throw();
-
-    constexpr virtual const char*
-    what() const throw();
-  };
-
   typedef _Ios_Fmtflags fmtflags;
   static const fmtflags boolalpha =   _S_boolalpha;
   static const fmtflags dec =         _S_dec;
@@ -228,29 +208,6 @@ public:
     this->clear(this->rdstate() | __state);
   }
 };
-
-  // from src/c++98/ios_failure.cc
-  constexpr void
-  __throw_ios_failure(const char* __s __attribute__((unused)))
-  { _GLIBCXX_THROW_OR_ABORT(ios::failure(_(__s))); }
-
-  constexpr void
-  __throw_ios_failure(const char* str, int)
-  { __throw_ios_failure(str); }
-
-
-  // from basic_ios.tcc
-  template<typename _CharT, typename _Traits>
-    constexpr void
-    basic_ios<_CharT, _Traits>::clear(iostate __state)
-    {
-      if (this->rdbuf())
-  _M_streambuf_state = __state;
-      else
-    _M_streambuf_state = __state | badbit;
-      if (this->exceptions() & this->rdstate())
-  __throw_ios_failure(__N("basic_ios::clear"));
-    }
 
 } // namespace cest
 

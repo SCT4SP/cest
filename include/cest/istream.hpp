@@ -29,7 +29,7 @@ public:
     return *this;
   }
 
-  protected:
+protected:
   constexpr basic_istream() { }
 };
 

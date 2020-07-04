@@ -43,17 +43,23 @@ public:
     traits_type::assign(this->data()[0], CharT()); // m_p[0] = \0;
   }
 
-  constexpr basic_string(const CharT *s, const Allocator &alloc = Allocator()) {
-    const size_type sz = traits_type::length(s);
-    m_capacity = sz+1;                    // ensure m_capacity is not 0
-    m_p = m_alloc.allocate(m_capacity+1); // +1 for the null terminator
-    traits_type::copy(m_p, s, sz); // traits_type supports user customisation
-    traits_type::assign(this->data()[m_size = sz], CharT());
+  constexpr basic_string(const CharT* s,
+                         size_type count,
+                         const Allocator& alloc = Allocator()) {
+    m_capacity = count+1;                    // ensure m_capacity is not 0
+    m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
+    traits_type::copy(m_p, s, count); // traits_type supports user customisation
+    traits_type::assign(this->data()[m_size = count], CharT());
   }
+
+  constexpr basic_string(const CharT* s, const Allocator &alloc = Allocator())
+  : basic_string(s, traits_type::length(s), alloc) {}
 
   constexpr basic_string(const basic_string& str) : basic_string(str.c_str()) {}
 
   constexpr ~basic_string() { m_alloc.deallocate(m_p,m_capacity+1); }
+
+  constexpr allocator_type get_allocator() const   { return m_alloc;       }
 
   constexpr size_type        size() const          { return m_size;        }
   constexpr size_type      length() const          { return m_size;        }

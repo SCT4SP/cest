@@ -12,7 +12,7 @@ namespace ss_tests {
 template <typename Iss, typename S>
 constexpr bool istringstream_test1() {
   S str("def");
-//  Iss s1("abc");
+  Iss s1("abc");
   Iss s2(str);
   char c;
   s2.get(c);

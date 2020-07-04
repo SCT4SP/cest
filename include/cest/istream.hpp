@@ -20,12 +20,7 @@ public:
   using pos_type    = typename traits_type::pos_type;
   using off_type    = typename traits_type::off_type;
 
-  streamsize _M_gcount;
-
-  virtual constexpr ~basic_istream() { _M_gcount = streamsize(0); }
-
-  class sentry;
-  friend class sentry;
+  virtual constexpr ~basic_istream() { }
 
   constexpr basic_istream& get(char_type& ch);
 //  { return *this; }
@@ -35,9 +30,7 @@ public:
   }
 
   protected:
-  constexpr basic_istream() : _M_gcount(streamsize(0))
-  { /*this->init(0);*/ }
-
+  constexpr basic_istream() { }
 };
 
 using  istream = basic_istream<char>;

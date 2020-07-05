@@ -2,67 +2,17 @@
 #define _CEST_SSTREAM_HPP_
 
 #include "istream.hpp"
+#include "streambuf.hpp"
 #include "string.hpp"
 
 namespace cest {
-
-// for streambuf.hpp
-template<
-  class _CharT,
-  class _Traits = std::char_traits<_CharT>
-> class basic_streambuf {
-public:
-  typedef _CharT   char_type;
-  typedef _Traits  traits_type;
-  typedef typename traits_type::int_type    int_type;
-  typedef typename traits_type::pos_type    pos_type;
-  typedef typename traits_type::off_type    off_type;
-
-protected:
-  char_type*    _M_in_beg;     ///< Start of get area.
-  char_type*    _M_in_cur;     ///< Current read area.
-  char_type*    _M_in_end;     ///< End of get area.
-  char_type*    _M_out_beg;    ///< Start of put area.
-  char_type*    _M_out_cur;    ///< Current put area.
-  char_type*    _M_out_end;    ///< End of put area.
-  //  locale      _M_buf_locale;
-
-public:
-  constexpr // virtual
-  ~basic_streambuf()
-  {}
-
-protected:
-  constexpr basic_streambuf()
-  : _M_in_beg(0), _M_in_cur(0), _M_in_end(0),
-  _M_out_beg(0), _M_out_cur(0), _M_out_end(0)//,
-//  _M_buf_locale(locale())
-  { }
-
-  constexpr basic_streambuf(const basic_streambuf& rhs) {}
-
-  constexpr void                                                       
-  setg(char_type* __gbeg, char_type* __gnext, char_type* __gend)
-  {                                                        
-    _M_in_beg = __gbeg;                                                    
-    _M_in_cur = __gnext;
-    _M_in_end = __gend;                                          
-  }
-
-  constexpr void pbump(int __n) { _M_out_cur += __n; }
-
-  constexpr void setp(char_type* __pbeg, char_type* __pend)
-  {
-    _M_out_beg = _M_out_cur = __pbeg;
-    _M_out_end = __pend;
-  }
-};
 
 template<
   class _CharT,
   class _Traits = std::char_traits<_CharT>,
   class _Alloc = std::allocator<_CharT>
-> class basic_stringbuf : public basic_streambuf<_CharT, _Traits> {
+> class basic_stringbuf : public basic_streambuf<_CharT, _Traits>
+{
 public:
 
   typedef _CharT  char_type;
@@ -78,6 +28,7 @@ public:
   typedef typename __string_type::size_type   __size_type;
 
 protected:
+
   ios_base::openmode _M_mode;
   __string_type      _M_string;
 
@@ -178,11 +129,6 @@ public:
   typedef basic_istream<char_type, traits_type> __istream_type;
 
   // cppreference (3)
-//  explicit constexpr
-//  basic_istringstream(const __string_type& __str,
-//    ios_base::openmode __mode = ios_base::in)
-//  : __istream_type() { }
-
   explicit constexpr
   basic_istringstream(const __string_type& __str,
     ios_base::openmode __mode = ios_base::in)
@@ -199,7 +145,6 @@ public:
   constexpr ~basic_istringstream() {}
 
   __stringbuf_type  _M_stringbuf;
-  //  __string_type _M_string;
 };
 
 using  istringstream = basic_istringstream<char>;

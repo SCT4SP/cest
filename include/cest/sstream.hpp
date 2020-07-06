@@ -133,7 +133,7 @@ public:
   basic_istringstream(const __string_type& __str,
     ios_base::openmode __mode = ios_base::in)
   : __istream_type(), _M_stringbuf(__str, __mode | ios_base::in)
-  { /*this->init(&_M_stringbuf);*/ }
+  { this->init(&_M_stringbuf); }
 
   // cppreference (6)
   // doesn't exist in libstdc++?

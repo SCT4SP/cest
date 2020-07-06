@@ -14,9 +14,10 @@ constexpr bool istringstream_test1() {
   S str("def");
   Iss s1("abc");
   Iss s2(str);
-  char c;
-  s2.get(c);
-  return true;//s1.get() == 'a' && s2.get() == 'd';
+  char c1, c2;
+  s1.get(c1);
+  s2.get(c2);
+  return c1 == 'a' && c2 == 'd';
 }
 
 } // namespace ss_tests

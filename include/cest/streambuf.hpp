@@ -29,6 +29,9 @@ public:
   ~basic_streambuf()
   {}
 
+  constexpr int
+  pubsync() { return this->sync(); }
+
   constexpr int_type
   snextc()
   {
@@ -97,6 +100,9 @@ protected:
     _M_out_beg = _M_out_cur = __pbeg;
     _M_out_end = __pend;
   }
+
+  virtual constexpr int
+  sync() { return 0; }
 
   virtual constexpr int_type
   underflow()

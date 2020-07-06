@@ -6,6 +6,7 @@
 #include "streambuf.hpp"
 #include <string>  // std::char_traits
 #include <ios>     // std::streamsize
+#include <locale>
 
 namespace cest {
 
@@ -187,6 +188,17 @@ protected:
   iostate    _M_exception;
   iostate    _M_streambuf_state;
 
+  //locale     _M_ios_locale;
+
+  // from src/c++98/ios_locale.cc
+  constexpr void _M_init() throw()
+  {
+    _M_precision = 6;
+    _M_width = 0;
+    _M_flags = skipws | dec;
+//    _M_ios_locale = locale(); // std::locale is not constexpr
+  }
+
 public:
   constexpr fmtflags
   flags() const
@@ -299,6 +311,8 @@ _M_ctype(0), _M_num_put(0), _M_num_get(0)
   : ios_base(), _M_tie(0), _M_fill(char_type()), _M_fill_init(false),
 _M_streambuf(0), _M_ctype(0), _M_num_put(0), _M_num_get(0)
   { }
+
+  constexpr void init(basic_streambuf<_CharT, _Traits>* __sb);
 };
 
   // from basic_ios.tcc
@@ -310,8 +324,25 @@ _M_streambuf(0), _M_ctype(0), _M_num_put(0), _M_num_get(0)
       _M_streambuf_state = __state;   
     else
       _M_streambuf_state = __state | badbit;
-    //if (this->exceptions() & this->rdstate())                
-      //__throw_ios_failure(__N("basic_ios::clear"));
+    if (this->exceptions() & this->rdstate())                
+      std::__throw_ios_failure(__N("basic_ios::clear"));
+  }
+
+  template<typename _CharT, typename _Traits>
+  constexpr void
+  basic_ios<_CharT, _Traits>::init(basic_streambuf<_CharT, _Traits>* __sb)
+  {
+    ios_base::_M_init();
+
+//    _M_cache_locale(_M_ios_locale);
+
+    _M_fill = _CharT();
+    _M_fill_init = false;
+
+    _M_tie = 0;
+    _M_exception = goodbit;
+    _M_streambuf = __sb;
+    _M_streambuf_state = __sb ? goodbit : badbit;
   }
 
 } // namespace cest

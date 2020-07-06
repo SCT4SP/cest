@@ -28,7 +28,7 @@ public:
 
   explicit constexpr
   basic_ostream(__streambuf_type* __sb)
-  { /*this->init(__sb);*/ }
+  { this->init(__sb); }
 
   // for endl
   constexpr basic_ostream& operator<<(basic_ostream& (*pf)(basic_ostream&))  {
@@ -53,7 +53,7 @@ public:
 
   protected:
   constexpr basic_ostream()
-  { /*this->init(0);*/ }
+  { this->init(0); }
 };
 
 template< class CharT, class Traits>
@@ -85,7 +85,7 @@ using ostream = basic_ostream<char>;
       // _GLIBCXX_RESOLVE_LIB_DEFECTS
       // DR 60. What is a formatted input function?
       // basic_ostream::flush() is *not* an unformatted output function.
-/*      ios_base::iostate __err = ios_base::goodbit;
+      ios_base::iostate __err = ios_base::goodbit;
       __try
   {
     if (this->rdbuf() && this->rdbuf()->pubsync() == -1)
@@ -100,7 +100,6 @@ using ostream = basic_ostream<char>;
   { this->_M_setstate(ios_base::badbit); }
       if (__err)
   this->setstate(__err);
-*/
       return *this;
     }
 

@@ -22,30 +22,48 @@ public:
   typedef basic_streambuf<_CharT, _Traits>    __streambuf_type;
   typedef basic_ios<_CharT, _Traits>    __ios_type;
   typedef basic_ostream<_CharT, _Traits>    __ostream_type;
-  typedef std::num_get<_CharT, std::ostreambuf_iterator<_CharT, _Traits> >
-          __num_get_type;
+  typedef std::num_put<_CharT, std::ostreambuf_iterator<_CharT, _Traits> >
+          __num_put_type;
   typedef std::ctype<_CharT>             __ctype_type;
 
   explicit constexpr
   basic_ostream(__streambuf_type* __sb)
   { this->init(__sb); }
 
+  virtual constexpr
+  ~basic_ostream() { }
+
+  class sentry;
+  friend class sentry;
+
   // for endl
-  constexpr basic_ostream& operator<<(basic_ostream& (*pf)(basic_ostream&))  {
-    return pf(*this);
+  constexpr __ostream_type&
+  operator<<(__ostream_type& (*__pf)(__ostream_type&)) {
+    return __pf(*this);
+  }
+
+  constexpr __ostream_type&
+  operator<<(__ios_type&     (*__pf)(__ios_type&))     {
+    __pf(*this);
+    return *this;
   }
 
   // for hex
-  constexpr basic_ostream& operator<<(ios_base&      (*pf)(ios_base&))       {
-    pf(*this);
+  constexpr __ostream_type&
+  operator<<(ios_base&       (*__pf)(ios_base&))       {
+    __pf(*this);
     return *this;
   }
 
-  constexpr basic_ostream& operator<<(int value)                             {
+  constexpr __ostream_type&
+  operator<<(long __n)
+  { return _M_insert(__n); }
+
+  constexpr __ostream_type& operator<<(int value)                             {
     return *this;
   }
 
-  constexpr basic_ostream& operator<<(unsigned int value)                    {
+  constexpr __ostream_type& operator<<(unsigned int value)                    {
     return *this;
   }
 
@@ -54,6 +72,10 @@ public:
   protected:
   constexpr basic_ostream()
   { this->init(0); }
+
+  template<typename _ValueT>
+  constexpr __ostream_type&
+  _M_insert(_ValueT __v);
 };
 
 template< class CharT, class Traits>
@@ -76,7 +98,37 @@ endl(basic_ostream<CharT, Traits> &os) {
 
 using ostream = basic_ostream<char>;
 
-// from ostream.tcc
+  template <typename _CharT, typename _Traits>
+    class basic_ostream<_CharT, _Traits>::sentry
+    {
+      // Data Members.
+      bool        _M_ok;
+      basic_ostream<_CharT, _Traits>&   _M_os;
+
+    public:
+      explicit                                          
+      sentry(basic_ostream<_CharT, _Traits>& __os);
+                                                                          
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+      ~sentry()
+      {                                                       
+  // XXX MT                                                                
+  if (bool(_M_os.flags() & ios_base::unitbuf) && !std::uncaught_exception())
+    {   
+      // Can't call flush directly or else will get into recursive lock.
+      if (_M_os.rdbuf() && _M_os.rdbuf()->pubsync() == -1)
+        _M_os.setstate(ios_base::badbit);
+    }                                                                  
+      }
+#pragma GCC diagnostic pop
+                                                          
+      explicit
+      operator bool() const                                       
+      { return _M_ok; }
+    };
+
+  // from ostream.tcc
   template<typename _CharT, typename _Traits>
     constexpr basic_ostream<_CharT, _Traits>&
     basic_ostream<_CharT, _Traits>::
@@ -102,6 +154,36 @@ using ostream = basic_ostream<char>;
   this->setstate(__err);
       return *this;
     }
+
+  // from ostream.tcc
+  template<typename _CharT, typename _Traits>
+    template<typename _ValueT>
+      constexpr basic_ostream<_CharT, _Traits>&
+      basic_ostream<_CharT, _Traits>::
+      _M_insert(_ValueT __v)
+      {
+  sentry __cerb(*this);
+  if (__cerb)
+    {
+      ios_base::iostate __err = ios_base::goodbit;
+      __try
+        {
+    const __num_put_type& __np = __check_facet(this->_M_num_put);
+    if (__np.put(*this, *this, this->fill(), __v).failed())
+      __err |= ios_base::badbit;
+        }
+      __catch(__cxxabiv1::__forced_unwind&)
+        {
+    this->_M_setstate(ios_base::badbit);
+    __throw_exception_again;
+        }
+      __catch(...)
+        { this->_M_setstate(ios_base::badbit); }
+      if (__err)
+        this->setstate(__err);
+    }
+  return *this;
+      }
 
 } // namespace cest
 

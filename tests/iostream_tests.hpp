@@ -20,6 +20,9 @@ void iostream_tests()
 {
   constexpr const auto tup1 = std::tuple{true};
 
+  int i = 9900001;
+  std::cout << i << '\n';
+
   using std_char_type    = decltype(std::cout)::char_type;
   using std_traits_type  = decltype(std::cout)::traits_type;
   auto  &std_endl = std::endl<std_char_type,std_traits_type>;

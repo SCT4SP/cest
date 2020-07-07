@@ -52,7 +52,6 @@ protected:
 using  istream = basic_istream<char>;
 using wistream = basic_istream<wchar_t>;
 
-  // from istream.cc
   template<typename _CharT, typename _Traits>
   class basic_istream<_CharT, _Traits>::sentry
   {

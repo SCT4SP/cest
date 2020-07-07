@@ -21,12 +21,17 @@ constexpr bool istringstream_test1() {
   s1.get(c1);
   s2.get(c2);
   bool b2 = c1 == 'b' && c2 == 'e';
+  bool good = s1.good() && s2.good();
   s1.unget();
   s2.unget();
   s1.get(c1);
   s2.get(c2);
   bool b3 = c1 == 'b' && c2 == 'e';
-  return b1 && b2 && b3;
+  bool beof1 = !s1.eof() && !s1.fail();
+  s1.get(c1);
+  s1.get(c1);
+  bool beof2 = s1.eof() && s1.fail();
+  return b1 && b2 && b3 && good && beof1 && beof2;
 }
 
 } // namespace ss_tests

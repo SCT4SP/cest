@@ -17,7 +17,16 @@ constexpr bool istringstream_test1() {
   char c1, c2;
   s1.get(c1);
   s2.get(c2);
-  return c1 == 'a' && c2 == 'd';
+  bool b1 = c1 == 'a' && c2 == 'd';
+  s1.get(c1);
+  s2.get(c2);
+  bool b2 = c1 == 'b' && c2 == 'e';
+  s1.unget();
+  s2.unget();
+  s1.get(c1);
+  s2.get(c2);
+  bool b3 = c1 == 'b' && c2 == 'e';
+  return b1 && b2 && b3;
 }
 
 } // namespace ss_tests

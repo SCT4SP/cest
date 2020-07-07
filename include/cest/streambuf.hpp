@@ -3,6 +3,8 @@
 
 namespace cest {
 
+#define _IsUnused __attribute__ ((__unused__))
+
 template<
   class _CharT,
   class _Traits = std::char_traits<_CharT>
@@ -67,6 +69,20 @@ public:
     return __ret;
   }
 
+  constexpr int_type
+  sungetc()
+  {
+    int_type __ret;
+    if (__builtin_expect(this->eback() < this->gptr(), true))
+    {
+      this->gbump(-1);
+      __ret = traits_type::to_int_type(*this->gptr());
+    }
+    else
+      __ret = this->pbackfail();
+    return __ret;
+  }
+
 protected:
   constexpr basic_streambuf()
   : _M_in_beg(0), _M_in_cur(0), _M_in_end(0),
@@ -75,6 +91,9 @@ protected:
   { }
 
   constexpr basic_streambuf(const basic_streambuf& rhs) {}
+
+  constexpr char_type*
+  eback() const { return _M_in_beg; }
 
   constexpr char_type*
   gptr()  const { return _M_in_cur;  }
@@ -121,6 +140,11 @@ protected:
     }
     return __ret;
   }
+
+  virtual constexpr int_type
+  pbackfail(int_type __c _IsUnused  = traits_type::eof())
+  { return traits_type::eof(); }
+
 };
 
 } // namespace cest

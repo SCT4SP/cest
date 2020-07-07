@@ -37,11 +37,13 @@ public:
   class sentry;
   friend class sentry;
 
-  constexpr basic_istream& get(char_type& ch);
+  constexpr
+  __istream_type&
+  get(char_type& ch);
 
-  constexpr basic_istream& unget() {
-    return *this;
-  }
+  constexpr
+  __istream_type&
+  unget();
 
 protected:
   constexpr basic_istream() { }
@@ -118,6 +120,7 @@ using wistream = basic_istream<wchar_t>;
   }
     }
 
+  // from istream.tcc
   template<typename _CharT, typename _Traits>
     constexpr basic_istream<_CharT, _Traits>&
     basic_istream<_CharT, _Traits>::
@@ -152,6 +155,42 @@ using wistream = basic_istream<wchar_t>;
   __err |= ios_base::failbit;
       if (__err)
   this->setstate(__err);
+      return *this;
+    }
+
+  // from istream.tcc
+  template<typename _CharT, typename _Traits>
+    constexpr basic_istream<_CharT, _Traits>&
+    basic_istream<_CharT, _Traits>::
+    unget(void)
+    {
+      // _GLIBCXX_RESOLVE_LIB_DEFECTS
+      // 60. What is a formatted input function?
+      _M_gcount = 0;
+      // Clear eofbit per N3168.
+      this->clear(this->rdstate() & ~ios_base::eofbit);
+      sentry __cerb(*this, true);
+      if (__cerb)
+  {
+    ios_base::iostate __err = ios_base::goodbit;
+    __try
+      {
+        const int_type __eof = traits_type::eof();
+        __streambuf_type* __sb = this->rdbuf();
+        if (!__sb
+      || traits_type::eq_int_type(__sb->sungetc(), __eof))
+    __err |= ios_base::badbit;
+      }
+    __catch(__cxxabiv1::__forced_unwind&)
+      {
+        this->_M_setstate(ios_base::badbit);
+        __throw_exception_again;
+      }
+    __catch(...)
+      { this->_M_setstate(ios_base::badbit); }
+    if (__err)
+      this->setstate(__err);
+  }
       return *this;
     }
 

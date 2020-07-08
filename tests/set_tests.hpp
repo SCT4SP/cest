@@ -295,7 +295,7 @@ void new_set_tests()
 {
   using namespace set_tests_ns;
 
-  tests_helper<true,cest::set>();
+  tests_helper<CONSTEXPR_CEST,cest::set>();
 //  tests_helper<true,cest::set,cea::mono_block_alloc>(); // ok, but distracting
 
   tests_helper<false,std::set,std::allocator>();

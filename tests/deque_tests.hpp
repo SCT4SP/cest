@@ -15,11 +15,11 @@ constexpr bool deque_test1()
 void deque_tests()
 {
 #if RUN_STATIC_TESTS == 1
-//  static_assert(deque_test1<cest::deque<int>>());
+  static_assert(deque_test1<cest::deque<int>>());
 #endif
 
   assert((deque_test1< std::deque<int>>()));
-//  assert((deque_test1<cest::deque<int>>()));
+  assert((deque_test1<cest::deque<int>>()));
 }
 
 #endif //  _CEST_DEQUE_TESTS_HPP_

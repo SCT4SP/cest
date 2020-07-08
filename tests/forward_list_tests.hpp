@@ -124,7 +124,7 @@ constexpr void doit()
           assert(forward_list_test6<F6>());
 
   if constexpr (SA) {
-#ifndef NO_STATIC_TESTS
+#if RUN_STATIC_TESTS == 1
     static_assert(forward_list_test1<F1>());
     static_assert(forward_list_test2<F2>());
     static_assert(forward_list_test3<F3>());
@@ -162,12 +162,8 @@ void forward_list_tests()
 {
   using namespace fl_tests;
 
-  tests_helper<true,cest::forward_list>();
-#ifdef USE_CONSTEXPR_STDLIB
-  tests_helper<true,std::forward_list>();  // constexpr tests not yet
-#else
-  tests_helper<false,std::forward_list>(); // false: no constexpr tests
-#endif
+  tests_helper<CONSTEXPR_CEST,cest::forward_list>();
+  tests_helper<CONSTEXPR_STDLIB,std::forward_list>();
 }
 
 #endif // _CEST_FORWARD_LIST_TESTS_HPP_

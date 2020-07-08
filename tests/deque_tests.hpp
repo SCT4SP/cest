@@ -14,7 +14,7 @@ constexpr bool deque_test1()
 
 void deque_tests()
 {
-#ifndef NO_STATIC_TESTS
+#if RUN_STATIC_TESTS == 1
 //  static_assert(deque_test1<cest::deque<int>>());
 #endif
 

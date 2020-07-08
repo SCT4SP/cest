@@ -60,7 +60,7 @@ constexpr bool static_iterator_test() {
 void iterator_tests()
 {
   using namespace cest;
-#ifndef NO_STATIC_TESTS
+#if RUN_STATIC_TESTS == 1
   static_assert(iterator_test1<vector>());
   static_assert(static_iterator_test<std::vector<int>,vector<int>>());
   static_assert(static_iterator_test<std::forward_list<int>,forward_list<int>>());

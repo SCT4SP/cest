@@ -123,7 +123,7 @@ void string_tests()
   using cest_traits_type = decltype(cest::cout)::traits_type;
   auto &cest_endl = cest::endl<cest_char_type,cest_traits_type>;
 
-#ifndef NO_STATIC_TESTS
+#if RUN_STATIC_TESTS == 1
   static_assert((string_test1<cest::string>()) == tup1);
   static_assert((string_test2<cest::string>()) == tup2);
   static_assert((string_test3<cest::string>()) == tup3);

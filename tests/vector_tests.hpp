@@ -130,7 +130,7 @@ constexpr void doit()
   assert(vec_test8<V8>());
 
   if constexpr (SA) {
-#ifndef NO_STATIC_TESTS
+#if RUN_STATIC_TESTS == 1
     static_assert(vec_test0<V0>());
     static_assert(vec_test1<V1>());
     static_assert(vec_test2<V2>());
@@ -177,12 +177,8 @@ void vector_tests()
 {
   using namespace v_tests;
 
-  tests_helper<true,cest::vector>();
-#ifdef USE_CONSTEXPR_STDLIB
-  tests_helper<true,std::vector>();  // true: constexpr tests
-#else
-  tests_helper<false,std::vector>(); // false: no constexpr tests
-#endif
+  tests_helper<CONSTEXPR_CEST,cest::vector>();
+  tests_helper<CONSTEXPR_STDLIB,std::vector>();  // true: constexpr tests
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

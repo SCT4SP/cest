@@ -68,7 +68,7 @@ constexpr void tests_helper()
   assert(alloc_test1<IntAlloc>());
   assert(alloc_test2<IntAlloc>());
   if constexpr (SA) {
-#ifndef NO_STATIC_TESTS
+#if RUN_STATIC_TESTS == 1
     static_assert(alloc_test1<IntAlloc>());
     static_assert(alloc_test2<IntAlloc>());
 #endif

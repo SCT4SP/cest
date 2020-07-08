@@ -20,9 +20,6 @@ void iostream_tests()
 {
   constexpr const auto tup1 = std::tuple{true};
 
-  int i = 9900001;
-  std::cout << i << '\n';
-
   using std_char_type    = decltype(std::cout)::char_type;
   using std_traits_type  = decltype(std::cout)::traits_type;
   auto  &std_endl = std::endl<std_char_type,std_traits_type>;
@@ -31,7 +28,7 @@ void iostream_tests()
   using cest_traits_type = decltype(cest::cout)::traits_type;
   auto &cest_endl = cest::endl<cest_char_type,cest_traits_type>;
 
-#ifndef NO_STATIC_TESTS
+#if RUN_STATIC_TESTS == 1
   static_assert(iostream_test1(cest::cout, cest::cerr, cest::hex, cest_endl));
 #endif
 

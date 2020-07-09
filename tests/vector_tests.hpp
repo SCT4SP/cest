@@ -115,8 +115,17 @@ constexpr bool vec_test8() {
   return 0==sz0 && 0==sz1 && 0==sz2 && 6==sum;
 }
 
+template <typename V>
+constexpr bool vec_test9() {
+  V v;
+  v.push_back(1);
+  v.push_back(2);
+  v.push_back(3);
+  return 3==*v.rbegin() && 1==*v.rend();
+}
+
 template <bool SA, class V0, class V1, class V2, class V3,
-                   class V4, class V5, class V6, class V7, class V8>
+                   class V4, class V5, class V6, class V7, class V8, class V9>
 constexpr void doit()
 {
   assert(vec_test0<V0>());
@@ -128,6 +137,7 @@ constexpr void doit()
   assert(vec_test6<V6>());
   assert(vec_test7<V7>());
   assert(vec_test8<V8>());
+  assert(vec_test9<V9>());
 
   if constexpr (SA) {
 #if RUN_STATIC_TESTS == 1
@@ -139,7 +149,7 @@ constexpr void doit()
     static_assert(vec_test5<V5>());
     static_assert(vec_test6<V6>());
     static_assert(vec_test7<V7>());
-    static_assert(vec_test8<V8>());
+    static_assert(vec_test9<V9>());
 #endif
   }
 }
@@ -156,6 +166,7 @@ constexpr void tests_helper()
   using V6  = Vt<double>;
   using V7  = Vt<int>;
   using V8  = Vt<int>;
+  using V9  = Vt<int>;
 
   using Va0 = Vt<double, cea::mono_block_alloc<double>>;
   using Va1 = Vt<int,    cea::mono_block_alloc<int>>;
@@ -166,9 +177,10 @@ constexpr void tests_helper()
   using Va6 = Vt<double, cea::mono_block_alloc<double>>;
   using Va7 = Vt<int,    cea::mono_block_alloc<int>>;
   using Va8 = Vt<int,    cea::mono_block_alloc<int>>;
+  using Va9 = Vt<int,    cea::mono_block_alloc<int>>;
 
-  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8>();
-  doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8>();
+  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9>();
+  doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8, Va9>();
 }
 
 } // namespace v_tests

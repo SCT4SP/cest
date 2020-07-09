@@ -48,12 +48,25 @@ public:
     }
   }
 
-  constexpr iterator        begin()       { return {m_p};          }
-  constexpr const_iterator  begin() const { return {m_p};          }
-  constexpr const_iterator cbegin() const { return {m_p};          }
-  constexpr iterator          end()       { return {m_p + m_size}; }
-  constexpr const_iterator    end() const { return {m_p + m_size}; }
-  constexpr const_iterator   cend() const { return {m_p + m_size}; }
+  constexpr iterator        begin()       noexcept { return {m_p};          }
+  constexpr const_iterator  begin() const noexcept { return {m_p};          }
+  constexpr const_iterator cbegin() const noexcept { return {m_p};          }
+  constexpr iterator          end()       noexcept { return {m_p + m_size}; }
+  constexpr const_iterator    end() const noexcept { return {m_p + m_size}; }
+  constexpr const_iterator   cend() const noexcept { return {m_p + m_size}; }
+
+  constexpr reverse_iterator
+  rbegin()       noexcept { return reverse_iterator(end()); }
+
+  constexpr const_reverse_iterator
+  rbegin() const noexcept { return const_reverse_iterator(end()); }
+
+  constexpr reverse_iterator
+  rend()         noexcept { return reverse_iterator(begin()); }
+
+  constexpr const_reverse_iterator
+  rend()   const noexcept { return const_reverse_iterator(begin()); }
+
   constexpr void         pop_back()       { m_size--; }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }

@@ -40,10 +40,10 @@ protected:
 
 public:
 
-  explicit operator bool() const
+  explicit constexpr operator bool() const
   { return !this->fail(); }
 
-  bool
+  constexpr bool
   operator!() const
   { return this->fail(); }
 

@@ -192,6 +192,36 @@ public:
            !traits_type::compare(lhs, rhs.data(), traits_type::length(lhs));
   }
 
+  friend constexpr bool operator<(const basic_string &lhs,
+                                  const basic_string &rhs) noexcept {
+    return lhs.compare(rhs) < 0;
+  }
+
+  constexpr int compare(const basic_string& str) const
+  {
+    const size_type  size = this->size();
+    const size_type osize = str.size();
+    const size_type   len = std::min(size, osize);
+
+    int r = traits_type::compare(this->data(), str.data(), len);
+    if (!r)    // traits_type::compare says equal, but possibly inequal length
+      r = _S_compare(size, osize);
+    return r;
+  }
+
+private:
+  static constexpr int _S_compare(size_type n1, size_type n2) noexcept
+  {
+    const difference_type d = difference_type(n1 - n2);
+
+    if (d > __gnu_cxx::__numeric_traits<int>::__max)
+      return __gnu_cxx::__numeric_traits<int>::__max;
+    else if (d < __gnu_cxx::__numeric_traits<int>::__min)
+      return __gnu_cxx::__numeric_traits<int>::__min;
+    else
+      return int(d);
+  }
+
   allocator_type  m_alloc;
   size_type       m_size     = 0;
   size_type       m_capacity = 0;

@@ -3,4 +3,10 @@
 
 #include <algorithm>
 
+namespace CEST_NAMESPACE {
+
+  using std::find;
+
+} // namespace CEST_NAMESPACE
+
 #endif // _CEST_ALGORITHM_HPP_

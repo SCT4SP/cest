@@ -1,7 +1,7 @@
 #ifndef _CEST_IOS_BASE_HPP_
 #define _CEST_IOS_BASE_HPP_
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
   enum _Ios_Fmtflags
   {
@@ -203,6 +203,6 @@ constexpr ios_base& dec(ios_base& str) { return str; }
 constexpr ios_base& hex(ios_base& str) { return str; }
 constexpr ios_base& oct(ios_base& str) { return str; }
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_IOS_BASE_HPP_

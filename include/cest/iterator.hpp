@@ -5,7 +5,7 @@
 
 #include <iterator> // std::iterator_traits
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 // Based on GNU libstdc++ class __normal_iterator from stl_iterator.h
 template <typename I, typename C>
@@ -79,6 +79,6 @@ constexpr auto  operator-(const iter<IL, C> &l, const iter<IR, C> &r) noexcept
   return l.base() - r.base();
 }
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_ITERATOR_HPP_

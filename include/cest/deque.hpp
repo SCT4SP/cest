@@ -13,7 +13,7 @@
   // std::allocator is safe, but it is not the only allocator
   // for which this is valid.
   template<class _Tp>
-    struct std::__is_bitwise_relocatable<cest::deque<_Tp>>
+    struct std::__is_bitwise_relocatable<CEST_NAMESPACE::deque<_Tp>>
     : std::true_type { };
 #endif
 

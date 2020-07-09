@@ -7,7 +7,7 @@
 #include "ostream.hpp"
 #include "sstream.hpp"
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 namespace impl {
   basic_stringbuf cout(string("cout"));
@@ -17,6 +17,6 @@ namespace impl {
 ostream cout(&impl::cout);
 ostream cerr(&impl::cerr);
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_IOSTREAM_HPP_

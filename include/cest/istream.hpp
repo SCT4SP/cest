@@ -5,7 +5,7 @@
 #include "streambuf.hpp"
 #include <string>  // std::char_traits
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 template <
   class _CharT,
@@ -193,6 +193,6 @@ using wistream = basic_istream<wchar_t>;
       return *this;
     }
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_ISTREAM_HPP_

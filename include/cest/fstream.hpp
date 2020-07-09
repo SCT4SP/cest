@@ -6,7 +6,7 @@
 #include "istream.hpp" // cest::basic_istream
 #include <string>      // std::char_traits
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 template <
   class CharT,
@@ -28,6 +28,6 @@ public:
 using  ifstream = basic_ifstream<char>;
 using wifstream = basic_ifstream<wchar_t>;
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_FSTREAM_HPP_

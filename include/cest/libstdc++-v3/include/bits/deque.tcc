@@ -58,7 +58,7 @@
 
 #include <bits/stl_algobase.h>
 
-namespace cest _GLIBCXX_VISIBILITY(default)
+namespace CEST_NAMESPACE _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
@@ -976,11 +976,11 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   // optimization".
   template<typename _Tp, typename _VTp>
     void
-    __fill_a1(const cest::_Deque_iterator<_Tp, _Tp&, _Tp*>& __first,
-	      const cest::_Deque_iterator<_Tp, _Tp&, _Tp*>& __last,
+    __fill_a1(const CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*>& __first,
+	      const CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*>& __last,
 	      const _VTp& __value)
     {
-      typedef cest::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
+      typedef CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
       if (__first._M_node != __last._M_node)
 	{
 	  std::__fill_a1(__first._M_cur, __first._M_last, __value);
@@ -998,11 +998,11 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   template<bool _IsMove,
 	   typename _Tp, typename _Ref, typename _Ptr, typename _OI>
     _OI
-    __copy_move_dit(cest::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
-		    cest::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
+    __copy_move_dit(CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
+		    CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
 		    _OI __result)
     {
-      typedef cest::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
+      typedef CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
       if (__first._M_node != __last._M_node)
 	{
 	  __result
@@ -1027,27 +1027,27 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   template<bool _IsMove,
 	   typename _Tp, typename _Ref, typename _Ptr, typename _OI>
     _OI
-    __copy_move_a1(cest::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
-		   cest::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
+    __copy_move_a1(CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
+		   CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
 		   _OI __result)
     { return __copy_move_dit<_IsMove>(__first, __last, __result); }
 
   template<bool _IsMove,
 	   typename _ITp, typename _IRef, typename _IPtr, typename _OTp>
-    cest::_Deque_iterator<_OTp, _OTp&, _OTp*>
-    __copy_move_a1(cest::_Deque_iterator<_ITp, _IRef, _IPtr> __first,
-		   cest::_Deque_iterator<_ITp, _IRef, _IPtr> __last,
-		   cest::_Deque_iterator<_OTp, _OTp&, _OTp*> __result)
+    CEST_NAMESPACE::_Deque_iterator<_OTp, _OTp&, _OTp*>
+    __copy_move_a1(CEST_NAMESPACE::_Deque_iterator<_ITp, _IRef, _IPtr> __first,
+		   CEST_NAMESPACE::_Deque_iterator<_ITp, _IRef, _IPtr> __last,
+		   CEST_NAMESPACE::_Deque_iterator<_OTp, _OTp&, _OTp*> __result)
     { return __copy_move_dit<_IsMove>(__first, __last, __result); }
 
   template<bool _IsMove, typename _II, typename _Tp>
     typename __gnu_cxx::__enable_if<
       std::__is_random_access_iter<_II>::__value,
-      cest::_Deque_iterator<_Tp, _Tp&, _Tp*> >::__type
+      CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*> >::__type
     __copy_move_a1(_II __first, _II __last,
-		   cest::_Deque_iterator<_Tp, _Tp&, _Tp*> __result)
+		   CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*> __result)
     {
-      typedef cest::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
+      typedef CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
       typedef typename _Iter::difference_type difference_type;
 
       difference_type __len = __last - __first;
@@ -1070,11 +1070,11 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	   typename _Tp, typename _Ref, typename _Ptr, typename _OI>
     _OI
     __copy_move_backward_dit(
-		cest::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
-		cest::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
+		CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
+		CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
 		_OI __result)
     {
-      typedef cest::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
+      typedef CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
       if (__first._M_node != __last._M_node)
 	{
 	  __result = std::__copy_move_backward_a1<_IsMove>(
@@ -1097,28 +1097,28 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
 	   typename _Tp, typename _Ref, typename _Ptr, typename _OI>
     _OI
     __copy_move_backward_a1(
-		cest::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
-		cest::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
+		CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __first,
+		CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __last,
 		_OI __result)
     { return __copy_move_backward_dit<_IsMove>(__first, __last, __result); }
 
   template<bool _IsMove,
 	   typename _ITp, typename _IRef, typename _IPtr, typename _OTp>
-    cest::_Deque_iterator<_OTp, _OTp&, _OTp*>
+    CEST_NAMESPACE::_Deque_iterator<_OTp, _OTp&, _OTp*>
     __copy_move_backward_a1(
-		cest::_Deque_iterator<_ITp, _IRef, _IPtr> __first,
-		cest::_Deque_iterator<_ITp, _IRef, _IPtr> __last,
-		cest::_Deque_iterator<_OTp, _OTp&, _OTp*> __result)
+		CEST_NAMESPACE::_Deque_iterator<_ITp, _IRef, _IPtr> __first,
+		CEST_NAMESPACE::_Deque_iterator<_ITp, _IRef, _IPtr> __last,
+		CEST_NAMESPACE::_Deque_iterator<_OTp, _OTp&, _OTp*> __result)
     { return __copy_move_backward_dit<_IsMove>(__first, __last, __result); }
 
   template<bool _IsMove, typename _II, typename _Tp>
     typename __gnu_cxx::__enable_if<
       std::__is_random_access_iter<_II>::__value,
-      cest::_Deque_iterator<_Tp, _Tp&, _Tp*> >::__type
+      CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*> >::__type
     __copy_move_backward_a1(_II __first, _II __last,
-		cest::_Deque_iterator<_Tp, _Tp&, _Tp*> __result)
+		CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*> __result)
     {
-      typedef cest::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
+      typedef CEST_NAMESPACE::_Deque_iterator<_Tp, _Tp&, _Tp*> _Iter;
       typedef typename _Iter::difference_type difference_type;
 
       difference_type __len = __last - __first;
@@ -1146,11 +1146,11 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   template<typename _Tp, typename _Ref, typename _Ptr, typename _II>
     constexpr bool
     __equal_dit(
-	const cest::_Deque_iterator<_Tp, _Ref, _Ptr>& __first1,
-	const cest::_Deque_iterator<_Tp, _Ref, _Ptr>& __last1,
+	const CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr>& __first1,
+	const CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr>& __last1,
 	_II __first2)
     {
-      typedef cest::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
+      typedef CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
       if (__first1._M_node != __last1._M_node)
 	{
 	  if (!std::__equal_aux1(__first1._M_cur, __first1._M_last, __first2))
@@ -1173,26 +1173,26 @@ _GLIBCXX_END_NAMESPACE_CONTAINER
   template<typename _Tp, typename _Ref, typename _Ptr, typename _II>
     typename __gnu_cxx::__enable_if<
       std::__is_random_access_iter<_II>::__value, bool>::__type
-    __equal_aux1(cest::_Deque_iterator<_Tp, _Ref, _Ptr> __first1,
-		 cest::_Deque_iterator<_Tp, _Ref, _Ptr> __last1,
+    __equal_aux1(CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __first1,
+		 CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __last1,
 		 _II __first2)
-    { return cest::__equal_dit(__first1, __last1, __first2); }
+    { return CEST_NAMESPACE::__equal_dit(__first1, __last1, __first2); }
 
   template<typename _Tp1, typename _Ref1, typename _Ptr1,
 	   typename _Tp2, typename _Ref2, typename _Ptr2>
     bool
-    __equal_aux1(cest::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __first1,
-		 cest::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __last1,
-		 cest::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __first2)
-    { return cest::__equal_dit(__first1, __last1, __first2); }
+    __equal_aux1(CEST_NAMESPACE::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __first1,
+		 CEST_NAMESPACE::_Deque_iterator<_Tp1, _Ref1, _Ptr1> __last1,
+		 CEST_NAMESPACE::_Deque_iterator<_Tp2, _Ref2, _Ptr2> __first2)
+    { return CEST_NAMESPACE::__equal_dit(__first1, __last1, __first2); }
 
   template<typename _II, typename _Tp, typename _Ref, typename _Ptr>
     typename __gnu_cxx::__enable_if<
       std::__is_random_access_iter<_II>::__value, bool>::__type
     __equal_aux1(_II __first1, _II __last1,
-		cest::_Deque_iterator<_Tp, _Ref, _Ptr> __first2)
+		CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> __first2)
     {
-      typedef cest::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
+      typedef CEST_NAMESPACE::_Deque_iterator<_Tp, _Ref, _Ptr> _Iter;
       typedef typename _Iter::difference_type difference_type;
 
       difference_type __len = __last1 - __first1;

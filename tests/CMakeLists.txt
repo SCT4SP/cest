@@ -22,3 +22,6 @@ target_compile_definitions(${name} PRIVATE CONSTEXPR_CEST=1)
 target_compile_definitions(${name} PRIVATE CONSTEXPR_STDLIB=0)
 # Indicates that constexpr tests (cest+stdlib) should be performed
 target_compile_definitions(${name} PRIVATE RUN_STATIC_TESTS=0)
+
+# The namespace which contains all the definitions in cest
+target_compile_definitions(${name} PRIVATE CEST_NAMESPACE=cest)

@@ -5,7 +5,7 @@
 #include "ios_base.hpp"
 #include <string>  // std::char_traits
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 template <class, class> class basic_ostream; // forward declaration
 template <class, class> class basic_istream; // forward declaration
@@ -143,6 +143,6 @@ _M_streambuf(0), _M_ctype(0), _M_num_put(0), _M_num_get(0)
     _M_streambuf_state = __sb ? goodbit : badbit;
   }
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_BASIC_IOS_HPP_

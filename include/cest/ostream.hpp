@@ -5,7 +5,7 @@
 #include "streambuf.hpp"
 #include <string>  // std::char_traits
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 template <
   class _CharT,
@@ -185,6 +185,6 @@ using ostream = basic_ostream<char>;
   return *this;
       }
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_OSTREAM_HPP_

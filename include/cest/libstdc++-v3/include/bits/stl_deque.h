@@ -69,7 +69,7 @@
 
 #include <debug/assertions.h>
 
-namespace cest _GLIBCXX_VISIBILITY(default)
+namespace CEST_NAMESPACE _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 _GLIBCXX_BEGIN_NAMESPACE_CONTAINER

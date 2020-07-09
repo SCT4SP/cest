@@ -6,7 +6,7 @@
 #include <memory>  // std::allocator
 #include <cstddef>
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 template <
   class T,

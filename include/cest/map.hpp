@@ -3,11 +3,11 @@
 
 // $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/map_tests.hpp
 
-#include "cest/swap.hpp"
+#include "swap.hpp"
 #include <functional> // std::less
 #include <memory>
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 template <
   class Key,
@@ -300,6 +300,6 @@ public:
   std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_MAP_HPP_

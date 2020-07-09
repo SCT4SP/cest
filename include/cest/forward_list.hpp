@@ -7,7 +7,7 @@
 
 #include <memory>
 
-namespace cest {
+namespace CEST_NAMESPACE {
 
 // constexpr reinterpret_cast is prohibited in C++20 (Section 7.7 (5.15))
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=49171
@@ -230,6 +230,6 @@ struct forward_list {
   std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
-} // namespace cest
+} // namespace CEST_NAMESPACE
 
 #endif // _CEST_FORWARD_LIST_HPP_

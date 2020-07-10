@@ -6,6 +6,7 @@
 namespace CEST_NAMESPACE {
 
   using std::find;
+  using std::set_intersection;
 
 } // namespace CEST_NAMESPACE
 

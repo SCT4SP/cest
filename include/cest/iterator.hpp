@@ -7,6 +7,8 @@
 
 namespace CEST_NAMESPACE {
 
+  using std::inserter;
+
 // Based on GNU libstdc++ class __normal_iterator from stl_iterator.h
 template <typename I, typename C>
 class iter {

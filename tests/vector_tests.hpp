@@ -117,11 +117,14 @@ constexpr bool vec_test8() {
 
 template <typename V>
 constexpr bool vec_test9() {
-  V v, v2;
+  V v;
   v.push_back(1);
   v.push_back(2);
   v.push_back(3);
-  return 3==*v.rbegin() && 1==*v.rend() && v == v;
+  bool b1 = 3==*v.rbegin() && 1==*(v.rend()-1);
+  bool b2 = 1==v.front()   && 3==v.back();
+  bool b3 = v == v;
+  return b1 && b2 && b3;
 }
 
 template <bool SA, class V0, class V1, class V2, class V3,

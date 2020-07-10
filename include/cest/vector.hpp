@@ -55,6 +55,10 @@ public:
   constexpr iterator          end()       noexcept { return {m_p + m_size}; }
   constexpr const_iterator    end() const noexcept { return {m_p + m_size}; }
   constexpr const_iterator   cend() const noexcept { return {m_p + m_size}; }
+  constexpr reference       front()                { return *begin();       }
+  constexpr const_reference front() const          { return *begin();       }
+  constexpr reference        back()                { return *(end()-1);     }
+  constexpr const_reference  back() const          { return *(end()-1);     }
 
   constexpr reverse_iterator
   rbegin()       noexcept { return reverse_iterator(end()); }

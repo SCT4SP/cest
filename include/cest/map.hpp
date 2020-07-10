@@ -47,6 +47,9 @@ public:
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type   = ptrdiff_t;
 
+    constexpr tree_iter()                  noexcept                 { }
+    explicit constexpr tree_iter(node *np) noexcept : curr_node(np) { }
+
     constexpr reference operator*()  const { return  curr_node->x; }
     constexpr pointer   operator->() const { return &curr_node->x; }
 
@@ -98,6 +101,11 @@ public:
     using pointer           = const value_type*;
     using iterator_category = std::bidirectional_iterator_tag;
     using difference_type   = ptrdiff_t;
+
+    constexpr const_tree_iter()                  noexcept                 { }
+    explicit constexpr const_tree_iter(node *np) noexcept : curr_node(np) { }
+    constexpr const_tree_iter(const map::iterator& it)  noexcept
+      : curr_node(it.curr_node) { }
 
     constexpr reference operator*()  const { return  curr_node->x; }
     constexpr pointer   operator->() const { return &curr_node->x; }
@@ -171,7 +179,7 @@ public:
 //  constexpr     iterator  begin()       noexcept { return {m_begin}; }
   constexpr const_iterator  begin() const noexcept { return {m_begin}; }
   constexpr const_iterator cbegin() const noexcept { return {m_begin}; }
-  constexpr       iterator    end()       noexcept { return {nullptr}; }
+  constexpr       iterator    end()       noexcept { return iterator(nullptr); }
   constexpr const_iterator    end() const noexcept { return {nullptr}; }
   constexpr const_iterator   cend() const noexcept { return {nullptr}; }
   constexpr size_type        size() const noexcept { return m_size;    }
@@ -188,7 +196,7 @@ public:
       else                             {              break; }
     }
 
-    return {n};
+    return iterator(n);
   }
 
   constexpr const_iterator find(const Key &key) const {

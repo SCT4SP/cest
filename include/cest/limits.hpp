@@ -3,4 +3,10 @@
 
 #include <limits>
 
+namespace CEST_NAMESPACE {
+
+  using std::numeric_limits;
+
+} // namespace CEST_NAMESPACE
+
 #endif // _CEST_LIMITS_HPP_

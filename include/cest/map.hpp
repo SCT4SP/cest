@@ -179,9 +179,9 @@ public:
 //  constexpr     iterator  begin()       noexcept { return {m_begin}; }
   constexpr const_iterator  begin() const noexcept { return {m_begin}; }
   constexpr const_iterator cbegin() const noexcept { return {m_begin}; }
-  constexpr       iterator    end()       noexcept { return iterator(nullptr); }
-  constexpr const_iterator    end() const noexcept { return {nullptr}; }
-  constexpr const_iterator   cend() const noexcept { return {nullptr}; }
+  constexpr       iterator    end()       noexcept { return iterator(); }
+  constexpr const_iterator    end() const noexcept { return const_iterator(); }
+  constexpr const_iterator   cend() const noexcept { return const_iterator(); }
   constexpr size_type        size() const noexcept { return m_size;    }
   [[nodiscard]]
   constexpr bool            empty() const noexcept { return 0==m_size; }
@@ -209,7 +209,7 @@ public:
       else                             {              break; }
     }
 
-    return {n};
+    return const_iterator(n);
   }
 
   template <class K>

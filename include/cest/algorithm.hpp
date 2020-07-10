@@ -5,6 +5,7 @@
 
 namespace CEST_NAMESPACE {
 
+  using std::copy;
   using std::find;
   using std::set_intersection;
 

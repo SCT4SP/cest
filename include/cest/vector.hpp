@@ -5,6 +5,7 @@
 
 #include <memory>  // std::allocator
 #include <cstddef>
+#include <algorithm>
 
 namespace CEST_NAMESPACE {
 
@@ -70,7 +71,7 @@ public:
   constexpr void         pop_back()       { m_size--; }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
-	
+
   constexpr void push_back(const value_type &value) {
     if (0 == m_capacity) {
       reserve(1);
@@ -104,6 +105,12 @@ public:
   size_type       m_capacity = 0;
   value_type     *m_p        = nullptr;
 };
+
+template <typename _Tp, typename _Alloc>
+constexpr bool
+operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+{ return (__x.size() == __y.size()
+          && std::equal(__x.begin(), __x.end(), __y.begin())); }
 
 } // namespace cest
 

@@ -2,10 +2,12 @@
 #define _CEST_IOSTREAM_TESTS_HPP_
 
 #include "cest/iostream.hpp"
+#include "cest/fstream.hpp"
 #include <iostream>
+#include <fstream>
 #include <cassert>
 
-constexpr auto iostream_test1(auto &cout, auto &cerr, auto &hex, auto &endl)
+constexpr bool iostream_test1(auto &cout, auto &cerr, auto &hex, auto &endl)
 {
   cout << "Hello ";
   cout << "World!" << endl;
@@ -14,6 +16,19 @@ constexpr auto iostream_test1(auto &cout, auto &cerr, auto &hex, auto &endl)
   cout << hex << 66 << ' ' << 66U << endl; // 42
   cerr << hex << 66 << ' ' << 66U << endl;
   return true;
+}
+
+template <typename Str, typename Ifs, typename Is>
+constexpr bool iostream_test2()
+{
+  Str filename(__FILE__);
+  Ifs ifs(filename.c_str());
+  if (!ifs)
+    return false;
+  Is& is = ifs;
+  char c;
+  is.get(c);
+  return '#' == c;
 }
 
 void iostream_tests()
@@ -34,6 +49,7 @@ void iostream_tests()
 
   assert(iostream_test1( std::cout,  std::cout,  std::hex,  std_endl));
   assert(iostream_test1(cest::cout, cest::cout, cest::hex, cest_endl));
+  assert((iostream_test2<std::string,std::ifstream,std::istream>()));
 }
 
 #endif // _CEST_IOSTREAM_TESTS_HPP_

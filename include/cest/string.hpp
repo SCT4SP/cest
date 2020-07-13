@@ -57,6 +57,43 @@ public:
 
   constexpr basic_string(const basic_string& str) : basic_string(str.c_str()) {}
 
+  template <class InputIt>
+  constexpr basic_string(InputIt __beg, InputIt __end,
+                         const Allocator& alloc = Allocator()) : m_alloc(alloc)
+  {
+    static_assert(std::is_same_v<
+      std::input_iterator_tag,
+      typename std::iterator_traits<InputIt>::iterator_category
+    >);
+
+    size_type __len = 0;
+    size_type __capacity = size_type(m_capacity);
+
+    while (__beg != __end && __len < __capacity)
+      {
+        data()[__len++] = *__beg;
+        ++__beg;
+      }
+
+    while (__beg != __end)
+      {
+        if (__len == __capacity)
+          {
+            // Allocate more space.
+            __capacity = __len + 1;
+            pointer __another  = m_alloc.allocate(__capacity + 1);
+            traits_type::copy(__another, m_p, __len);
+            m_alloc.deallocate(m_p,m_capacity+1);
+            m_p = __another;
+            m_capacity = __capacity;
+          }
+        data()[__len++] = *__beg;
+        ++__beg;
+      }
+
+    traits_type::assign(this->data()[m_size = __len], CharT());
+  }
+
   constexpr ~basic_string() { m_alloc.deallocate(m_p,m_capacity+1); }
 
   constexpr allocator_type get_allocator() const   { return m_alloc;       }

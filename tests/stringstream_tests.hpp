@@ -44,6 +44,17 @@ constexpr bool istringstream_test2() {
   return 'a' == c;
 }
 
+template <typename Ifs, typename S, typename Isbi>
+constexpr bool istringstream_test3() {
+  Ifs file(__FILE__);
+  //std::istreambuf_iterator<typename S::value_type> ite(file);
+  Isbi it(file);
+  bool b1 = *it == '#';
+  S str(it, {});
+  bool b2 = str[0] == '#';
+  return b1 && b2;
+}
+
 } // namespace ss_tests
 
 void stringstream_tests()
@@ -54,11 +65,16 @@ void stringstream_tests()
   assert((istringstream_test1<cest::istringstream, cest::string>()));
   assert((istringstream_test2<std::istringstream, std::string>()));
   assert((istringstream_test2<cest::istringstream, cest::string>()));
+  using  std_isbi =  std::istreambuf_iterator<char>;
+  using cest_isbi = cest::istreambuf_iterator<char>;
+  assert((istringstream_test3< std::ifstream,  std::string,  std_isbi>()));
+  assert((istringstream_test3<cest::ifstream, cest::string, cest_isbi>()));
 
 #if RUN_STATIC_TESTS == 1
   static_assert(istringstream_test1<cest::istringstream, cest::string>());
 //  static_assert(istringstream_test1<std::istringstream, std::string>());
   static_assert((istringstream_test2<cest::istringstream, cest::string>()));
+  static_assert((istringstream_test3<cest::ifstream, cest::string>()));
 #endif
 }
 

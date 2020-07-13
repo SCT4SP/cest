@@ -50,6 +50,13 @@ public:
     _M_string(__str.data(), __str.size(), __str.get_allocator())
   { _M_stringbuf_init(__mode); }
 
+  constexpr void str(const __string_type& __s)
+  {
+//    _M_string.assign(__s.data(), __s.size());
+    _M_string = __s;
+    _M_stringbuf_init(_M_mode);
+  }
+
 protected:
   // Common initialization code goes here.
   constexpr void _M_stringbuf_init(ios_base::openmode __mode)
@@ -128,6 +135,11 @@ public:
   typedef basic_stringbuf<_CharT, _Traits, _Alloc>  __stringbuf_type;
   typedef basic_istream<char_type, traits_type> __istream_type;
 
+  // cppreference (1) though like libstdc++, no call to contructor (2)
+  constexpr basic_istringstream()
+  : __istream_type(), _M_stringbuf(ios_base::in)
+  { this->init(&_M_stringbuf); }
+
   // cppreference (3)
   explicit constexpr
   basic_istringstream(const __string_type& __str,
@@ -141,6 +153,9 @@ public:
   basic_istringstream(__string_type&& __str,
     ios_base::openmode __mode = ios_base::in)
   : __istream_type() { }*/
+
+  constexpr __string_type str() const { return _M_stringbuf.str(); }
+  constexpr void str(const __string_type& __s) { _M_stringbuf.str(__s); }
 
   constexpr ~basic_istringstream() {}
 

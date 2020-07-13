@@ -193,6 +193,13 @@ using wistream = basic_istream<wchar_t>;
       return *this;
     }
 
+  template<typename _CharT, typename _Traits>
+    class basic_iostream
+    : public basic_istream<_CharT, _Traits>//,
+//      public basic_ostream<_CharT, _Traits>
+    {
+    };
+
 } // namespace CEST_NAMESPACE
 
 #endif // _CEST_ISTREAM_HPP_

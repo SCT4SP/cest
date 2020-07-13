@@ -45,7 +45,7 @@ public:
 
   constexpr basic_string(const CharT* s,
                          size_type count,
-                         const Allocator& alloc = Allocator()) {
+                         const Allocator& alloc = Allocator()) : m_alloc(alloc){
     m_capacity = count+1;                    // ensure m_capacity is not 0
     m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
     traits_type::copy(m_p, s, count); // traits_type supports user customisation
@@ -168,12 +168,28 @@ public:
   }
   constexpr basic_string& operator+=(CharT ch) { push_back(ch); return *this; }
 
+  constexpr basic_string& operator=(const basic_string& str)
+  {
+    const CharT* s  = str.c_str();
+    size_type count = traits_type::length(s);
+
+    if (m_capacity < str.m_capacity) {
+      m_alloc.deallocate(m_p, m_capacity+1);
+      m_capacity = count+1;                    // ensure m_capacity is not 0
+      m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
+    }
+    
+    traits_type::copy(m_p, s, count+1);
+    m_size = count;
+    return *this;
+  }
+
   constexpr void reserve(size_type new_cap)
   {
     if (new_cap > m_capacity)
     {
       value_type *p = m_alloc.allocate(new_cap+1); // for the null terminator
-      traits_type::copy(p, m_p, m_size);
+      traits_type::copy(p, m_p, m_size+1);
       m_alloc.deallocate(m_p, m_capacity+1);
       m_p = p;
       m_capacity = new_cap;

@@ -116,6 +116,19 @@ constexpr bool string_test9() {
   return b1 && b2;
 }
 
+template <typename S>
+constexpr bool string_test10() {
+  S str("abc"), str2;
+  using Traits = std::char_traits<typename S::value_type>;
+  auto len1 = Traits::length(str.c_str());
+  str.reserve(32);
+  auto len2 = Traits::length(str.c_str());
+  str2 = str;
+  bool b = str[0]==str2[0] && str[1]==str2[1] && str[2]==str2[2];
+  auto len3 = Traits::length(str2.c_str());
+  return len1==len2 && len1==len3;
+}
+
 void string_tests()
 {
   constexpr const auto tup1 = std::tuple{true,true,0,false,1,'q','\0','\0'};
@@ -141,6 +154,7 @@ void string_tests()
   static_assert((string_test5<cest::string>()) == tup5);
   static_assert(string_test6<cest::string>(cest::cout, cest_endl) == tup6);
   static_assert(string_test9<cest::string>());
+  static_assert(string_test10<cest::string>());
 #endif
   
   assert(string_test1< std::string>() == tup1);
@@ -161,6 +175,8 @@ void string_tests()
   assert(string_test8<cest::string>());
   assert(string_test9< std::string>());
   assert(string_test9<cest::string>());
+  assert(string_test10<std::string>());
+  assert(string_test10<cest::string>());
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

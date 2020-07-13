@@ -52,7 +52,9 @@ public:
 
   constexpr void str(const __string_type& __s)
   {
-//    _M_string.assign(__s.data(), __s.size());
+    // Cannot use _M_string = __s, since v3 strings are COW
+    // (not always true now but assign() always works).
+    //_M_string.assign(__s.data(), __s.size());
     _M_string = __s;
     _M_stringbuf_init(_M_mode);
   }

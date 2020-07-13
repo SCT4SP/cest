@@ -38,12 +38,9 @@ template <typename Iss, typename S>
 constexpr bool istringstream_test2() {
   Iss s;
   S str("alphaville");
-  /*S str2;
-  str2 = str;
-  S str3;
-  str3.assign(str);*/
   s.str(std::move(str));
   char c;
+  s.get(c);
   return 'a' == c;
 }
 
@@ -55,13 +52,13 @@ void stringstream_tests()
 
   assert((istringstream_test1<std::istringstream, std::string>()));
   assert((istringstream_test1<cest::istringstream, cest::string>()));
-//  assert((istringstream_test2<std::istringstream, std::string>()));
-//  assert((istringstream_test2<cest::istringstream, cest::string>()));
+  assert((istringstream_test2<std::istringstream, std::string>()));
+  assert((istringstream_test2<cest::istringstream, cest::string>()));
 
 #if RUN_STATIC_TESTS == 1
-//  static_assert(istringstream_test1<cest::istringstream, cest::string>());
+  static_assert(istringstream_test1<cest::istringstream, cest::string>());
 //  static_assert(istringstream_test1<std::istringstream, std::string>());
-//  static_assert((istringstream_test2<cest::istringstream, cest::string>()));
+  static_assert((istringstream_test2<cest::istringstream, cest::string>()));
 #endif
 }
 

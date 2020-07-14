@@ -1,44 +1,13 @@
 #ifndef _CEST_OSTREAM_HPP_
 #define _CEST_OSTREAM_HPP_
 
-#include "ios.hpp"       // cest::basic_ios
-#include "streambuf.hpp" // cest::basic_streambuf
-#include <string>        // std::char_traits
-#include <iostream>      // std::cout, std::cerr, std::clog
+#include "ios.hpp"             // cest::basic_ios
+#include "streambuf.hpp"       // cest::basic_streambuf
+#include "runtime_ostream.hpp" // cest::runtime_ostream 
+#include <string>              // std::char_traits
+#include <iostream>            // std::cout, std::cerr, std::clog
 
 namespace CEST_NAMESPACE {
-
-using ostream = basic_ostream<char>;
-
-extern ostream cout;
-extern ostream cerr;
-extern ostream clog;
-
-namespace impl {
-
-template <class CharT, class Traits, class T>
-constexpr void runtime_ostream(basic_ostream<CharT,Traits>& os, T x)
-{
-  if (!std::is_constant_evaluated())
-    if      (&cest::cout == &os) std::cout << x;
-    else if (&cest::cerr == &os) std::cerr << x;
-    else if (&cest::clog == &os) std::clog << x;
-}
-
-// madness for endl
-template <class CharT, class Traits>
-constexpr void runtime_ostream(
-       basic_ostream<CharT,Traits>& os,
-  std::basic_ostream<CharT,Traits>& (*fp)(std::basic_ostream<CharT,Traits>&)
-)
-{
-  if (!std::is_constant_evaluated())
-    if      (&cest::cout == &os) std::cout << fp;
-    else if (&cest::cerr == &os) std::cerr << fp;
-    else if (&cest::clog == &os) std::clog << fp;
-}
-
-} // namespace impl
 
 template <class _CharT, class _Traits>
   class basic_ostream : /*virtual*/ public basic_ios<_CharT, _Traits>
@@ -110,6 +79,8 @@ public:
   constexpr __ostream_type&
   _M_insert(_ValueT __v);
 };
+
+using ostream = basic_ostream<char>;
 
 template< class CharT, class Traits>
 constexpr basic_ostream<CharT,Traits>&

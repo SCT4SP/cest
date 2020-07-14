@@ -1,9 +1,8 @@
 #ifndef _CEST_STRING_HPP_
 #define _CEST_STRING_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/string_tests.hpp
-
 #include "ostream.hpp"
+#include "runtime_ostream.hpp"
 #include <string>   // std::char_traits
 #include <memory>   // std::allocator
 #include <iterator> // std::reverse_iterator
@@ -285,8 +284,11 @@ template <class CharT, class Traits, class Allocator>
 constexpr basic_ostream<CharT, Traits>&
 operator<<(
   basic_ostream<CharT, Traits>& os,
-  const basic_string<CharT, Traits, Allocator>& str
-) { return os; }
+  const basic_string<CharT, Traits, Allocator>& str)
+{
+  impl::runtime_ostream(os, str.c_str());
+  return os;
+}
 
 using string    = basic_string<char>;
 using wstring   = basic_string<wchar_t>;

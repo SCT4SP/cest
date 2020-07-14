@@ -17,6 +17,10 @@ template <
   class _Traits = std::char_traits<_CharT>
 > class basic_istream;                        // forward declaration
 
+extern basic_ostream<char> cout;
+extern basic_ostream<char> cerr;
+extern basic_ostream<char> clog;
+
 template <
   class _CharT,
   class _Traits = std::char_traits<_CharT>

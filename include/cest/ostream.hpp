@@ -13,6 +13,32 @@ extern ostream cout;
 extern ostream cerr;
 extern ostream clog;
 
+namespace impl {
+
+template <class CharT, class Traits, class T>
+constexpr void runtime_ostream(basic_ostream<CharT,Traits>& os, T x)
+{
+  if (!std::is_constant_evaluated())
+    if      (&cest::cout == &os) std::cout << x;
+    else if (&cest::cerr == &os) std::cerr << x;
+    else if (&cest::clog == &os) std::clog << x;
+}
+
+// madness for endl
+template <class CharT, class Traits>
+constexpr void runtime_ostream(
+       basic_ostream<CharT,Traits>& os,
+  std::basic_ostream<CharT,Traits>& (*fp)(std::basic_ostream<CharT,Traits>&)
+)
+{
+  if (!std::is_constant_evaluated())
+    if      (&cest::cout == &os) std::cout << fp;
+    else if (&cest::cerr == &os) std::cerr << fp;
+    else if (&cest::clog == &os) std::clog << fp;
+}
+
+} // namespace impl
+
 template <class _CharT, class _Traits>
   class basic_ostream : /*virtual*/ public basic_ios<_CharT, _Traits>
 {
@@ -64,20 +90,12 @@ public:
   { return _M_insert(__n); }
 
   constexpr __ostream_type& operator<<(int value)                             {
-    if (!std::is_constant_evaluated())
-      if      (&cest::cout == this) std::cout << value;
-      else if (&cest::cerr == this) std::cerr << value;
-      else if (&cest::clog == this) std::clog << value;
-
+    impl::runtime_ostream(*this, value);
     return *this;
   }
 
   constexpr __ostream_type& operator<<(unsigned int value)                    {
-    if (!std::is_constant_evaluated())
-      if      (&cest::cout == this) std::cout << value;
-      else if (&cest::cerr == this) std::cerr << value;
-      else if (&cest::clog == this) std::clog << value;
-
+    impl::runtime_ostream(*this, value);
     return *this;
   }
 
@@ -94,33 +112,25 @@ public:
 
 template< class CharT, class Traits>
 constexpr basic_ostream<CharT,Traits>&
-operator<<(basic_ostream<CharT,Traits>& os, CharT ch) {
-  if (!std::is_constant_evaluated())
-    if      (&cest::cout == &os) std::cout << ch;
-    else if (&cest::cerr == &os) std::cerr << ch;
-    else if (&cest::clog == &os) std::clog << ch;
+operator<<(basic_ostream<CharT,Traits>& os, CharT ch)
+{
+  impl::runtime_ostream(os, ch);
   return os;
 }
 
 template <class CharT, class Traits>
 constexpr basic_ostream<CharT,Traits>&
-operator<<(basic_ostream<CharT,Traits>& os, const CharT* s) {
-  if (!std::is_constant_evaluated())
-    if      (&cest::cout == &os) std::cout << s;
-    else if (&cest::cerr == &os) std::cerr << s;
-    else if (&cest::clog == &os) std::clog << s;
-
+operator<<(basic_ostream<CharT,Traits>& os, const CharT* s)
+{
+  impl::runtime_ostream(os, s);
   return os;
 }
 
 template <class CharT, class Traits >
 constexpr basic_ostream<CharT,Traits> &
-endl(basic_ostream<CharT, Traits> &os) {
-  if (!std::is_constant_evaluated())
-    if      (&cest::cout == &os) std::cout << std::endl;
-    else if (&cest::cerr == &os) std::cerr << std::endl;
-    else if (&cest::clog == &os) std::clog << std::endl;
-
+endl(basic_ostream<CharT, Traits> &os)
+{
+  impl::runtime_ostream(os, std::endl);
   return os;
 }
 

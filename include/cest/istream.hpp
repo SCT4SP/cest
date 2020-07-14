@@ -7,10 +7,8 @@
 
 namespace CEST_NAMESPACE {
 
-template <
-  class _CharT,
-  class _Traits = std::char_traits<_CharT>
-> class basic_istream : /*virtual*/ public basic_ios<_CharT, _Traits>
+template <class _CharT, class _Traits>
+  class basic_istream : /*virtual*/ public basic_ios<_CharT, _Traits>
 {
 public:
   typedef _CharT          char_type;

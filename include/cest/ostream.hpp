@@ -7,10 +7,14 @@
 
 namespace CEST_NAMESPACE {
 
-template <
-  class _CharT,
-  class _Traits = std::char_traits<_CharT>
-> class basic_ostream : /*virtual*/ public basic_ios<_CharT, _Traits>
+using ostream = basic_ostream<char>;
+
+extern ostream cout;
+extern ostream cerr;
+extern ostream clog;
+
+template <class _CharT, class _Traits>
+  class basic_ostream : /*virtual*/ public basic_ios<_CharT, _Traits>
 {
 public:
   typedef _CharT          char_type;
@@ -60,10 +64,20 @@ public:
   { return _M_insert(__n); }
 
   constexpr __ostream_type& operator<<(int value)                             {
+    if (!std::is_constant_evaluated())
+      if      (&cest::cout == this) std::cout << value;
+      else if (&cest::cerr == this) std::cerr << value;
+      else if (&cest::clog == this) std::clog << value;
+
     return *this;
   }
 
   constexpr __ostream_type& operator<<(unsigned int value)                    {
+    if (!std::is_constant_evaluated())
+      if      (&cest::cout == this) std::cout << value;
+      else if (&cest::cerr == this) std::cerr << value;
+      else if (&cest::clog == this) std::clog << value;
+
     return *this;
   }
 
@@ -81,22 +95,34 @@ public:
 template< class CharT, class Traits>
 constexpr basic_ostream<CharT,Traits>&
 operator<<(basic_ostream<CharT,Traits>& os, CharT ch) {
+  if (!std::is_constant_evaluated())
+    if      (&cest::cout == &os) std::cout << ch;
+    else if (&cest::cerr == &os) std::cerr << ch;
+    else if (&cest::clog == &os) std::clog << ch;
   return os;
 }
 
 template <class CharT, class Traits>
 constexpr basic_ostream<CharT,Traits>&
 operator<<(basic_ostream<CharT,Traits>& os, const CharT* s) {
+  if (!std::is_constant_evaluated())
+    if      (&cest::cout == &os) std::cout << s;
+    else if (&cest::cerr == &os) std::cerr << s;
+    else if (&cest::clog == &os) std::clog << s;
+
   return os;
 }
 
 template <class CharT, class Traits >
 constexpr basic_ostream<CharT,Traits> &
 endl(basic_ostream<CharT, Traits> &os) {
+  if (!std::is_constant_evaluated())
+    if      (&cest::cout == &os) std::cout << std::endl;
+    else if (&cest::cerr == &os) std::cerr << std::endl;
+    else if (&cest::clog == &os) std::clog << std::endl;
+
   return os;
 }
-
-using ostream = basic_ostream<char>;
 
   template <typename _CharT, typename _Traits>
     class basic_ostream<_CharT, _Traits>::sentry

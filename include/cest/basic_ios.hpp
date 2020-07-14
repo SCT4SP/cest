@@ -7,8 +7,15 @@
 
 namespace CEST_NAMESPACE {
 
-template <class, class> class basic_ostream; // forward declaration
-template <class, class> class basic_istream; // forward declaration
+template <
+  class _CharT,
+  class _Traits = std::char_traits<_CharT>
+> class basic_ostream;                        // forward declaration
+
+template <
+  class _CharT,
+  class _Traits = std::char_traits<_CharT>
+> class basic_istream;                        // forward declaration
 
 template <
   class _CharT,

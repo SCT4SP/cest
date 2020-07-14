@@ -45,10 +45,11 @@ void iostream_tests()
 
 #if RUN_STATIC_TESTS == 1
   static_assert(iostream_test1(cest::cout, cest::cerr, cest::hex, cest_endl));
+  static_assert(iostream_test2<std::string,std::ifstream,std::istream>());
 #endif
 
-  assert(iostream_test1( std::cout,  std::cout,  std::hex,  std_endl));
-  assert(iostream_test1(cest::cout, cest::cout, cest::hex, cest_endl));
+  assert(iostream_test1( std::cout,  std::cerr,  std::hex,  std_endl));
+  assert(iostream_test1(cest::cout, cest::cerr, cest::hex, cest_endl));
   assert((iostream_test2<std::string,std::ifstream,std::istream>()));
 }
 

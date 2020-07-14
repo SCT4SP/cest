@@ -1,9 +1,10 @@
 #ifndef _CEST_OSTREAM_HPP_
 #define _CEST_OSTREAM_HPP_
 
-#include "ios.hpp" // cest::basic_ios
-#include "streambuf.hpp"
-#include <string>  // std::char_traits
+#include "ios.hpp"       // cest::basic_ios
+#include "streambuf.hpp" // cest::basic_streambuf
+#include <string>        // std::char_traits
+#include <iostream>      // std::cout, std::cerr, std::clog
 
 namespace CEST_NAMESPACE {
 

@@ -1,27 +1,16 @@
 #ifndef _CEST_QUEUE_HPP_
 #define _CEST_QUEUE_HPP_
 
-#include <functional>
-#include <vector>
-//#include <deque>
-#include "deque.hpp"
-#include "libstdc++-v3/include/bits/stl_queue.h"
+namespace CEST_NAMESPACE {
 
-// specialisation on std::uses_allocator for cest::queue and priority_queue
-namespace std _GLIBCXX_VISIBILITY(default)
-{
-_GLIBCXX_BEGIN_NAMESPACE_VERSION
+template<
+  class T,
+  class Container = deque<T>
+>
+class queue {
+public:
+};
 
-  template<typename _Tp, typename _Seq, typename _Alloc>
-    struct uses_allocator<CEST_NAMESPACE::queue<_Tp, _Seq>, _Alloc>
-    : public uses_allocator<_Seq, _Alloc>::type { };
-
-  template<typename _Tp, typename _Seq, typename _Compare,
-	   typename _Alloc>
-    struct uses_allocator<CEST_NAMESPACE::priority_queue<_Tp, _Seq, _Compare>, _Alloc>
-    : public uses_allocator<_Seq, _Alloc>::type { };
-
-_GLIBCXX_END_NAMESPACE_VERSION
-} // namespace
+// namespace CEST_NAMESPACE
 
 #endif // _CEST_QUEUE_HPP_

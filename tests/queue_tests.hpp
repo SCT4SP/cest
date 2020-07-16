@@ -1,6 +1,7 @@
 #ifndef _CEST_QUEUE_TESTS_HPP_
 #define _CEST_QUEUE_TESTS_HPP_
 
+#if 0
 #include "cest/queue.hpp"
 #include "cest/list.hpp"
 #include <queue>
@@ -33,9 +34,11 @@ constexpr bool queue_test1()
   return b0 && sz0==0 && ef1==42 && eb1==42 && ef2==42 && eb2==43 && sz2==2 &&
                                                ef3==43 && eb3==43 && b4;
 }
+#endif
 
 void queue_tests()
 {
+#if 0
 #if RUN_STATIC_TESTS == 1
   static_assert(queue_test1<cest::queue<int>>());
   static_assert(queue_test1<cest::queue<int,cest::list<int>>>());
@@ -45,6 +48,7 @@ void queue_tests()
   assert((queue_test1<cest::queue<int>>()));
   assert((queue_test1< std::queue<int,cest::list<int>>>()));
   assert((queue_test1<cest::queue<int,cest::list<int>>>()));
+#endif
 }
 
 #endif // _CEST_QUEUE_TESTS_HPP_

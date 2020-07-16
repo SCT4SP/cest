@@ -9,7 +9,16 @@ template <typename D>
 constexpr bool deque_test1()
 {
   D d;
-  return true;
+  bool b1 = d.size() == 0;
+  d.push_front(3);
+  d.push_front(2);
+  d.push_front(1);
+  bool b2 = d.size() == 3;
+  d.push_back(4);
+  d.push_back(5);
+  bool b3 = d.size() == 5;
+  bool b4 = d[0]==1 && d[1]==2 && d[2]==3 && d[3]==4 && d[4]==5;
+  return b1 && b2 && b3 && b4;
 }
 
 void deque_tests()

@@ -66,6 +66,12 @@ public:
     m_tail.back().push_back(std::move(value));
   }
 
+  constexpr reference       front()       { return m_head.back().back(); }
+  constexpr const_reference front() const { return m_head.back().back(); }
+  constexpr reference        back()       { return m_tail.back().back(); }
+  constexpr const_reference  back() const { return m_tail.back().back(); }
+  [[nodiscard]] constexpr bool empty() const noexcept { return size()==0; }
+
   reference       operator[]( size_type pos )
   {
     size_type chunk, chunk_offset;

@@ -2,7 +2,6 @@
 #define _CEST_DEQUE_HPP_
 
 #include "vector.hpp"
-#include "list.hpp"
 #include <memory>    // std::allocator_traits
 //#include <algorithm> // std::rotate
 
@@ -33,10 +32,10 @@ public:
   constexpr deque()
   {
     value_type *p = m_alloc.allocate(CHUNK_SIZE);
-    m_back  = p + (CHUNK_SIZE / 2);
-    m_front = m_back - 1;
-    m_chunks.push_front(p);
-    m_front_chunk = m_back_chunk = m_chunks.begin();
+    m_back  = CHUNK_SIZE / 2;
+    m_front = CHUNK_SIZE / 2 - 1;
+    m_chunks.push_back(p);
+    m_front_chunk = m_back_chunk = 0;
   }
 
   constexpr ~deque()
@@ -52,31 +51,39 @@ public:
   constexpr void push_front( const T& value )
   {
     push_front_helper();
-    std::construct_at(m_front, value);
+    std::construct_at(&m_chunks[m_front_chunk][m_front], value);
   }
 
   constexpr void push_front( T&& value )
   {
     push_front_helper();
-    std::construct_at(m_front, std::move(value));
+    std::construct_at(&m_chunks[m_front_chunk][m_front], std::move(value));
   }
 
   constexpr void push_back( const T& value )
   {
     push_back_helper();
-    std::construct_at(m_back, std::move(value));
+    std::construct_at(&m_chunks[m_back_chunk][m_back], std::move(value));
   }
 
   constexpr void push_back( T&& value )
   {
     push_back_helper();
-    std::construct_at(m_back, std::move(value));
+    std::construct_at(&m_chunks[m_back_chunk][m_back], std::move(value));
   }
 
-  constexpr reference       front()       { return *m_front; }
-  constexpr const_reference front() const { return *m_front; }
-  constexpr reference        back()       { return *m_back;  }
-  constexpr const_reference  back() const { return *m_back;  }
+  constexpr reference       front() {
+    return m_chunks[m_front_chunk][m_front];
+  }
+  constexpr const_reference front() const {
+    return m_chunks[m_front_chunk][m_front];
+  }
+  constexpr reference        back()       {
+    return m_chunks[m_back_chunk][m_back];
+  }
+  constexpr const_reference  back() const {
+    return m_chunks[m_back_chunk][m_back];
+  }
   [[nodiscard]] constexpr bool empty() const noexcept { return size()==0; }
   constexpr size_type size() const noexcept { return m_size; }
 
@@ -102,19 +109,19 @@ public:
 private:
   constexpr void push_front_helper()
   {
-    if (m_front == *m_front_chunk)
+    if (m_front == 0)
     {
-      if (m_front_chunk == m_chunks.begin())
+      if (m_front_chunk == 0)
       {
         value_type *p = m_alloc.allocate(CHUNK_SIZE);
-        m_chunks.push_front(p);
-        m_front_chunk = m_chunks.begin();
+        m_chunks.push_back(p);
+        std::rotate(m_chunks.rbegin(), m_chunks.rbegin() + 1, m_chunks.rend());
       }
       else {
         --m_front_chunk;
       }
 
-      m_front = *m_front_chunk + CHUNK_SIZE - 1;
+      m_front = CHUNK_SIZE - 1;
     }
     else
     {
@@ -126,16 +133,16 @@ private:
 
   constexpr void push_back_helper()
   {
-    if (m_back == (*m_back_chunk + CHUNK_SIZE - 1))
+    if (m_back == CHUNK_SIZE - 1)
     {
-      if (++m_back_chunk == m_chunks.end())
+      if (m_back_chunk == m_chunks.size() - 1)
       {
         value_type *p = m_alloc.allocate(CHUNK_SIZE);
         m_chunks.push_back(p);
-        --m_back_chunk;
+        ++m_back_chunk;
       }
       
-      m_back = *m_back_chunk;
+      m_back = 0;
     }
     else
     {
@@ -145,13 +152,13 @@ private:
     m_size++;
   }
 
-  allocator_type         m_alloc;
-  value_type*            m_front = nullptr;
-  value_type*            m_back  = nullptr;
-  size_type              m_size  = 0;
-  list<value_type*>::iterator m_front_chunk;
-  list<value_type*>::iterator m_back_chunk;
-  list<value_type*> m_chunks;
+  allocator_type      m_alloc;
+  size_type           m_front;
+  size_type           m_back;
+  size_type           m_size  = 0;
+  size_type           m_front_chunk;
+  size_type           m_back_chunk;
+  vector<value_type*> m_chunks;
 };
 
 } // namespace CEST_NAMESPACE

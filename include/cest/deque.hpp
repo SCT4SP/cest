@@ -51,62 +51,26 @@ public:
 
   constexpr void push_front( const T& value )
   {
-/*    if (m_head.back().size() >= CHUNK_SIZE)
-      m_head.push_back(vector<T>());
-
-    m_head.back().push_back(value);
-*/
+    push_front_helper();
+    std::construct_at(m_front, value);
   }
 
   constexpr void push_front( T&& value )
   {
-    if (m_front == *m_front_chunk)
-    {
-      if (m_front_chunk == m_chunks.begin())
-      {
-        value_type *p = m_alloc.allocate(CHUNK_SIZE);
-        m_chunks.push_front(p);
-        m_front_chunk = m_chunks.begin();
-      }
-      else {
-        --m_front_chunk;
-      }
-
-      m_front = *m_front_chunk + CHUNK_SIZE - 1;
-    }
-    else
-    {
-      --m_front;
-    }
-
+    push_front_helper();
     std::construct_at(m_front, std::move(value));
-    m_size++;
   }
 
   constexpr void push_back( const T& value )
   {
+    push_back_helper();
+    std::construct_at(m_back, std::move(value));
   }
 
   constexpr void push_back( T&& value )
   {
-    if (m_back == (*m_back_chunk + CHUNK_SIZE - 1))
-    {
-      if (++m_back_chunk == m_chunks.end())
-      {
-        value_type *p = m_alloc.allocate(CHUNK_SIZE);
-        m_chunks.push_back(p);
-        --m_back_chunk;
-      }
-      
-      m_back = *m_back_chunk;
-    }
-    else
-    {
-      ++m_back;
-    }
-
+    push_back_helper();
     std::construct_at(m_back, std::move(value));
-    m_size++;
   }
 
   constexpr reference       front()       { return *m_front; }
@@ -136,6 +100,50 @@ public:
   //const_reference operator[]( size_type pos ) const;
 
 private:
+  constexpr void push_front_helper()
+  {
+    if (m_front == *m_front_chunk)
+    {
+      if (m_front_chunk == m_chunks.begin())
+      {
+        value_type *p = m_alloc.allocate(CHUNK_SIZE);
+        m_chunks.push_front(p);
+        m_front_chunk = m_chunks.begin();
+      }
+      else {
+        --m_front_chunk;
+      }
+
+      m_front = *m_front_chunk + CHUNK_SIZE - 1;
+    }
+    else
+    {
+      --m_front;
+    }
+
+    m_size++;
+  }
+
+  constexpr void push_back_helper()
+  {
+    if (m_back == (*m_back_chunk + CHUNK_SIZE - 1))
+    {
+      if (++m_back_chunk == m_chunks.end())
+      {
+        value_type *p = m_alloc.allocate(CHUNK_SIZE);
+        m_chunks.push_back(p);
+        --m_back_chunk;
+      }
+      
+      m_back = *m_back_chunk;
+    }
+    else
+    {
+      ++m_back;
+    }
+
+    m_size++;
+  }
 
   allocator_type         m_alloc;
   value_type*            m_front = nullptr;

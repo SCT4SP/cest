@@ -3,7 +3,7 @@
 
 #include "vector.hpp"
 #include <memory>    // std::allocator_traits
-//#include <algorithm> // std::rotate
+#include <algorithm> // std::rotate
 
 #define CHUNK_SIZE 1024
 
@@ -32,8 +32,8 @@ public:
   constexpr deque()
   {
     value_type *p = m_alloc.allocate(CHUNK_SIZE);
-    m_back  = CHUNK_SIZE / 2;
-    m_front = CHUNK_SIZE / 2 - 1;
+    m_front = CHUNK_SIZE / 2;
+    m_back  = CHUNK_SIZE / 2 - 1;
     m_chunks.push_back(p);
     m_front_chunk = m_back_chunk = 0;
   }
@@ -51,7 +51,7 @@ public:
   constexpr void push_front( const T& value )
   {
     push_front_helper();
-    std::construct_at(&m_chunks[m_front_chunk][m_front], value);
+    std::construct_at(&m_chunks[m_front_chunk][m_front],           value);
   }
 
   constexpr void push_front( T&& value )
@@ -63,13 +63,13 @@ public:
   constexpr void push_back( const T& value )
   {
     push_back_helper();
-    std::construct_at(&m_chunks[m_back_chunk][m_back], std::move(value));
+    std::construct_at(&m_chunks[m_back_chunk][m_back],             value);
   }
 
   constexpr void push_back( T&& value )
   {
     push_back_helper();
-    std::construct_at(&m_chunks[m_back_chunk][m_back], std::move(value));
+    std::construct_at(&m_chunks[m_back_chunk][m_back],   std::move(value));
   }
 
   constexpr reference       front() {
@@ -87,24 +87,18 @@ public:
   [[nodiscard]] constexpr bool empty() const noexcept { return size()==0; }
   constexpr size_type size() const noexcept { return m_size; }
 
-  reference       operator[]( size_type pos )
+  constexpr      reference operator[]( size_type pos )
   {
-/*    size_type chunk, chunk_offset;
-    if (pos < part_size(m_head))
-    {
-      const size_type head_pos = part_size(m_head) - pos - 1;
-      chunk                    = head_pos / CHUNK_SIZE;
-      chunk_offset             = head_pos % CHUNK_SIZE;
-      return m_head[chunk][chunk_offset];
-    } else {
-      const size_type tail_pos = pos - part_size(m_head);
-      chunk                    = tail_pos / CHUNK_SIZE;
-      chunk_offset             = tail_pos % CHUNK_SIZE;
-      return m_tail[chunk][chunk_offset];
-    }
-*/
+    const size_type chunk        = (m_front + pos) % CHUNK_SIZE;
+    const size_type chunk_offset = (m_front + pos) / CHUNK_SIZE;
+    return m_chunks[m_front_chunk + chunk_offset][chunk];
   }
-  //const_reference operator[]( size_type pos ) const;
+  constexpr const_reference operator[]( size_type pos ) const
+  {
+    const size_type chunk        = (m_front + pos) % CHUNK_SIZE;
+    const size_type chunk_offset = (m_front + pos) / CHUNK_SIZE;
+    return m_chunks[m_front_chunk + chunk_offset][chunk];
+  }
 
 private:
   constexpr void push_front_helper()

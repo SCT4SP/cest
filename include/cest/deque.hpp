@@ -40,10 +40,8 @@ public:
 
   constexpr ~deque()
   {
-    /*value_type *p = m_front;
-    do {
-      std::destroy_n(m_p,m_size);
-    } while */
+    for (size_type i = 0; i < size(); ++i)
+      std::destroy_n(&(*this)[i], 1);
     for (auto p : m_chunks)
       m_alloc.deallocate(p, CHUNK_SIZE);
   }
@@ -70,6 +68,34 @@ public:
   {
     push_back_helper();
     std::construct_at(&m_chunks[m_back_chunk][m_back],   std::move(value));
+  }
+
+  constexpr void pop_back()
+  {
+    if (!empty()) {
+      std::destroy_n(&m_chunks[m_back_chunk][m_back], 1);
+      if (m_back == 0) {
+        m_back = CHUNK_SIZE - 1;
+        --m_back_chunk;
+      } else {
+        --m_back;
+      }
+      --m_size;
+    }
+  }
+
+  constexpr void pop_front()
+  {
+    if (!empty()) {
+      std::destroy_n(&m_chunks[m_front_chunk][m_front], 1);
+      if (m_front == CHUNK_SIZE - 1) {
+        m_front = 0;
+        ++m_front_chunk;
+      } else {
+        ++m_front;
+      }
+      --m_size;
+    }
   }
 
   constexpr reference       front() {

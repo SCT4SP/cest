@@ -19,7 +19,15 @@ constexpr bool deque_test1()
   bool b3 = d.size() == 5 && !d.empty();
   bool b4 = d[0]==1 && d[1]==2 && d[2]==3 && d[3]==4 && d[4]==5;
   bool b5 = d.front()==1 && d.back()==5;
-  return b1 && b2 && b3 && b4 && b5;
+  d.pop_back();
+  d.pop_front();
+  bool b6 = d[0]==2 && d[2]==4 && d.size()==3;
+  d.pop_back();
+  d.pop_back();
+  bool b7 = d[0]==2 && d.size()==1;
+  d.pop_back();
+  bool b8 = d.empty();
+  return b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8;
 }
 
 void deque_tests()

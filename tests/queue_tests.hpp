@@ -37,12 +37,12 @@ constexpr bool queue_test1()
 void queue_tests()
 {
 #if RUN_STATIC_TESTS == 1
-//  static_assert(queue_test1<cest::queue<int>>());
+  static_assert(queue_test1<cest::queue<int>>());
   static_assert(queue_test1<cest::queue<int,cest::list<int>>>());
 #endif
 
   assert((queue_test1< std::queue<int>>()));
-//  assert((queue_test1<cest::queue<int>>()));
+  assert((queue_test1<cest::queue<int>>()));
   assert((queue_test1< std::queue<int,cest::list<int>>>()));
   assert((queue_test1<cest::queue<int,cest::list<int>>>()));
 }

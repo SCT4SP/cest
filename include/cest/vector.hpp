@@ -15,6 +15,7 @@ template <
 >
 class vector {
 public:
+
   using value_type            = T;
   using allocator_type        = Allocator;
   using size_type             = std::size_t;

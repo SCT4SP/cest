@@ -7,6 +7,7 @@
 #include "cest/list.hpp"
 #include "cest/set.hpp"
 #include "cest/map.hpp"
+#include "cest/deque.hpp"
 #include "cest/queue.hpp" //
 #include <cassert>
 #include <iterator>
@@ -15,6 +16,7 @@
 #include <list>
 #include <set>
 #include <map>
+#include <deque>
 
 template <template <typename...> typename V>
 constexpr auto iterator_test1() {
@@ -62,15 +64,19 @@ void iterator_tests()
   using namespace cest;
 #if RUN_STATIC_TESTS == 1
   static_assert(iterator_test1<vector>());
+  static_assert(iterator_test1<deque>());
   static_assert(static_iterator_test<std::vector<int>,vector<int>>());
   static_assert(static_iterator_test<std::forward_list<int>,forward_list<int>>());
   static_assert(static_iterator_test<std::set<int>,set<int>>());
   static_assert(static_iterator_test<std::map<int,char>,map<int,char>>());
   static_assert(static_iterator_test<std::list<int>,list<int>>());
+  static_assert(static_iterator_test<std::deque<int>,deque<int>>());
 #endif
 
   assert(iterator_test1<std::vector>());
   assert(iterator_test1<vector>());
+  assert(iterator_test1<std::deque>());
+  assert(iterator_test1<deque>());
 }
 
 #endif // _CEST_ITERATOR_TESTS_HPP_

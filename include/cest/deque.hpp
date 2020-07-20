@@ -16,7 +16,8 @@ template <
 class deque {
 public:
 
-//  struct iter;
+  struct       iter;
+  struct const_iter;
 
   using value_type            = T;
   using allocator_type        = Allocator;
@@ -26,13 +27,11 @@ public:
   using const_reference       = const value_type&;
   using pointer               = std::allocator_traits<Allocator>::pointer;
   using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
-//  using iterator              =       iter;
-  using iterator              =       T*;
-  using const_iterator        = const T*;
+  using iterator              =       iter;
+  using const_iterator        = const_iter;
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-#if 0
   struct iter
   {
     using difference_type   = std::ptrdiff_t;
@@ -41,17 +40,10 @@ public:
     using pointer           = value_type*;
     using iterator_category = std::random_access_iterator_tag;
 
-    constexpr reference operator*()           const noexcept {
-      return *m_p;
-    }
-
-    constexpr pointer   operator->()          const noexcept {
-      return m_p;
-    }
-
+    constexpr reference operator*()           const noexcept { return *m_p; }
+    constexpr pointer   operator->()          const noexcept { return  m_p; }
     constexpr auto&     operator++()                noexcept { // pre-incr
-//      m_node = m_node->next; return *this;
-      if (m_p = *m_ppchunk + CHUNK_SIZE - 1) {
+      if (m_p == *m_ppchunk + CHUNK_SIZE - 1) {
         ++m_ppchunk;
         m_p = *m_ppchunk;
       } else {
@@ -62,18 +54,84 @@ public:
     }
 
     constexpr auto      operator++(int)             noexcept { // post-incr
-//      auto tmp(m_node); ++(*this); return tmp; 
       auto tmp{m_p, m_ppchunk}; ++(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const iter& rhs) noexcept {
-      return true;//m_node == rhs.m_node;
+    constexpr auto&     operator--()                noexcept { // pre-decr
+      if (m_p == *m_ppchunk) {
+        --m_ppchunk;
+        m_p = *m_ppchunk;
+      } else {
+        --m_p;
+      }
+
+      return *this;
     }
 
-    value_type*  m_p;
-    value_type** m_ppchunk; // address of the vector element
+    constexpr auto      operator--(int)             noexcept { // post-decr
+      auto tmp{m_p, m_ppchunk}; --(*this); return tmp; 
+    }
+
+    constexpr bool      operator==(const iter& rhs) noexcept {
+      return m_p == rhs.m_p;
+    }
+
+    value_type*  m_p       = nullptr;
+    value_type** m_ppchunk = nullptr; // address of the vector element
   };
-#endif
+
+  struct const_iter
+  {
+    using difference_type   = std::ptrdiff_t;
+    using value_type        = deque::value_type;
+    using reference         = const value_type&;
+    using pointer           = const value_type*;
+    using iterator_category = std::random_access_iterator_tag;
+
+    constexpr const_iter(const value_type* p, value_type* const* ppchunk)
+      : m_p(p),      m_ppchunk(ppchunk)      {}
+    constexpr const_iter(const iter&     it)
+      : m_p(it.m_p), m_ppchunk(it.m_ppchunk) {}
+
+    constexpr reference operator*()           const noexcept { return *m_p; }
+    constexpr pointer   operator->()          const noexcept { return  m_p; }
+    constexpr auto&     operator++()                noexcept { // pre-incr
+      if (m_p == *m_ppchunk + CHUNK_SIZE - 1) {
+        ++m_ppchunk;
+        m_p = *m_ppchunk;
+      } else {
+        ++m_p;
+      }
+
+      return *this;
+    }
+
+    constexpr auto      operator++(int)             noexcept { // post-incr
+      auto tmp{m_p, m_ppchunk}; ++(*this); return tmp; 
+    }
+
+    constexpr auto&     operator--()                noexcept { // pre-decr
+      if (m_p == *m_ppchunk) {
+        --m_ppchunk;
+        m_p = *m_ppchunk;
+      } else {
+        --m_p;
+      }
+
+      return *this;
+    }
+
+    constexpr auto      operator--(int)             noexcept { // post-decr
+      auto tmp{m_p, m_ppchunk}; --(*this); return tmp; 
+    }
+
+    constexpr bool      operator==(const const_iter& rhs) noexcept {
+      return m_p == rhs.m_p;
+    }
+
+    const value_type*  m_p       = nullptr;
+    value_type* const* m_ppchunk = nullptr; // address of the vector element
+  };
 
   constexpr deque()
   {
@@ -91,8 +149,6 @@ public:
     for (auto p : m_chunks)
       m_alloc.deallocate(p, CHUNK_SIZE);
   }
-
-  constexpr iterator begin() noexcept { return {&(*this)[0], &m_chunks[0]}; }
 
   constexpr void push_front( const T& value )
   {
@@ -146,6 +202,24 @@ public:
     }
   }
 
+  constexpr       iterator  begin()       noexcept {
+    return {&m_chunks[m_front_chunk][m_front], &m_chunks[m_front_chunk]};
+  }
+  constexpr const_iterator  begin() const noexcept {
+    return {&m_chunks[m_front_chunk][m_front], &m_chunks[m_front_chunk]};
+  }
+  constexpr const_iterator cbegin() const noexcept {
+    return {&m_chunks[m_front_chunk][m_front], &m_chunks[m_front_chunk]};
+  }
+  constexpr iterator          end()       noexcept {
+    return {&m_chunks[m_back_chunk][m_back+1], &m_chunks[m_back_chunk]};
+  }
+  constexpr const_iterator    end() const noexcept {
+    return {&m_chunks[m_back_chunk][m_back+1], &m_chunks[m_back_chunk]};
+  }
+  constexpr const_iterator   cend() const noexcept {
+    return {&m_chunks[m_back_chunk][m_back+1], &m_chunks[m_back_chunk]};
+  }
   constexpr reference       front() {
     return m_chunks[m_front_chunk][m_front];
   }

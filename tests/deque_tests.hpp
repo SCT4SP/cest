@@ -39,23 +39,47 @@ constexpr bool deque_test2()
   d.push_back(3);
   auto it = d.begin();
   bool b1 = *it==1;
-  ++it;
+  auto it2 = ++it;
   bool b2 = *it==2;
   ++it;
   bool b3 = *it==3;
-  return b1 && b2 && b3;
+  bool b4 = it==it && it!=it2;
+  return b1 && b2 && b3 && b4;
+}
+
+// This test is especially good when the deque CHUNK_SIZE is set to a low value
+// (e.g. 4). The 4 calls to push_front should create a second chunk. The 
+template <typename D>
+constexpr bool deque_test3()
+{
+  D d;
+  d.push_front(4);
+  d.push_front(3);
+  d.push_front(2);
+  d.push_front(1);
+  auto it = --d.end();
+  bool b1 = *it==4;
+  d.pop_front();
+  d.pop_front();
+  d.pop_front();
+  bool b2 = *it==4;
+  return b1 && b2;
 }
 
 void deque_tests()
 {
 #if CONSTEXPR_CEST == 1
   static_assert(deque_test1<cest::deque<int>>());
+  static_assert(deque_test2<cest::deque<int>>());
+  static_assert(deque_test3<cest::deque<int>>());
 #endif
 
   assert((deque_test1< std::deque<int>>()));
   assert((deque_test1<cest::deque<int>>()));
   assert((deque_test2< std::deque<int>>()));
-//  assert((deque_test2<cest::deque<int>>()));
+  assert((deque_test2<cest::deque<int>>()));
+  assert((deque_test3< std::deque<int>>()));
+  assert((deque_test3<cest::deque<int>>()));
 }
 
 #endif //  _CEST_DEQUE_TESTS_HPP_

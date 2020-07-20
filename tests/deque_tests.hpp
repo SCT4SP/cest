@@ -30,6 +30,22 @@ constexpr bool deque_test1()
   return b1 && b2 && b3 && b4 && b5 && b6 && b7 && b8;
 }
 
+template <typename D>
+constexpr bool deque_test2()
+{
+  D d;
+  d.push_front(2);
+  d.push_front(1);
+  d.push_back(3);
+  auto it = d.begin();
+  bool b1 = *it==1;
+  ++it;
+  bool b2 = *it==2;
+  ++it;
+  bool b3 = *it==3;
+  return b1 && b2 && b3;
+}
+
 void deque_tests()
 {
 #if CONSTEXPR_CEST == 1
@@ -38,6 +54,8 @@ void deque_tests()
 
   assert((deque_test1< std::deque<int>>()));
   assert((deque_test1<cest::deque<int>>()));
+  assert((deque_test2< std::deque<int>>()));
+//  assert((deque_test2<cest::deque<int>>()));
 }
 
 #endif //  _CEST_DEQUE_TESTS_HPP_

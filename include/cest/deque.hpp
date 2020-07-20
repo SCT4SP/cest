@@ -16,6 +16,8 @@ template <
 class deque {
 public:
 
+//  struct iter;
+
   using value_type            = T;
   using allocator_type        = Allocator;
   using size_type             = std::size_t;
@@ -24,10 +26,54 @@ public:
   using const_reference       = const value_type&;
   using pointer               = std::allocator_traits<Allocator>::pointer;
   using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
+//  using iterator              =       iter;
   using iterator              =       T*;
   using const_iterator        = const T*;
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+#if 0
+  struct iter
+  {
+    using difference_type   = std::ptrdiff_t;
+    using value_type        = deque::value_type;
+    using reference         = value_type&;
+    using pointer           = value_type*;
+    using iterator_category = std::random_access_iterator_tag;
+
+    constexpr reference operator*()           const noexcept {
+      return *m_p;
+    }
+
+    constexpr pointer   operator->()          const noexcept {
+      return m_p;
+    }
+
+    constexpr auto&     operator++()                noexcept { // pre-incr
+//      m_node = m_node->next; return *this;
+      if (m_p = *m_ppchunk + CHUNK_SIZE - 1) {
+        ++m_ppchunk;
+        m_p = *m_ppchunk;
+      } else {
+        ++m_p;
+      }
+
+      return *this;
+    }
+
+    constexpr auto      operator++(int)             noexcept { // post-incr
+//      auto tmp(m_node); ++(*this); return tmp; 
+      auto tmp{m_p, m_ppchunk}; ++(*this); return tmp; 
+    }
+
+    constexpr bool      operator==(const iter& rhs) noexcept {
+      return true;//m_node == rhs.m_node;
+    }
+
+    value_type*  m_p;
+    value_type** m_ppchunk; // address of the vector element
+  };
+#endif
 
   constexpr deque()
   {
@@ -45,6 +91,8 @@ public:
     for (auto p : m_chunks)
       m_alloc.deallocate(p, CHUNK_SIZE);
   }
+
+  constexpr iterator begin() noexcept { return {&(*this)[0], &m_chunks[0]}; }
 
   constexpr void push_front( const T& value )
   {
@@ -175,9 +223,9 @@ private:
   allocator_type      m_alloc;
   size_type           m_front;
   size_type           m_back;
-  size_type           m_size  = 0;
   size_type           m_front_chunk;
   size_type           m_back_chunk;
+  size_type           m_size  = 0;
   vector<value_type*> m_chunks;
 };
 

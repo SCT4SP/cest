@@ -258,6 +258,7 @@ private:
         value_type *p = m_alloc.allocate(CHUNK_SIZE);
         m_chunks.push_back(p);
         std::rotate(m_chunks.rbegin(), m_chunks.rbegin() + 1, m_chunks.rend());
+        ++m_back_chunk;
       }
       else {
         --m_front_chunk;

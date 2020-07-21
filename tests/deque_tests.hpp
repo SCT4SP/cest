@@ -37,18 +37,21 @@ constexpr bool deque_test2()
   d.push_front(2);
   d.push_front(1);
   d.push_back(3);
-  auto it = d.begin();
-  bool b1 = *it==1;
-  auto it2 = ++it;
-  bool b2 = *it==2;
-  ++it;
-  bool b3 = *it==3;
-  bool b4 = it==it && it!=it2;
+  auto it1 = d.begin();
+  bool b1 = *it1==1;
+  auto it2 = ++it1;
+  bool b2 = *it1==2;
+  ++it1;
+  bool b3 = *it1==3;
+  bool b4 = it1==it1 && it1!=it2 && 1==it1-it2;
   return b1 && b2 && b3 && b4;
 }
 
 // This test is especially good when the deque CHUNK_SIZE is set to a low value
-// (e.g. 4). The 4 calls to push_front should create a second chunk. The 
+// (e.g. 4). The 4 calls to push_front will then create a second chunk. While
+// deque::push_front and deque::push_back invalidate existing iterators,
+// deque::pop_front and deque::pop_back do not. So, iterator `it` below
+// should not be, and is not, invalidated by the calls to pop_front.
 template <typename D>
 constexpr bool deque_test3()
 {

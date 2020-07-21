@@ -76,6 +76,14 @@ public:
       return m_p == rhs.m_p;
     }
 
+    friend difference_type
+    constexpr operator-(const iter& __x, const iter& __y) noexcept
+    {
+      return CHUNK_SIZE
+        * (__x.m_ppchunk - __x.m_ppchunk - 1) + (__x.m_p - *__x.m_ppchunk)
+        + (*__y.m_ppchunk + CHUNK_SIZE - __y.m_p);
+    }
+
     value_type*  m_p       = nullptr;
     value_type** m_ppchunk = nullptr; // address of the vector element
   };
@@ -127,6 +135,14 @@ public:
 
     constexpr bool      operator==(const const_iter& rhs) noexcept {
       return m_p == rhs.m_p;
+    }
+
+    friend difference_type
+    constexpr operator-(const const_iter& __x, const const_iter& __y) noexcept
+    {
+      return CHUNK_SIZE
+        * (__x.m_ppchunk - __x.m_ppchunk - 1) + (__x.m_p - *__x.m_ppchunk)
+        + (*__y.m_ppchunk + CHUNK_SIZE - __y.m_p);
     }
 
     const value_type*  m_p       = nullptr;

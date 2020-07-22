@@ -4,7 +4,7 @@
 #include "basic_ios.hpp"
 #include <iostream>      // std::cout, std::cerr, std::clog
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 namespace impl {
 
@@ -32,6 +32,6 @@ constexpr void runtime_ostream(
 
 } // namespace impl
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // __CEST_RUNTIME_OSTREAM_HPP__

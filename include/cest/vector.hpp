@@ -7,7 +7,7 @@
 #include <cstddef>
 #include <algorithm>
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template <
   class T,

@@ -7,7 +7,7 @@
 #include <memory>   // std::allocator
 #include <iterator> // std::reverse_iterator
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template <
   class CharT,
@@ -296,6 +296,6 @@ using u8string  = basic_string<char8_t>;
 using u16string = basic_string<char16_t>;
 using u32string = basic_string<char32_t>;
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_STRING_HPP_

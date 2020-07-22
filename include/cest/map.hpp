@@ -7,7 +7,7 @@
 #include <functional> // std::less
 #include <memory>
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template <
   class Key,
@@ -308,6 +308,6 @@ public:
   std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_MAP_HPP_

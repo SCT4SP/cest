@@ -6,7 +6,7 @@
 #include "cest/string.hpp"
 #include <algorithm>
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 // returns 8 (non-zero) on a successful find; as do libstdc++ and libc++
 constexpr int isalnum(int ch) {
@@ -22,6 +22,6 @@ constexpr int isupper(int ch) {
   return std::find(str.cbegin(), str.cend(), ch) != str.cend() ? 256 : 0;
 }
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_CCTYPE_HPP_

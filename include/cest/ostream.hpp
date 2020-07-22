@@ -7,7 +7,7 @@
 #include <string>              // std::char_traits
 #include <iostream>            // std::cout, std::cerr, std::clog
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template <class _CharT, class _Traits>
   class basic_ostream : /*virtual*/ public basic_ios<_CharT, _Traits>
@@ -193,6 +193,6 @@ endl(basic_ostream<CharT, Traits> &os)
   return *this;
       }
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_OSTREAM_HPP_

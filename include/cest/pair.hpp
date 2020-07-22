@@ -3,11 +3,11 @@
 
 #include <pair>
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
   using std::pair;
   using std::make_pair;
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_PAIR_HPP_

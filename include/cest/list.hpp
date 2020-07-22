@@ -6,7 +6,7 @@
 #include <memory>
 #include <algorithm>
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template <
   typename T,
@@ -280,6 +280,6 @@ struct list {
   std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_LIST_HPP_

@@ -5,7 +5,7 @@
 #include "streambuf.hpp"
 #include "string.hpp"
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template<
   class _CharT,
@@ -164,6 +164,6 @@ public:
 using  istringstream = basic_istringstream<char>;
 using wistringstream = basic_istringstream<wchar_t>;
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_SSTREAM_HPP_

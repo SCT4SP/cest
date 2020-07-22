@@ -3,10 +3,10 @@
 
 #include <fstream>
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
   using std::ifstream;
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_FSTREAM_HPP_

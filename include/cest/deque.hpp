@@ -7,7 +7,7 @@
 
 #define CHUNK_SIZE 1024
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template <
   class T,
@@ -320,6 +320,6 @@ private:
   vector<value_type*> m_chunks;
 };
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_DEQUE_HPP_

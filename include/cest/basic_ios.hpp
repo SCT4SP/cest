@@ -5,7 +5,7 @@
 #include "ios_base.hpp"
 #include <string>  // std::char_traits
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template <
   class _CharT,
@@ -154,6 +154,6 @@ _M_streambuf(0), _M_ctype(0), _M_num_put(0), _M_num_get(0)
     _M_streambuf_state = __sb ? goodbit : badbit;
   }
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_BASIC_IOS_HPP_

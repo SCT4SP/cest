@@ -3,10 +3,10 @@
 
 #include <cstdlib>
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
   using std::size_t;
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_CSTDLIB_HPP_

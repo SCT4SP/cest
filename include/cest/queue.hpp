@@ -4,7 +4,7 @@
 #include "cest/deque.hpp"
 #include <utility> // std::move
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 template<
   class T,
@@ -39,6 +39,6 @@ private:
   container_type m_cont;
 };
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_QUEUE_HPP_

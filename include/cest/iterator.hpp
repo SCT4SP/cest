@@ -5,7 +5,7 @@
 
 #include <iterator> // std::iterator_traits
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
   using std::inserter;
   using std::back_inserter;
@@ -83,6 +83,6 @@ constexpr auto  operator-(const iter<IL, C> &l, const iter<IR, C> &r) noexcept
   return l.base() - r.base();
 }
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_ITERATOR_HPP_

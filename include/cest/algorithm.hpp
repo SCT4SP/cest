@@ -3,12 +3,12 @@
 
 #include <algorithm>
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
   using std::copy;
   using std::find;
   using std::set_intersection;
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_ALGORITHM_HPP_

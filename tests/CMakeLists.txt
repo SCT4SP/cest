@@ -18,6 +18,3 @@ target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../include)
 
 # Indicates to test cest's constexpr (and runtime) support
 target_compile_definitions(${name} PRIVATE CONSTEXPR_CEST=1)
-
-# The namespace which contains all the definitions in cest
-target_compile_definitions(${name} PRIVATE CEST_NAMESPACE=cest)

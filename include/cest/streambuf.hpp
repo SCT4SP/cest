@@ -1,7 +1,7 @@
 #ifndef _CEST_STREAMBUF_HPP_
 #define _CEST_STREAMBUF_HPP_
 
-namespace CEST_NAMESPACE {
+namespace cest {
 
 #define _IsUnused __attribute__ ((__unused__))
 
@@ -147,6 +147,6 @@ protected:
 
 };
 
-} // namespace CEST_NAMESPACE
+} // namespace cest
 
 #endif // _CEST_STREAMBUF_HPP_

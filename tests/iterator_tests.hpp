@@ -62,7 +62,7 @@ constexpr bool static_iterator_test() {
 void iterator_tests()
 {
   using namespace cest;
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert(iterator_test1<vector>());
   static_assert(iterator_test1<deque>());
   static_assert(static_iterator_test<std::vector<int>,vector<int>>());

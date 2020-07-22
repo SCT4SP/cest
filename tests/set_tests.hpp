@@ -14,7 +14,7 @@ namespace set_tests_ns {
 // This is the style of output from implementation of Okasaki's Haskell RB tree
 template <template <typename...> typename S, typename ...Ts>
 constexpr void debug_print_set(S<Ts...> &s) {
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 0
   using namespace std;
   if constexpr (is_same_v<S<Ts...>,cest::set<Ts...>>) {
     using node = typename cest::set<Ts...>::node_type;
@@ -27,7 +27,7 @@ constexpr void debug_print_set(S<Ts...> &s) {
     };
     cout  << show(s.m_root,show) << endl;
   }
-#endif // RUN_STATIC_TESTS
+#endif
 }
 
 constexpr bool common_static_set_tests()
@@ -267,7 +267,7 @@ constexpr void doit()
   assert(set_test4<S4>(1,2,3,4,5));
 
   if constexpr (SA) {
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
     static_assert(set_test1<S1>());     // somehow, the 3rd arg is being
     static_assert(set_test2<S2>());     // found within the set already:
     static_assert(set_test3<S3>(3,2,1) == tup3);//std::tuple{2,3,2,2}); // tup3  !??
@@ -325,7 +325,7 @@ void set_tests()
   constexpr const auto tup11 = tuple{true,2,true,2,3,3};
   constexpr const auto tup12 = tuple{true};
 
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert(common_static_set_tests());
 //  static_assert(set_test1<set>() == tup1);
 //  static_assert(set_test1<set<int>>());

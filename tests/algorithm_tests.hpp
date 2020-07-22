@@ -111,7 +111,7 @@ void algorithm_tests()
   constexpr const auto tup2 = std::tuple{4,true,4,true,'c',true};
   constexpr const auto tup3 = std::tuple{5,5,5,5};
 
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert((algorithm_test1<cest::vector<int>,cest::set<int>>()) == tup1);
   static_assert((algorithm_test2<cest::vector<int>,cest::set<int>>()) == tup2);
   static_assert((algorithm_test3<

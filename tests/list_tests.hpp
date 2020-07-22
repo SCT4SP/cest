@@ -101,7 +101,7 @@ constexpr auto list_test3()
 
 void list_tests()
 {
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert(list_test1<cest::list<int>>());
   static_assert(list_test2<cest::list<int>>());
   static_assert(list_test3<cest::list>());

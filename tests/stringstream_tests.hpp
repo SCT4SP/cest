@@ -61,20 +61,21 @@ void stringstream_tests()
 {
   using namespace ss_tests;
 
-  assert((istringstream_test1<std::istringstream, std::string>()));
-  assert((istringstream_test1<cest::istringstream, cest::string>()));
-  assert((istringstream_test2<std::istringstream, std::string>()));
-  assert((istringstream_test2<cest::istringstream, cest::string>()));
   using  std_isbi =  std::istreambuf_iterator<char>;
   using cest_isbi = cest::istreambuf_iterator<char>;
+
+  assert((istringstream_test1< std::istringstream, std::string>()));
+  assert((istringstream_test1<cest::istringstream, cest::string>()));
+  assert((istringstream_test2< std::istringstream, std::string>()));
+  assert((istringstream_test2<cest::istringstream, cest::string>()));
   assert((istringstream_test3< std::ifstream,  std::string,  std_isbi>()));
   assert((istringstream_test3<cest::ifstream, cest::string, cest_isbi>()));
 
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert(istringstream_test1<cest::istringstream, cest::string>());
 //  static_assert(istringstream_test1<std::istringstream, std::string>());
   static_assert((istringstream_test2<cest::istringstream, cest::string>()));
-  static_assert((istringstream_test3<cest::ifstream, cest::string>()));
+//  static_assert((istringstream_test3<cest::ifstream, cest::string, cest_isbi>()));
 #endif
 }
 

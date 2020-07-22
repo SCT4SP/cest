@@ -36,7 +36,7 @@ constexpr bool queue_test1()
 
 void queue_tests()
 {
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert(queue_test1<cest::queue<int>>());
   static_assert(queue_test1<cest::queue<int,cest::list<int>>>());
 #endif

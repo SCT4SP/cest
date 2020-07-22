@@ -73,7 +73,7 @@ void map_tests()
   constexpr const auto tup1 = std::tuple{true,false,false,true};
   constexpr const auto tup2 = std::tuple{'a',1,true,false};
 
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert(common_static_map_tests());
   static_assert((map_test1<cest::map,char,int>()) == tup1);
   static_assert((map_test2<cest::map,char,int>()) == tup2);

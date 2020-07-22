@@ -8,7 +8,7 @@
 
 void cctype_tests()
 {
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert(cest::isalnum('q') != 0);
   static_assert(cest::isalnum('!') == 0);
 

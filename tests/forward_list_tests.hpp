@@ -124,14 +124,12 @@ constexpr void doit()
           assert(forward_list_test6<F6>());
 
   if constexpr (SA) {
-#if RUN_STATIC_TESTS == 1
     static_assert(forward_list_test1<F1>());
     static_assert(forward_list_test2<F2>());
     static_assert(forward_list_test3<F3>());
     static_assert(forward_list_test4<F4>());
 //    static_assert(forward_list_test5<F5>()); // stdlib and std::allocator
     static_assert(forward_list_test6<F6>());
-#endif
   }
 }
 
@@ -163,7 +161,6 @@ void forward_list_tests()
   using namespace fl_tests;
 
   tests_helper<CONSTEXPR_CEST,cest::forward_list>();
-  tests_helper<CONSTEXPR_STDLIB,std::forward_list>();
 }
 
 #endif // _CEST_FORWARD_LIST_TESTS_HPP_

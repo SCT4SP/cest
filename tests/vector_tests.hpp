@@ -143,7 +143,6 @@ constexpr void doit()
   assert(vec_test9<V9>());
 
   if constexpr (SA) {
-#if RUN_STATIC_TESTS == 1
     static_assert(vec_test0<V0>());
     static_assert(vec_test1<V1>());
     static_assert(vec_test2<V2>());
@@ -153,7 +152,6 @@ constexpr void doit()
     static_assert(vec_test6<V6>());
     static_assert(vec_test7<V7>());
     static_assert(vec_test9<V9>());
-#endif
   }
 }
 
@@ -192,8 +190,7 @@ void vector_tests()
 {
   using namespace v_tests;
 
-  tests_helper<CONSTEXPR_CEST,cest::vector>();
-  tests_helper<CONSTEXPR_STDLIB,std::vector>();  // true: constexpr tests
+  tests_helper<CONSTEXPR_CEST,cest::vector>(); // true: constexpr tests
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

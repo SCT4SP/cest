@@ -43,14 +43,15 @@ void iostream_tests()
   using cest_traits_type = decltype(cest::cout)::traits_type;
   auto &cest_endl = cest::endl<cest_char_type,cest_traits_type>;
 
-#if RUN_STATIC_TESTS == 1
+#if CONSTEXPR_CEST == 1
   static_assert(iostream_test1(cest::cout, cest::cerr, cest::hex, cest_endl));
-  static_assert(iostream_test2<std::string,std::ifstream,std::istream>());
+  //static_assert(iostream_test2<cest::string,cest::ifstream,cest::istream>());
 #endif
 
   assert(iostream_test1( std::cout,  std::cerr,  std::hex,  std_endl));
   assert(iostream_test1(cest::cout, cest::cerr, cest::hex, cest_endl));
   assert((iostream_test2<std::string,std::ifstream,std::istream>()));
+  //assert((iostream_test2<cest::string,cest::ifstream,cest::istream>()));
 }
 
 #endif // _CEST_IOSTREAM_TESTS_HPP_

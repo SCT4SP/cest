@@ -68,9 +68,8 @@ constexpr bool string_test4()
   cd.clear();
   bool b1 = str[i1]=='b' && i2==S::npos && i3==2 && i4==S::npos;
   bool b2 = i5==2 && i6==S::npos && cd.empty();
-  bool b3 = true;//!(one_dollar.find('$')==S::npos);
-  bool b4 = true;//  one_dollar.find('$')==S::npos; // why not a compilation error?
-  return b1 && b2 && b3 && b4;
+  bool b3 = !(one_dollar.find('$')==S::npos);
+  return b1 && b2 && b3;
 }
 
 template <typename S>

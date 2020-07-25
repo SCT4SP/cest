@@ -10,7 +10,7 @@
 #include <cassert>
 
 template <typename S>
-constexpr auto string_test1()
+constexpr bool string_test1()
 {
   S str;
   bool b1 = str.empty();
@@ -20,15 +20,15 @@ constexpr auto string_test1()
 
   str.push_back('q');
   typename S::value_type nt1 = str.c_str()[str.length()];
-  bool b3 = str.empty();
+  bool b3 = !str.empty();
   typename S::size_type s2 = str.size();
   auto q = str[0];
   
-  return std::tuple{b1,b2,s1,b3,s2,q,nt0,nt1};
+  return b1 && b2 && s1==0 && b3 && s2==1 && q=='q' && nt0=='\0' && nt1=='\0';
 }
 
 template <typename S>
-constexpr auto string_test2()
+constexpr bool string_test2()
 {
   S str("Ok");
   auto nt = str.c_str()[str.length()];
@@ -38,18 +38,24 @@ constexpr auto string_test2()
   str2.pop_back();
   auto nt2 = str2.c_str()[str2.length()];
   bool eq = str == str2 && str == "Ok";
-  return std::tuple{str.size(),str.length(),str[0],str[1],nt,nt2,eq,c};
+
+  bool b1 = 2==str.size() && 2==str.length() && 'O'==str[0] && 'k'==str[1];
+  bool b2 = '\0'==nt      && '\0'==nt2       && eq          && '!'==c;
+  return b1 && b2;
 }
 
 template <typename S>
-constexpr auto string_test3()
+constexpr bool string_test3()
 {
   S strA("abc"), strB("abcZZZ");
   bool b1 = strA == "abcZZZ";
   bool b2 = "abcZZZ" == strA;
   bool b3 = strB == "abc";
   bool b4 = "abc" == strB;
-  return std::tuple{b1,b2,b3,b4};
+
+//  constexpr const auto tup3 = std::tuple{false,false,false,false};
+//  return std::tuple{b1,b2,b3,b4};
+  return !b1 && !b2 && !b3 && !b4;
 }
 
 template <typename S>
@@ -73,7 +79,7 @@ constexpr bool string_test4()
 }
 
 template <typename S>
-constexpr auto string_test5()
+constexpr bool string_test5()
 {
   S str0("");
   bool b0 = str0.capacity() > 0;
@@ -84,14 +90,15 @@ constexpr auto string_test5()
   bool b3 = str == "abcdabcd";
   typename S::size_type len = str.length();
   auto nt = str.c_str()[str.length()];
-  return std::tuple{b0,b1,b2,b3,len,nt};
+
+  return b0 && b1 && b2 && b3 && 8==len && '\0'==nt;
 }
 
 template <typename S>
-constexpr auto string_test6(auto &cout, auto &endl) {
+constexpr bool string_test6(auto &cout, auto &endl) {
   S str("Zod");
   cout << str << endl;
-  return std::tuple{true};
+  return true;
 }
 
 template <typename S>
@@ -134,13 +141,6 @@ constexpr bool string_test10() {
 
 void string_tests()
 {
-  constexpr const auto tup1 = std::tuple{true,true,0,false,1,'q','\0','\0'};
-  constexpr const auto tup2 = std::tuple{2,2,'O','k','\0','\0',true,'!'};
-  constexpr const auto tup3 = std::tuple{false,false,false,false};
-//  constexpr const auto tup4 = std::tuple{'b',true,2,true,2,true,true};
-  constexpr const auto tup5 = std::tuple{true,true,true,true,8,'\0'};
-  constexpr const auto tup6 = std::tuple{true};
-
   using std_char_type    = decltype(std::cout)::char_type;
   using std_traits_type  = decltype(std::cout)::traits_type;
   auto  &std_endl = std::endl<std_char_type,std_traits_type>;
@@ -150,31 +150,31 @@ void string_tests()
   auto &cest_endl = cest::endl<cest_char_type,cest_traits_type>;
 
 #if CONSTEXPR_CEST == 1
-  static_assert((string_test1<cest::string>()) == tup1);
-  static_assert((string_test2<cest::string>()) == tup2);
-  static_assert((string_test3<cest::string>()) == tup3);
+  static_assert(string_test1<cest::string>());
+  static_assert(string_test2<cest::string>());
+  static_assert(string_test3<cest::string>());
   static_assert(string_test4<cest::string>());
-  static_assert((string_test5<cest::string>()) == tup5);
-  static_assert(string_test6<cest::string>(cest::cout, cest_endl) == tup6);
+  static_assert(string_test5<cest::string>());
+  static_assert(string_test6<cest::string>(cest::cout, cest_endl));
   static_assert(string_test9<cest::string>());
   static_assert(string_test10<cest::string>());
 #endif
   
-  assert(string_test1< std::string>() == tup1);
-  assert(string_test1<cest::string>() == tup1);
-  assert(string_test2< std::string>() == tup2);
-  assert(string_test2<cest::string>() == tup2);
-  assert(string_test3< std::string>() == tup3);
-  assert(string_test3<cest::string>() == tup3);
+  assert(string_test1< std::string>());
+  assert(string_test1<cest::string>());
+  assert(string_test2< std::string>());
+  assert(string_test2<cest::string>());
+  assert(string_test3< std::string>());
+  assert(string_test3<cest::string>());
 
   assert(string_test4<cest::string>());
   assert(string_test4< std::string>());
   assert(string_test4<cest::string>());
 
-  assert(string_test5< std::string>() == tup5);
-  assert(string_test5<cest::string>() == tup5);
-  assert(string_test6< std::string>( std::cout,  std_endl) == tup6);
-  assert(string_test6<cest::string>(cest::cout, cest_endl) == tup6);
+  assert(string_test5< std::string>());
+  assert(string_test5<cest::string>());
+  assert(string_test6< std::string>( std::cout,  std_endl));
+  assert(string_test6<cest::string>(cest::cout, cest_endl));
   assert(string_test7< std::string>());
   assert(string_test7<cest::string>());
   assert(string_test8< std::string>());

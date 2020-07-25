@@ -53,8 +53,6 @@ constexpr bool string_test3()
   bool b3 = strB == "abc";
   bool b4 = "abc" == strB;
 
-//  constexpr const auto tup3 = std::tuple{false,false,false,false};
-//  return std::tuple{b1,b2,b3,b4};
   return !b1 && !b2 && !b3 && !b4;
 }
 

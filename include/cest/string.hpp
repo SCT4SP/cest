@@ -204,9 +204,26 @@ public:
   }
   constexpr basic_string& operator+=(CharT ch) { push_back(ch); return *this; }
 
+  constexpr basic_string& operator=(const CharT* s)
+  {
+    //const CharT* s  = str.c_str();
+    size_type count = traits_type::length(s);
+
+    if (m_capacity < count+1) {
+      m_alloc.deallocate(m_p, m_capacity+1);
+      m_capacity = count+1;                    // ensure m_capacity is not 0
+      m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
+    }
+    
+    traits_type::copy(m_p, s, count+1);
+    m_size = count;
+    return *this;
+  }
+
   constexpr basic_string& operator=(const basic_string& str)
   {
-    const CharT* s  = str.c_str();
+    return this->operator=(str.c_str());
+    /*const CharT* s  = str.c_str();
     size_type count = traits_type::length(s);
 
     if (m_capacity < str.m_capacity) {
@@ -217,7 +234,7 @@ public:
     
     traits_type::copy(m_p, s, count+1);
     m_size = count;
-    return *this;
+    return *this;*/
   }
 
   constexpr void reserve(size_type new_cap)
@@ -232,21 +249,16 @@ public:
     }
   }
 
-  friend constexpr bool operator==(const basic_string &lhs,
-                                   const basic_string &rhs) noexcept {
-    return lhs.length() == rhs.length() &&
-           !traits_type::compare(lhs.data(), rhs.data(), lhs.length());
-  }
+  constexpr int compare(const CharT* s) const noexcept
+  {
+    const size_type  size = this->size();
+    const size_type osize = traits_type::length(s);
+    const size_type   len = std::min(size, osize);
 
-  friend constexpr bool operator==(const CharT *lhs,
-                                   const basic_string &rhs) noexcept {
-    return traits_type::length(lhs) == rhs.length() &&
-           !traits_type::compare(lhs, rhs.data(), traits_type::length(lhs));
-  }
-
-  friend constexpr bool operator<(const basic_string &lhs,
-                                  const basic_string &rhs) noexcept {
-    return lhs.compare(rhs) < 0;
+    int r = traits_type::compare(this->data(), s, len);
+    if (!r)
+      r = _S_compare(size, osize);
+    return r;
   }
 
   constexpr int compare(const basic_string& str) const
@@ -279,6 +291,71 @@ private:
   size_type       m_capacity = 0;
   value_type     *m_p        = nullptr;
 };
+
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline bool
+  operator==(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+             const basic_string<_CharT, _Traits, _Alloc>& __rhs)
+  noexcept
+  { return __lhs.compare(__rhs) == 0; }
+
+template<typename _CharT>
+  inline constexpr
+  std::enable_if_t<std::__is_char<_CharT>::__value, bool>
+  operator==(const basic_string<_CharT>& __lhs,
+             const basic_string<_CharT>& __rhs) noexcept
+  { return (__lhs.size() == __rhs.size()
+            && !std::char_traits<_CharT>::compare(__lhs.data(), __rhs.data(),
+                                                  __lhs.size())); }
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline constexpr bool
+  operator==(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+             const _CharT* __rhs)
+  { return __lhs.compare(__rhs) == 0; }
+
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline constexpr bool
+  operator==(const _CharT* __lhs,
+             const basic_string<_CharT, _Traits, _Alloc>& __rhs)
+  { return __rhs.compare(__lhs) == 0; }
+
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline constexpr bool
+  operator!=(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+             const basic_string<_CharT, _Traits, _Alloc>& __rhs)
+  noexcept
+  { return !(__lhs == __rhs); }
+
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline constexpr bool
+  operator!=(const _CharT* __lhs,
+             const basic_string<_CharT, _Traits, _Alloc>& __rhs)
+  { return !(__lhs == __rhs); }
+
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline constexpr bool
+  operator!=(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+             const _CharT* __rhs)
+  { return !(__lhs == __rhs); }
+
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline constexpr bool
+  operator<(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+            const basic_string<_CharT, _Traits, _Alloc>& __rhs)
+  noexcept
+  { return __lhs.compare(__rhs) < 0; }
+
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline constexpr bool
+  operator<(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+            const _CharT* __rhs)
+  { return __lhs.compare(__rhs) < 0; }
+
+template<typename _CharT, typename _Traits, typename _Alloc>
+  inline constexpr bool
+  operator<(const _CharT* __lhs,
+            const basic_string<_CharT, _Traits, _Alloc>& __rhs)
+  { return __rhs.compare(__lhs) > 0; }
 
 template <class CharT, class Traits, class Allocator>
 constexpr basic_ostream<CharT, Traits>&

@@ -181,7 +181,7 @@ constexpr void tests_helper()
   using Va9 = Vt<int,    cea::mono_block_alloc<int>>;
 
   doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9>();
-  doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8, Va9>();
+//  doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8, Va9>();
 }
 
 } // namespace v_tests

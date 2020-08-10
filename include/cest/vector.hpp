@@ -22,8 +22,8 @@ public:
   using difference_type       = std::ptrdiff_t;
   using reference             = value_type&;
   using const_reference       = const value_type&;
-  using pointer               = std::allocator_traits<Allocator>::pointer;
-  using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
+  using pointer               = typename std::allocator_traits<Allocator>::pointer;
+  using const_pointer         = typename std::allocator_traits<Allocator>::const_pointer;
   using iterator              =       T*;
   using const_iterator        = const T*;
   using reverse_iterator      = std::reverse_iterator<iterator>;
@@ -40,7 +40,9 @@ public:
     if (new_cap > m_capacity)
     {
       value_type *p = m_alloc.allocate(new_cap);
-      std::copy_n(m_p, m_size, p);
+//      std::copy_n(m_p, m_size, p);
+      for (size_type i = 0; i < m_size; i++)
+        std::construct_at(&p[i], m_p[i]);
       if (0 != m_capacity) {
         std::destroy_n(m_p,m_size);
         m_alloc.deallocate(m_p,m_capacity);

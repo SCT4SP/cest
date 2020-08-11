@@ -22,8 +22,8 @@ struct list {
   using difference_type       = std::ptrdiff_t;
   using reference             =       value_type&;
   using const_reference       = const value_type&;
-  using pointer               = std::allocator_traits<Allocator>::pointer;
-  using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
+  using pointer               = typename std::allocator_traits<Allocator>::pointer;
+  using const_pointer         = typename std::allocator_traits<Allocator>::const_pointer;
   using iterator              =       iter;
   using const_iterator        = const_iter;
   using reverse_iterator      = std::reverse_iterator<iterator>;
@@ -52,6 +52,7 @@ struct list {
 
   struct node : node_base {
     constexpr node(const value_type &v) : value(v) {}
+    // Is this constructor used?
     constexpr node(const value_type &v, node_base* n, node_base* p)
                                                : node_base(n,p), value(v) {}
     value_type value;
@@ -89,7 +90,7 @@ struct list {
       auto tmp(m_node); --(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const iter& rhs) noexcept {
+    constexpr bool      operator==(const iter& rhs) const noexcept {
       return m_node == rhs.m_node;
     }
     
@@ -131,7 +132,7 @@ struct list {
       auto tmp(m_node); --(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const const_iter& rhs) noexcept {
+    constexpr bool      operator==(const const_iter& rhs) const noexcept {
       return m_node == rhs.m_node;
     }
     
@@ -203,7 +204,9 @@ struct list {
     node* new_node = m_node_alloc.allocate(1);
 
     // As an implicit-lifetime type (P0593R6), node construction isn't needed
-    std::construct_at(&new_node->value, value);
+    //std::construct_at(&new_node->value, value);
+    std::construct_at(new_node, value);
+    // ...actually...it is: that exemption doesn't apply for constexpr.
 
     // List_node_base::_M_hook
     // __tmp->_M_hook(__position._M_const_cast()._M_node);
@@ -226,7 +229,9 @@ struct list {
     node_base*   p = const_cast<node_base*>(pos.m_node);
     node* new_node = m_node_alloc.allocate(1);
 
-    std::construct_at(&new_node->value, std::forward<Args>(args)...);
+    // Could a move constructor for node reduce this to one construct_at call?
+    std::construct_at(new_node, value_type{std::forward<Args>(args)...});
+    //std::construct_at(&new_node->value, std::forward<Args>(args)...);
 
     // List_node_base::_M_hook
     new_node->next = p;
@@ -262,7 +267,7 @@ struct list {
 
   template <typename... Args >
   constexpr reference emplace_front(Args&&... args) {
-    insert(begin(), value_type(std::forward<Args>(args)...));
+    insert(begin(), value_type{std::forward<Args>(args)...});
     return front();
   }
 
@@ -277,7 +282,7 @@ struct list {
 
   node_base m_node;
   size_type m_size = 0;
-  std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
+  typename std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
 } // namespace cest

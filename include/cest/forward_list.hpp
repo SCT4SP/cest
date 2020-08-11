@@ -54,7 +54,7 @@ struct forward_list {
   struct        node_base { node_base* next = nullptr; };
   struct node : node_base {
     constexpr node(const value_type &v, node_base* n = nullptr)
-                                                  : node_base(n), value(v) {}
+                                                  : node_base{n}, value{v} {}
     value_type value;
   };
 

@@ -40,7 +40,6 @@ public:
     if (new_cap > m_capacity)
     {
       value_type *p = m_alloc.allocate(new_cap);
-//      std::copy_n(m_p, m_size, p);
       for (size_type i = 0; i < m_size; i++)
         std::construct_at(&p[i], m_p[i]);
       if (0 != m_capacity) {

@@ -46,8 +46,8 @@ struct forward_list {
   using difference_type = std::ptrdiff_t;
   using reference       =       value_type&;
   using const_reference = const value_type&;
-  using pointer         = std::allocator_traits<Allocator>::pointer;
-  using const_pointer   = std::allocator_traits<Allocator>::const_pointer;
+  using pointer         = typename std::allocator_traits<Allocator>::pointer;
+  using const_pointer   = typename std::allocator_traits<Allocator>::const_pointer;
   using iterator        =       iter;
   using const_iterator  = const_iter;
 
@@ -82,7 +82,7 @@ struct forward_list {
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const iter& rhs) noexcept {
+    constexpr bool      operator==(const iter& rhs) const noexcept {
       return m_node == rhs.m_node;
     }
 
@@ -116,7 +116,7 @@ struct forward_list {
       auto tmp(m_node); ++(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const const_iter& rhs) noexcept {
+    constexpr bool      operator==(const const_iter& rhs) const noexcept {
       return m_node == rhs.m_node;
     }
 
@@ -227,7 +227,7 @@ struct forward_list {
   }
 
   node_base m_front;
-  std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
+  typename std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
 } // namespace cest

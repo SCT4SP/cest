@@ -29,8 +29,8 @@ public:
   using allocator_type        = Allocator;
   using reference             =       value_type&;
   using const_reference       = const value_type&;
-  using pointer               = std::allocator_traits<Allocator>::pointer;
-  using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
+  using pointer               = typename std::allocator_traits<Allocator>::pointer;
+  using const_pointer         = typename std::allocator_traits<Allocator>::const_pointer;
   using iterator              = const_tree_iter; // both are const_tree_iter
   using const_iterator        = const_tree_iter; // as specified cppreference
   using reverse_iterator      = std::reverse_iterator<iterator>;
@@ -44,6 +44,10 @@ public:
     using reference         = const value_type&;
     using pointer           = const value_type*;
     using iterator_category = std::bidirectional_iterator_tag;
+
+#ifdef __clang__
+    constexpr const_tree_iter(node* np) : curr_node(np) {}
+#endif
 
     constexpr reference operator*()  const { return  curr_node->x; }
     constexpr pointer   operator->() const { return &curr_node->x; }
@@ -94,6 +98,10 @@ public:
   enum eCol { RED, BLACK };
 
   struct node {
+#ifdef __clang__
+    constexpr node(value_type x, node* l, node* r, node* p, eCol c)
+      : x(x), l(l), r(r), p(p), c(c) {}
+#endif
     value_type x;
     node      *l, *r, *p;
     eCol       c;
@@ -236,6 +244,7 @@ public:
     m_root->c = BLACK; // make_black
 
     return {iterator(ret_node),added};
+    //return std::pair<iterator,bool>(iterator(ret_node),added);
   }
 //  std::pair<iterator,bool> insert( value_type&& value );
 
@@ -249,7 +258,7 @@ public:
   size_type m_size;
   allocator_type m_alloc;
   key_compare m_comp;
-  std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
+  typename std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
 } // namespace cest

@@ -34,7 +34,9 @@ constexpr bool common_static_set_tests()
 {
   auto f = []<template <class ...> class S>() {
     static_assert(sizeof(S<float>)==sizeof(S<double>));
+#ifndef __clang__
     static_assert(std::weakly_incrementable<typename S<int>::iterator>);
+#endif
     using       iter_t = typename S<int>::iterator;
     using const_iter_t = typename S<int>::const_iterator;
     static_assert(std::is_same_v<
@@ -335,6 +337,7 @@ void set_tests()
 //  static_assert(set_test3<set>(1,3,2) == tup5);
 //  static_assert(set_test3<set>(1,2,2) == tup6);
 //  static_assert(set_test4<set>(1,2,3,4,5) == tup7);
+
   static_assert(set_test5<set>(42)        == tup8);
   static_assert(set_test6<set>(1,6,8,11,13,15,17,22,25,27) == tup9);
   static_assert(set_test6<set>(27,25,22,17,15,13,11,8,6,1) == tup9);

@@ -71,7 +71,10 @@ constexpr auto list_test2()
 template <template <typename ...> typename L>
 constexpr auto list_test3()
 {
-  struct Foo { int i; short s; double *p; };
+  struct Foo {
+    constexpr Foo(int i, short s, double *p) : i(i), s(s), p(p) {} // clang needs a ctor
+    int i; short s; double *p;                           // for list::emplace
+  };
 
   L<Foo> l;
   const int i{42};
@@ -103,8 +106,8 @@ void list_tests()
 {
 #if CONSTEXPR_CEST == 1
   static_assert(list_test1<cest::list<int>>());
-  //static_assert(list_test2<cest::list<int>>());
-  //static_assert(list_test3<cest::list>());
+  static_assert(list_test2<cest::list<int>>());
+  static_assert(list_test3<cest::list>());
 #endif
 
   assert(list_test1< std::list<int>>());

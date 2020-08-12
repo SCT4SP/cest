@@ -230,7 +230,7 @@ struct list {
     node* new_node = m_node_alloc.allocate(1);
 
     // Could a move constructor for node reduce this to one construct_at call?
-    std::construct_at(new_node, value_type{std::forward<Args>(args)...});
+    std::construct_at(new_node, value_type(std::forward<Args>(args)...));
     //std::construct_at(&new_node->value, std::forward<Args>(args)...);
 
     // List_node_base::_M_hook
@@ -267,7 +267,7 @@ struct list {
 
   template <typename... Args >
   constexpr reference emplace_front(Args&&... args) {
-    insert(begin(), value_type{std::forward<Args>(args)...});
+    insert(begin(), value_type(std::forward<Args>(args)...));
     return front();
   }
 

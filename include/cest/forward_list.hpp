@@ -12,6 +12,8 @@ namespace cest {
 // constexpr reinterpret_cast is prohibited in C++20 (Section 7.7 (5.15))
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=49171
 
+// These are only needed for GCC
+
 template <typename T, typename U>
 constexpr T const_cast2(U *p) {
   return p ? const_cast<T>(p) : nullptr;

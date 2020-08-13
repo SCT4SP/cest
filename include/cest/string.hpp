@@ -19,12 +19,12 @@ public:
   using traits_type         = Traits;
   using value_type          = CharT;
   using allocator_type      = Allocator;
-  using size_type           = std::allocator_traits<Allocator>::size_type;
-  using difference_type     = std::allocator_traits<Allocator>::difference_type;
+  using size_type           = typename std::allocator_traits<Allocator>::size_type;
+  using difference_type     = typename std::allocator_traits<Allocator>::difference_type;
   using reference           = value_type&;
   using const_reference     = const value_type&;
-  using pointer             = std::allocator_traits<Allocator>::pointer;
-  using const_pointer       = std::allocator_traits<Allocator>::const_pointer;
+  using pointer             = typename std::allocator_traits<Allocator>::pointer;
+  using const_pointer       = typename std::allocator_traits<Allocator>::const_pointer;
   using iterator            =       CharT*;
   using const_iterator      = const CharT*;
   using reverse_iterator    = std::reverse_iterator<iterator>;
@@ -39,6 +39,8 @@ public:
   basic_string(const Allocator& alloc) noexcept : m_alloc(alloc) {
     m_capacity = 1;                                // Unlike 0, a scalable value
     m_p = m_alloc.allocate(m_capacity+1);          // +1 for the null terminator
+    for (size_type i = 0; i < m_capacity+1; i++)
+      std::construct_at(&m_p[i]);
     traits_type::assign(this->data()[0], CharT()); // m_p[0] = \0;
   }
 
@@ -47,6 +49,8 @@ public:
                          const Allocator& alloc = Allocator()) : m_alloc(alloc){
     m_capacity = count+1;                    // ensure m_capacity is not 0
     m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
+    for (size_type i = 0; i < m_capacity+1; i++)
+      std::construct_at(&m_p[i]);
     traits_type::copy(m_p, s, count); // traits_type supports user customisation
     traits_type::assign(this->data()[m_size = count], CharT());
   }
@@ -81,6 +85,8 @@ public:
             // Allocate more space.
             __capacity = __len + 1;
             pointer __another  = m_alloc.allocate(__capacity + 1);
+            for (size_type i = 0; i < __capacity+1; i++)
+              std::construct_at(&__another[i]);
             traits_type::copy(__another, m_p, __len);
             m_alloc.deallocate(m_p,m_capacity+1);
             m_p = __another;
@@ -184,6 +190,8 @@ public:
     }
     else {
       value_type *p = m_alloc.allocate(len+1);
+      for (size_type i = 0; i < len+1; i++)
+        std::construct_at(&p[i]);
       traits_type::copy(p, m_p, m_size);
       traits_type::copy(p + m_size, s, count);
       m_alloc.deallocate(m_p, m_capacity+1);
@@ -213,6 +221,8 @@ public:
       m_alloc.deallocate(m_p, m_capacity+1);
       m_capacity = count+1;                    // ensure m_capacity is not 0
       m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
+      for (size_type i = 0; i < m_capacity+1; i++)
+        std::construct_at(&m_p[i]);
     }
     
     traits_type::copy(m_p, s, count+1);
@@ -242,6 +252,8 @@ public:
     if (new_cap > m_capacity)
     {
       value_type *p = m_alloc.allocate(new_cap+1); // for the null terminator
+      for (size_type i = 0; i < new_cap+1; i++)
+        std::construct_at(&p[i]);
       traits_type::copy(p, m_p, m_size+1);
       m_alloc.deallocate(m_p, m_capacity+1);
       m_p = p;

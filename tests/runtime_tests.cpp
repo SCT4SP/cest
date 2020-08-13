@@ -3,8 +3,8 @@
 #include "list_tests.hpp"
 #include "set_tests.hpp"
 #include "map_tests.hpp"
-/*#include "string_tests.hpp"
-#include "cctype_tests.hpp"
+#include "string_tests.hpp"
+/*#include "cctype_tests.hpp"
 #include "deque_tests.hpp"
 #include "queue_tests.hpp"
 #include "iterator_tests.hpp"
@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
   list_tests();
   set_tests();
   map_tests();
-  /*string_tests();
-  cctype_tests();
+  string_tests();
+/*  cctype_tests();
   deque_tests();
   queue_tests();
   iterator_tests();

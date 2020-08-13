@@ -12,9 +12,11 @@ template <class CharT, class Traits, class T>
 constexpr void runtime_ostream(basic_ostream<CharT,Traits>& os, T x)
 {
   if (!std::is_constant_evaluated())
+  {
     if      (&cest::cout == &os) std::cout << x;
     else if (&cest::cerr == &os) std::cerr << x;
     else if (&cest::clog == &os) std::clog << x;
+  }
 }
 
 // madness for endl
@@ -25,9 +27,11 @@ constexpr void runtime_ostream(
 )
 {
   if (!std::is_constant_evaluated())
+  {
     if      (&cest::cout == &os) std::cout << fp;
     else if (&cest::cerr == &os) std::cerr << fp;
     else if (&cest::clog == &os) std::clog << fp;
+  }
 }
 
 } // namespace impl

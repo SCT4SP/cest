@@ -14,8 +14,8 @@ template <class IntAlloc>
 constexpr bool alloc_test1()
 {
   using alloc_int_t    = IntAlloc;
-  using alloc_double_t =
-    typename std::allocator_traits<IntAlloc>::rebind_alloc<double>;
+  using alloc_double_t = typename std::allocator_traits<IntAlloc>::
+                           template rebind_alloc<double>;
   alloc_int_t    alloc_i;
   alloc_double_t alloc_d;
   alloc_int_t    alloc_i2(alloc_d); // double free here?
@@ -24,10 +24,12 @@ constexpr bool alloc_test1()
   int *pi = alloc_i.allocate(4);
 
   // this simply calls the At<Foo> constructor
-  typename std::allocator_traits<decltype(alloc_i)>::rebind_alloc<Foo> ralloc_foo;
+  typename std::allocator_traits<decltype(alloc_i)>::
+    template rebind_alloc<Foo> ralloc_foo;
 
   Foo *pf = ralloc_foo.allocate(4);
-  pf->a = 1;     // std::construct_at is not required for simple types
+  std::construct_at(pf);
+  pf->a = 1;
   pf->b = '2';
   pf->c = 3.0f;
   pf->d = 4.0;

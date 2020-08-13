@@ -85,7 +85,11 @@ void allocator_tests()
 
   tests_helper<true,std::allocator<int>>();  // true: constexpr tests
   tests_helper<false,cea::mono_block_alloc<int>>(); // true fails on test2
+#ifdef __clang__
   tests_helper<true,cea::mbsa<int>>();
+#else
+  tests_helper<false,cea::mbsa<int>>(); // GCC doesn't like the construct_at
+#endif
 }
 
 #endif // _CEST_ALLOCATOR_TESTS_HPP_

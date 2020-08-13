@@ -85,8 +85,6 @@ constexpr auto set_test3(T x, T y, T z)
   debug_print_set(s);
 
   return std::tuple{s.size(),*r1.first,*r2.first,*r3.first};
-//  constexpr const auto tup3 = tuple{3,3,2,1};
-//  return 3==s.size() && 3==*r1.first && 2==*r2.first && 1==*r3.first;
 }
 
 template <class T, class U>

@@ -15,16 +15,6 @@
 #include <iterator>
 #include <cassert>
 
-/*namespace cest {
-template<typename _Container, typename _Iterator>
-  constexpr std::insert_iterator<_Container>
-  inserter(_Container& __x, _Iterator __i)
-  {
-    return std::insert_iterator<_Container>(__x,
-                                            typename _Container::iterator(__i));
-  }
-}*/
-
 template <typename V, typename S>
 constexpr bool algorithm_test1() {
   using namespace std;

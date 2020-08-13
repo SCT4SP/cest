@@ -72,8 +72,9 @@ template <template <typename ...> typename L>
 constexpr auto list_test3()
 {
   struct Foo {
-    constexpr Foo(int i, short s, double *p) : i(i), s(s), p(p) {} // clang needs a ctor
-    int i; short s; double *p;                           // for list::emplace
+    // clang needs a ctor for std::list::emplace
+    constexpr Foo(int i, short s, double *p) : i(i), s(s), p(p) {}
+    int i; short s; double *p;
   };
 
   L<Foo> l;

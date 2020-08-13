@@ -19,14 +19,13 @@ constexpr bool string_test1()
   typename S::value_type nt0 = str.c_str()[str.length()];
 
   str.push_back('q');
-/*
+
   typename S::value_type nt1 = str.c_str()[str.length()];
   bool b3 = !str.empty();
   typename S::size_type s2 = str.size();
   auto q = str[0];
-*/
 
-  return b1 && b2;// && s1==0 && b3 && s2==1 && q=='q' && nt0=='\0' && nt1=='\0';
+  return b1 && b2 && s1==0 && b3 && s2==1 && q=='q' && nt0=='\0' && nt1=='\0';
 }
 
 template <typename S>

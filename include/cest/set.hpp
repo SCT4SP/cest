@@ -45,10 +45,6 @@ public:
     using pointer           = const value_type*;
     using iterator_category = std::bidirectional_iterator_tag;
 
-#ifdef __clang__
-    constexpr const_tree_iter(node* np) : curr_node(np) {}
-#endif
-
     constexpr reference operator*()  const { return  curr_node->x; }
     constexpr pointer   operator->() const { return &curr_node->x; }
 
@@ -76,7 +72,7 @@ public:
 
     constexpr const_tree_iter      operator++(int) // post-increment
     {
-      const_tree_iter tmp(curr_node);
+      const_tree_iter tmp{curr_node};
       ++(*this);
       return tmp; 
     }
@@ -98,10 +94,8 @@ public:
   enum eCol { RED, BLACK };
 
   struct node {
-#ifdef __clang__
     constexpr node(value_type x, node* l, node* r, node* p, eCol c)
       : x(x), l(l), r(r), p(p), c(c) {}
-#endif
     value_type x;
     node      *l, *r, *p;
     eCol       c;
@@ -243,7 +237,7 @@ public:
     ins(m_root,nullptr,ins);
     m_root->c = BLACK; // make_black
 
-    return {iterator(ret_node),added};
+    return {iterator{ret_node},added};
     //return std::pair<iterator,bool>(iterator(ret_node),added);
   }
 //  std::pair<iterator,bool> insert( value_type&& value );

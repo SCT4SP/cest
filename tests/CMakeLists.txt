@@ -5,7 +5,8 @@ project(runtime_tests)
 # make -C ../../tests/build/
 
 #set(CMAKE_CXX_COMPILER $ENV{MYGCC}/bin/g++)
-set(CMAKE_CXX_COMPILER $ENV{MYCLANG}/bin/clang++)
+#set(CMAKE_CXX_COMPILER $ENV{MYCLANG}/bin/clang++)
+set(CMAKE_CXX_COMPILER clang++)
 message("CMAKE_CXX_COMPILER is ${CMAKE_CXX_COMPILER}")
 set(CMAKE_CXX_FLAGS "-std=c++2a")
 #set(CMAKE_CXX_FLAGS "-std=c++2a")

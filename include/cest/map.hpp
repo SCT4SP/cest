@@ -156,10 +156,8 @@ public:
   enum eCol { RED, BLACK };
 
   struct node {
-#ifdef __clang__
     constexpr node(value_type x, node* l, node* r, node* p, eCol c)
       : x(x), l(l), r(r), p(p), c(c) {}
-#endif
     value_type x;
     node      *l, *r, *p;
     eCol       c;

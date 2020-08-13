@@ -15,8 +15,18 @@
 #include <iterator>
 #include <cassert>
 
+/*namespace cest {
+template<typename _Container, typename _Iterator>
+  constexpr std::insert_iterator<_Container>
+  inserter(_Container& __x, _Iterator __i)
+  {
+    return std::insert_iterator<_Container>(__x,
+                                            typename _Container::iterator(__i));
+  }
+}*/
+
 template <typename V, typename S>
-constexpr auto algorithm_test1() {
+constexpr bool algorithm_test1() {
   using namespace std;
   using arr_t = array<int,5>;
   arr_t a{1,2,3,4,5};
@@ -40,11 +50,11 @@ constexpr auto algorithm_test1() {
                                inserter(sres,sres.end()));
   auto ssum = accumulate(sres.begin(), sres.end(), 0);
 
-  return tuple{sum,vsum,ssum};
+  return sum==12 && vsum==12 && ssum==12; // 3+4+5 == 12
 }
 
 template <typename V, typename S>
-constexpr auto algorithm_test2() {
+constexpr bool algorithm_test2() {
   using namespace std;
   using arr_t = array<int,5>;
   arr_t a{1,2,3,4,5};
@@ -61,7 +71,7 @@ constexpr auto algorithm_test2() {
   auto sze = *find(begin(sz), end(sz), 'c');            //     found
   auto szb =  find(begin(sz), end(sz), '&') == end(sz); // not found
 
-  return tuple{e,b,ve,vb,sze,szb};
+  return e==4 && b && 4==ve && vb && sze=='c' && szb;
 }
 
 template <typename It1, typename It2>
@@ -73,7 +83,7 @@ constexpr auto iterator_ok() {
 }
 
 template <typename V, typename S, typename L, typename FL>
-constexpr auto algorithm_test3() {
+constexpr bool algorithm_test3() {
   using namespace std;
   using arr_t = array<int,5>;
   arr_t a{1,2,3,4,5};
@@ -90,7 +100,8 @@ constexpr auto algorithm_test3() {
   FL fl;
   copy(a.begin(),a.end(),front_inserter(fl));
   auto sz4 = distance(fl.begin(), fl.end());
-  return std::tuple{sz1,sz2,sz3,sz4};
+
+  return sz1==5 && sz2==5 && sz3==5 && sz4==5;
 }
 
 template <
@@ -99,27 +110,23 @@ template <
   template <typename...> typename L,
   template <typename...> typename FL
 >
-void rt_algorithm_tests(auto tup1, auto tup2, auto tup3) {
-  assert((algorithm_test1<S<int>,V<int>>())                == tup1);
-  assert((algorithm_test2<S<int>,V<int>>())                == tup2);
-  assert((algorithm_test3<S<int>,V<int>,L<int>,FL<int>>()) == tup3);
+void rt_algorithm_tests() {
+  assert((algorithm_test1<S<int>,V<int>>()));
+  assert((algorithm_test2<S<int>,V<int>>()));
+  assert((algorithm_test3<S<int>,V<int>,L<int>,FL<int>>()));
 }
 
 void algorithm_tests()
 {
-  constexpr const auto tup1 = std::tuple{12,12,12}; // 3+4+5 == 12
-  constexpr const auto tup2 = std::tuple{4,true,4,true,'c',true};
-  constexpr const auto tup3 = std::tuple{5,5,5,5};
-
 #if CONSTEXPR_CEST == 1
-  static_assert((algorithm_test1<cest::vector<int>,cest::set<int>>()) == tup1);
-  static_assert((algorithm_test2<cest::vector<int>,cest::set<int>>()) == tup2);
+  static_assert((algorithm_test1<cest::vector<int>,cest::set<int>>()));
+  static_assert((algorithm_test2<cest::vector<int>,cest::set<int>>()));
   static_assert((algorithm_test3<
                    cest::vector<int>,
                    cest::set<int>,
                    cest::list<int>,
                    cest::forward_list<int>
-                 >()) == tup3);
+                 >()));
 #endif
   
   rt_algorithm_tests<
@@ -127,13 +134,13 @@ void algorithm_tests()
     std::set,
     std::list,
     std::forward_list
-  >(tup1, tup2, tup3);
+  >();
   rt_algorithm_tests<
     cest::vector,
     cest::set,
     cest::list,
     cest::forward_list
-  >(tup1, tup2, tup3);
+  >();
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

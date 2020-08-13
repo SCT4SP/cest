@@ -12,10 +12,8 @@ constexpr bool common_static_map_tests()
     static_assert(sizeof(M<int,float>)==sizeof(M<int,double>));
     using iter_t       = typename M<char,int>::iterator;
     using const_iter_t = typename M<char,int>::const_iterator;
-#ifndef __clang__
     static_assert(std::weakly_incrementable<iter_t>);
     static_assert(std::weakly_incrementable<const_iter_t>);
-#endif
     static_assert(std::is_same_v<
                     typename iter_t::iterator_category,
                     std::bidirectional_iterator_tag

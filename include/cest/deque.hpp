@@ -25,8 +25,8 @@ public:
   using difference_type       = std::ptrdiff_t;
   using reference             = value_type&;
   using const_reference       = const value_type&;
-  using pointer               = std::allocator_traits<Allocator>::pointer;
-  using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
+  using pointer               = typename std::allocator_traits<Allocator>::pointer;
+  using const_pointer         = typename std::allocator_traits<Allocator>::const_pointer;
   using iterator              =       iter;
   using const_iterator        = const_iter;
   using reverse_iterator      = std::reverse_iterator<iterator>;
@@ -42,7 +42,7 @@ public:
 
     constexpr reference operator*()           const noexcept { return *m_p; }
     constexpr pointer   operator->()          const noexcept { return  m_p; }
-    constexpr auto&     operator++()                noexcept { // pre-incr
+    constexpr iter&     operator++()                noexcept { // pre-incr
       if (m_p == *m_ppchunk + CHUNK_SIZE - 1) {
         ++m_ppchunk;
         m_p = *m_ppchunk;
@@ -53,11 +53,11 @@ public:
       return *this;
     }
 
-    constexpr auto      operator++(int)             noexcept { // post-incr
-      auto tmp{m_p, m_ppchunk}; ++(*this); return tmp; 
+    constexpr iter      operator++(int)             noexcept { // post-incr
+      iter tmp{m_p, m_ppchunk}; ++(*this); return tmp; 
     }
 
-    constexpr auto&     operator--()                noexcept { // pre-decr
+    constexpr iter&     operator--()                noexcept { // pre-decr
       if (m_p == *m_ppchunk) {
         --m_ppchunk;
         m_p = *m_ppchunk;
@@ -68,11 +68,11 @@ public:
       return *this;
     }
 
-    constexpr auto      operator--(int)             noexcept { // post-decr
-      auto tmp{m_p, m_ppchunk}; --(*this); return tmp; 
+    constexpr iter      operator--(int)             noexcept { // post-decr
+      iter tmp{m_p, m_ppchunk}; --(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const iter& rhs) noexcept {
+    constexpr bool      operator==(const iter& rhs) const noexcept {
       return m_p == rhs.m_p;
     }
 
@@ -103,7 +103,7 @@ public:
 
     constexpr reference operator*()           const noexcept { return *m_p; }
     constexpr pointer   operator->()          const noexcept { return  m_p; }
-    constexpr auto&     operator++()                noexcept { // pre-incr
+    constexpr const_iter&     operator++()          noexcept { // pre-incr
       if (m_p == *m_ppchunk + CHUNK_SIZE - 1) {
         ++m_ppchunk;
         m_p = *m_ppchunk;
@@ -114,11 +114,11 @@ public:
       return *this;
     }
 
-    constexpr auto      operator++(int)             noexcept { // post-incr
-      auto tmp{m_p, m_ppchunk}; ++(*this); return tmp; 
+    constexpr const_iter  operator++(int)           noexcept { // post-incr
+      const_iter tmp{m_p, m_ppchunk}; ++(*this); return tmp; 
     }
 
-    constexpr auto&     operator--()                noexcept { // pre-decr
+    constexpr const_iter& operator--()              noexcept { // pre-decr
       if (m_p == *m_ppchunk) {
         --m_ppchunk;
         m_p = *m_ppchunk;
@@ -129,11 +129,11 @@ public:
       return *this;
     }
 
-    constexpr auto      operator--(int)             noexcept { // post-decr
-      auto tmp{m_p, m_ppchunk}; --(*this); return tmp; 
+    constexpr const_iter  operator--(int)           noexcept { // post-decr
+      const_iter tmp{m_p, m_ppchunk}; --(*this); return tmp; 
     }
 
-    constexpr bool      operator==(const const_iter& rhs) noexcept {
+    constexpr bool      operator==(const const_iter& rhs) const noexcept {
       return m_p == rhs.m_p;
     }
 

@@ -4,10 +4,10 @@
 #include "set_tests.hpp"
 #include "map_tests.hpp"
 #include "string_tests.hpp"
-/*#include "cctype_tests.hpp"
+#include "cctype_tests.hpp"
 #include "deque_tests.hpp"
 #include "queue_tests.hpp"
-#include "iterator_tests.hpp"
+/*#include "iterator_tests.hpp"
 #include "algorithm_tests.hpp"
 #include "iostream_tests.hpp"
 #include "allocator_tests.hpp"
@@ -21,10 +21,10 @@ int main(int argc, char *argv[])
   set_tests();
   map_tests();
   string_tests();
-/*  cctype_tests();
+  cctype_tests();
   deque_tests();
   queue_tests();
-  iterator_tests();
+  /*iterator_tests();
   algorithm_tests();
   iostream_tests();
   allocator_tests();

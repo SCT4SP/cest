@@ -18,11 +18,11 @@ protected:
   I curr;
 
 public:
-  using iterator_category = std::iterator_traits<I>::iterator_category;
-  using value_type        = std::iterator_traits<I>::value_type;
-  using difference_type   = std::iterator_traits<I>::difference_type;
-  using reference         = std::iterator_traits<I>::reference;
-  using pointer           = std::iterator_traits<I>::pointer;
+  using iterator_category = typename std::iterator_traits<I>::iterator_category;
+  using value_type        = typename std::iterator_traits<I>::value_type;
+  using difference_type   = typename std::iterator_traits<I>::difference_type;
+  using reference         = typename std::iterator_traits<I>::reference;
+  using pointer           = typename std::iterator_traits<I>::pointer;
 
   constexpr iter() noexcept : curr(I()) { }
   explicit constexpr iter(const I &i) noexcept : curr(i) { }

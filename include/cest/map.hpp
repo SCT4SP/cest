@@ -31,8 +31,8 @@ public:
   using allocator_type        = Allocator;
   using       reference       =       value_type&;
   using const_reference       = const value_type&;
-  using       pointer         = std::allocator_traits<Allocator>::pointer;
-  using const_pointer         = std::allocator_traits<Allocator>::const_pointer;
+  using       pointer         = typename std::allocator_traits<Allocator>::pointer;
+  using const_pointer         = typename std::allocator_traits<Allocator>::const_pointer;
   using       iterator        =       tree_iter;
   using const_iterator        = const_tree_iter;
   using reverse_iterator      = std::reverse_iterator<iterator>;
@@ -156,6 +156,10 @@ public:
   enum eCol { RED, BLACK };
 
   struct node {
+#ifdef __clang__
+    constexpr node(value_type x, node* l, node* r, node* p, eCol c)
+      : x(x), l(l), r(r), p(p), c(c) {}
+#endif
     value_type x;
     node      *l, *r, *p;
     eCol       c;
@@ -305,7 +309,7 @@ public:
   size_type m_size;
   allocator_type m_alloc;
   key_compare m_comp;
-  std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
+  typename std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 
 } // namespace cest

@@ -59,8 +59,7 @@ public:
       else 
       {
         node *pn = curr_node->p;
-        while (pn && pn->r && !m_comp(curr_node->x,pn->r->x) &&
-                              !m_comp(pn->r->x,curr_node->x))
+        while (pn && pn->r && curr_node==pn->r)
         {
           curr_node = pn;
           pn = pn->p;
@@ -88,7 +87,6 @@ public:
     }
 
     node *curr_node = nullptr;
-    key_compare m_comp; // needed above due to illegal constexpr ptr compare
   };
 
   enum eCol { RED, BLACK };

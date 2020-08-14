@@ -112,10 +112,10 @@ constexpr bool set_test4(T x1, T x2, T x3, T x4, T x5)
   return 5==s1.size() && 5==s2.size() && 5==s3.size();
 }
 
-template <template <typename...> typename S, typename T>
-constexpr auto set_test5(T x)
+template <typename S, typename T>
+constexpr bool set_test5(T x)
 {
-  S<T> s;
+  S s;
 
   auto ib0 = s.begin();
   auto ie0 = s.end();
@@ -125,14 +125,14 @@ constexpr auto set_test5(T x)
   s.insert(x-1); auto ib2 = s.begin(); bool b2 = ib2==ie0; T b = *ib2;
   s.insert(x+1); auto ib3 = s.begin(); bool b3 = ib3==ie0; T c = *ib3;
 
-  return std::tuple{b0,b1,b2,b3,a,b,c,s.size()};
+  return b0 && !b1 && !b2 && !b3 && 42==a && 41==b && 41==c && 3==s.size();
 }
 
 // test pre-increment (and insert, begin and end)
-template <template <typename...> typename S, typename T, typename ...Ts>
-constexpr auto set_test6(T x, Ts ...xs)
+template <typename S, typename T, typename ...Ts>
+constexpr bool set_test6(T x, Ts ...xs)
 {
-  S<T> s;
+  S s;
 
   s.insert(x);
   auto it = s.begin();
@@ -195,21 +195,25 @@ constexpr auto set_test6(T x, Ts ...xs)
     sum += prev;
   }
 
-  using std::tuple;
-  return tuple{r0,r,a1,b1,a12,b12,a2,b2,a3,b3,a4,b4,a5,r6,sum,inc,s.size()};
+//  using std::tuple;
+//  return tuple{r0,r,a1,b1,a12,b12,a2,b2,a3,b3,a4,b4,a5,r6,sum,inc,s.size()};
+//  constexpr const auto tup9 = tuple{true,true,6,8,8,11,15,17,1,6,11,13,27,true,145,true,10};
+  return r0 && r && 6==a1 && 8==b1 && 8==a12 && 11==b12 && 15==a2 && 17==b2 &&
+         1==a3 && 6==b3 && 11==a4 && 13==b4 && 27==a5 && r6 && 145==sum &&
+         inc && 10==s.size();
 }
 
 // tests post-increment
-template <template <typename...> typename S>
-constexpr auto set_test7() {
-  S<int> s;
+template <typename S>
+constexpr bool set_test7() {
+  S s;
   inserts(s,1,5,4,2,3);
   auto it0 = s.begin();
   auto it1 = it0++;
-  return std::tuple{*it0,*it1};
+  return 2==*it0 && 1==*it1;
 }
 
-namespace test8 {
+namespace test9 {
   struct FatKey   { int x; int data[1000]; };
   struct LightKey { int x; };
   constexpr
@@ -221,40 +225,46 @@ namespace test8 {
 }
 
 // tests find
-template <template <typename...> typename S>
-constexpr auto set_test8() {
+template <typename S>
+constexpr bool set_test8() {
 
-  using namespace test8;
-  S<int> s1;
-  inserts(s1,1,2,3,4);
-  auto it1 = s1.find(2);
-  bool ok1 = it1 != s1.end();
+  S s;
+  inserts(s,1,2,3,4);
+  auto it = s.find(2);
+  bool ok = it != s.end();
+  return ok;
+}
+
+template <typename S>
+constexpr bool set_test9() {
+
+  using namespace test9;
 
   LightKey lk = {2};
 
-  S<FatKey, std::less<>> s2;
+  S s;
   FatKey fk{42,{}};
-  inserts(s2, FatKey{1,{}}, FatKey{2,{}}, FatKey{3,{}}, FatKey{4,{}});
-  auto it2 = s2.find(lk);    // The C++14 template version of find
-  int   x2 = it2->x;
-  bool ok2 = it2 != s2.end();
+  inserts(s, FatKey{1,{}}, FatKey{2,{}}, FatKey{3,{}}, FatKey{4,{}});
+  auto it = s.find(lk);    // The C++14 template version of find
+  int   x = it->x;
+  bool ok = it != s.end();
 
-  auto it3 = ++it2;
+  auto it2 = ++it;
+  auto  x2 = it2->x;
+  auto it3 = it2++;
   auto  x3 = it3->x;
-  auto it4 = it3++;
-  auto  x4 = it4->x;
 
-  return std::tuple{ok1,*it1,ok2,x2,x3,x4};
+  return ok && 2==x && 3==x2 && 3==x3;
 }
 
-template <bool SA, class S1, class S2, class S3, class S4>
+template <bool SA, class S1, class S2, class S3, class S4, class S5,
+                   class S6, class S7, class S8, class S9>
 constexpr void doit()
 {
-  using std::tuple;
-  constexpr const auto tup3 = tuple{3,3,2,1};
-  constexpr const auto tup4 = tuple{3,1,2,3};
-  constexpr const auto tup5 = tuple{3,1,3,2};
-  constexpr const auto tup6 = tuple{2,1,2,2};
+  constexpr const auto tup3 = std::tuple{3,3,2,1};
+  constexpr const auto tup4 = std::tuple{3,1,2,3};
+  constexpr const auto tup5 = std::tuple{3,1,3,2};
+  constexpr const auto tup6 = std::tuple{2,1,2,2};
 
   assert(set_test1<S1>());
   assert(set_test2<S2>());
@@ -263,16 +273,30 @@ constexpr void doit()
   assert(set_test3<S3>(1,3,2) == tup5);
   assert(set_test3<S3>(1,2,2) == tup6);
   assert(set_test4<S4>(1,2,3,4,5));
+  assert(set_test5<S5>(42));
+  assert(set_test6<S6>(1,6,8,11,13,15,17,22,25,27));
+  assert(set_test6<S6>(27,25,22,17,15,13,11,8,6,1));
+  assert(set_test6<S6>(1,27,6,25,8,22,11,17,13,15));
+  assert(set_test7<S7>());
+  assert(set_test8<S8>());
+  assert(set_test9<S9>());
 
   if constexpr (SA) {
 #if CONSTEXPR_CEST == 1
-    static_assert(set_test1<S1>());     // somehow, the 3rd arg is being
-    static_assert(set_test2<S2>());     // found within the set already:
-    static_assert(set_test3<S3>(3,2,1) == tup3);//std::tuple{2,3,2,2}); // tup3  !??
+    static_assert(set_test1<S1>());
+    static_assert(set_test2<S2>());
+    static_assert(set_test3<S3>(3,2,1) == tup3);
     static_assert(set_test3<S3>(1,2,3) == tup4);
     static_assert(set_test3<S3>(1,3,2) == tup5);
-//    static_assert(set_test3<S3>(1,2,2) == std::tuple{3,1,2,2}); // tup6  !??
-    //static_assert(set_test4<S4>(1,2,3,4,5));
+    static_assert(set_test3<S3>(1,2,2) == tup6);
+    static_assert(set_test4<S4>(1,2,3,4,5));
+    static_assert(set_test5<S5>(42));
+    static_assert(set_test6<S6>(1,6,8,11,13,15,17,22,25,27));
+    static_assert(set_test6<S6>(27,25,22,17,15,13,11,8,6,1));
+    static_assert(set_test6<S6>(1,27,6,25,8,22,11,17,13,15));
+    static_assert(set_test7<S7>());
+    static_assert(set_test8<S8>());
+    static_assert(set_test9<S9>());
 #endif
   }
 }
@@ -285,18 +309,21 @@ constexpr void tests_helper()
   using S2 = St<int,std::less<int>,Alloc<int>>;
   using S3 = St<int,std::less<int>,Alloc<int>>;
   using S4 = St<int,std::less<int>,Alloc<int>>;
+  using S5 = St<int,std::less<int>,Alloc<int>>;
+  using S6 = St<int,std::less<int>,Alloc<int>>;
+  using S7 = St<int,std::less<int>,Alloc<int>>;
+  using S8 = St<int,std::less<int>,Alloc<int>>;
+  using S9 = St<test9::FatKey,std::less<>>;
 
-  doit<SA, S1, S2, S3, S4>();
+  doit<SA, S1, S2, S3, S4, S5, S6, S7, S8, S9>();
 }
 
 void new_set_tests()
 {
-  using namespace set_tests_ns;
-
   tests_helper<CONSTEXPR_CEST,cest::set>();
 //  tests_helper<true,cest::set,cea::mono_block_alloc>(); // ok, but distracting
 
-  tests_helper<false,std::set,std::allocator>();
+  tests_helper<false,std::set>();
 //  tests_helper< true,std::set,cea::mono_block_alloc>();
 }
 
@@ -304,75 +331,11 @@ void new_set_tests()
 
 void set_tests()
 {
-  using std::tuple;
-  using cest::set;
-  using namespace set_tests_ns;
-
-  new_set_tests();
-
-//  constexpr const auto tup1 = tuple{true,3,true,true,3,false};
-//  constexpr const auto tup2 = tuple{2,1,true,2,true};
-//  constexpr const auto tup3 = tuple{3,3,2,1};
-//  constexpr const auto tup4 = tuple{3,1,2,3};
-//  constexpr const auto tup5 = tuple{3,1,3,2};
-//  constexpr const auto tup6 = tuple{2,1,2,2};
-  constexpr const auto tup7 = tuple{5,5,5};
-  constexpr const auto tup8 = tuple{true,false,false,false,42,41,41,3};
-  constexpr const auto tup9 = tuple{true,true,6,8,8,11,15,17,1,6,11,13,27,true,145,true,10};
-  constexpr const auto tup10 = tuple{2,1};
-  constexpr const auto tup11 = tuple{true,2,true,2,3,3};
-  constexpr const auto tup12 = tuple{true};
+  set_tests_ns::new_set_tests();
 
 #if CONSTEXPR_CEST == 1
-  static_assert(common_static_set_tests());
-//  static_assert(set_test1<set>() == tup1);
-//  static_assert(set_test1<set<int>>());
-//  static_assert(set_test2<set<int>>());
-//  static_assert(set_test3<set>(3,2,1) == tup3);
-//  static_assert(set_test3<set>(1,2,3) == tup4);
-//  static_assert(set_test3<set>(1,3,2) == tup5);
-//  static_assert(set_test3<set>(1,2,2) == tup6);
-//  static_assert(set_test4<set>(1,2,3,4,5) == tup7);
-
-  static_assert(set_test5<set>(42)        == tup8);
-  static_assert(set_test6<set>(1,6,8,11,13,15,17,22,25,27) == tup9);
-  static_assert(set_test6<set>(27,25,22,17,15,13,11,8,6,1) == tup9);
-  static_assert(set_test6<set>(1,27,6,25,8,22,11,17,13,15) == tup9);
-  static_assert(set_test6<set>(1,27,6,25,8,22,11,17,13,15) == tup9);
-  static_assert(set_test7<set>()                           == tup10);
-  static_assert(set_test8<set>()                           == tup11);
+  static_assert(set_tests_ns::common_static_set_tests());
 #endif
-//         assert(set_test1<set>() == tup1);
-//         assert(set_test1<set<int>>());
-//         assert(set_test2<set<int>>());
-//         assert(set_test3<set>(3,2,1) == tup3);
-//         assert(set_test3<set>(1,2,3) == tup4);
-//         assert(set_test3<set>(1,3,2) == tup5);
-//         assert(set_test3<set>(1,2,2) == tup6);
-//         assert(set_test4<set>(1,2,3,4,5) == tup7);
-         assert(set_test5<set>(42)        == tup8);
-         assert(set_test6<set>(1,6,8,11,13,15,17,22,25,27) == tup9);
-         assert(set_test6<set>(27,25,22,17,15,13,11,8,6,1) == tup9);
-         assert(set_test6<set>(1,27,6,25,8,22,11,17,13,15) == tup9);
-         assert(set_test7<set>()                           == tup10);
-         assert(set_test8<set>()                           == tup11);
-  {
-         using std::set;
-//         assert(set_test1<set>() == tup1);
-//         assert(set_test1<set<int>>());
-//         assert(set_test2<set<int>>());
-//         assert(set_test3<set>(3,2,1) == tup3);
-//         assert(set_test3<set>(1,2,3) == tup4);
-//         assert(set_test3<set>(1,3,2) == tup5);
-//         assert(set_test3<set>(1,2,2) == tup6);
-//         assert(set_test4<set>(1,2,3,4,5) == tup7);
-         assert(set_test5<set>(42)        == tup8);
-         assert(set_test6<set>(1,6,8,11,13,15,17,22,25,27) == tup9);
-         assert(set_test6<set>(27,25,22,17,15,13,11,8,6,1) == tup9);
-         assert(set_test6<set>(1,27,6,25,8,22,11,17,13,15) == tup9);
-         assert(set_test7<set>()                           == tup10);
-         assert(set_test8<set>()                           == tup11);
-  }
 }
 
 #endif // _CEST_SET_TESTS_HPP_

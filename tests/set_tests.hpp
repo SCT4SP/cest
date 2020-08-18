@@ -257,8 +257,17 @@ constexpr bool set_test9() {
   return ok && 2==x && 3==x2 && 3==x3;
 }
 
+template <typename S>
+constexpr bool set_test10()
+{
+  S s1;
+  inserts(s1,1,2,3);
+  S s2 = s1;
+  return 3==s1.size() && 3==s2.size();
+}
+
 template <bool SA, class S1, class S2, class S3, class S4, class S5,
-                   class S6, class S7, class S8, class S9>
+                   class S6, class S7, class S8, class S9, class S10>
 constexpr void doit()
 {
   constexpr const auto tup3 = std::tuple{3,3,2,1};
@@ -280,6 +289,7 @@ constexpr void doit()
   assert(set_test7<S7>());
   assert(set_test8<S8>());
   assert(set_test9<S9>());
+  assert(set_test10<S10>());
 
   if constexpr (SA) {
 #if CONSTEXPR_CEST == 1
@@ -297,6 +307,7 @@ constexpr void doit()
     static_assert(set_test7<S7>());
     static_assert(set_test8<S8>());
     static_assert(set_test9<S9>());
+    static_assert(set_test10<S10>());
 #endif
   }
 }
@@ -305,26 +316,28 @@ template <bool SA, template <class...> class St,
                    template <class> class Alloc = std::allocator>
 constexpr void tests_helper()
 {
-  using S1 = St<int,std::less<int>,Alloc<int>>;
-  using S2 = St<int,std::less<int>,Alloc<int>>;
-  using S3 = St<int,std::less<int>,Alloc<int>>;
-  using S4 = St<int,std::less<int>,Alloc<int>>;
-  using S5 = St<int,std::less<int>,Alloc<int>>;
-  using S6 = St<int,std::less<int>,Alloc<int>>;
-  using S7 = St<int,std::less<int>,Alloc<int>>;
-  using S8 = St<int,std::less<int>,Alloc<int>>;
-  using S9 = St<test9::FatKey,std::less<>>;
+  using S1  = St<int,std::less<int>,Alloc<int>>;
+  using S2  = St<int,std::less<int>,Alloc<int>>;
+  using S3  = St<int,std::less<int>,Alloc<int>>;
+  using S4  = St<int,std::less<int>,Alloc<int>>;
+  using S5  = St<int,std::less<int>,Alloc<int>>;
+  using S6  = St<int,std::less<int>,Alloc<int>>;
+  using S7  = St<int,std::less<int>,Alloc<int>>;
+  using S8  = St<int,std::less<int>,Alloc<int>>;
+  using S9  = St<test9::FatKey,std::less<>>;
+  using S10 = St<int,std::less<int>,Alloc<int>>;
 
-  doit<SA, S1, S2, S3, S4, S5, S6, S7, S8, S9>();
+  doit<SA, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10>();
 }
 
 void new_set_tests()
 {
+  tests_helper<false,std::set>();
+//  tests_helper< true,std::set,cea::mono_block_alloc>();
+
   tests_helper<CONSTEXPR_CEST,cest::set>();
 //  tests_helper<true,cest::set,cea::mono_block_alloc>(); // ok, but distracting
 
-  tests_helper<false,std::set>();
-//  tests_helper< true,std::set,cea::mono_block_alloc>();
 }
 
 } // namespace set_tests_ns

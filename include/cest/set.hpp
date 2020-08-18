@@ -97,7 +97,14 @@ public:
     eCol       c;
   };
 
-  constexpr  set() : m_root(nullptr), m_begin(nullptr), m_size(0) {}
+  constexpr  set() = default;
+
+  constexpr  set(const set& other)
+  {
+    for (auto it = other.begin(); it != other.end(); ++it)
+      insert(*it);
+  }
+
   constexpr ~set() {
     auto dd = [this](node *n, auto &dd_rec) -> void {
       if (n) {
@@ -242,9 +249,9 @@ public:
     return this->insert(value).first;
   }
 
-  node *m_root;
-  node *m_begin;
-  size_type m_size;
+  node *m_root = nullptr;
+  node *m_begin = nullptr;
+  size_type m_size = 0;
   allocator_type m_alloc;
   key_compare m_comp;
   typename std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;

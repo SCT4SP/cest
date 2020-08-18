@@ -1,8 +1,6 @@
 #ifndef _CEST_ITERATOR_HPP_
 #define _CEST_ITERATOR_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/iterator_tests.hpp
-
 #include <iterator> // std::iterator_traits
 
 namespace cest {

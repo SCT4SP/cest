@@ -1,8 +1,6 @@
 #ifndef _CEST_CCTYPE_HPP_
 #define _CEST_CCTYPE_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/cctype_tests.hpp
-
 #include "cest/string.hpp"
 #include <algorithm>
 

@@ -1,8 +1,6 @@
 #ifndef _CEST_MAP_HPP_
 #define _CEST_MAP_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/map_tests.hpp
-
 #include "swap.hpp"
 #include <functional> // std::less
 #include <memory>

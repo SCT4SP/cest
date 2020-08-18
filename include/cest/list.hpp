@@ -1,8 +1,6 @@
 #ifndef _CEST_LIST_HPP_
 #define _CEST_LIST_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/list_tests.hpp
-
 #include <memory>
 #include <algorithm>
 

@@ -1,8 +1,6 @@
 #ifndef _CEST_SET_HPP_
 #define _CEST_SET_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/set_tests.hpp
-
 #include "swap.hpp"
 #include <functional> // std::less
 #include <memory>

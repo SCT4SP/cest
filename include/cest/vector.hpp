@@ -1,8 +1,6 @@
 #ifndef _CEST_VECTOR_HPP_
 #define _CEST_VECTOR_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/vector_tests.hpp
-
 #include <memory>  // std::allocator
 #include <cstddef>
 #include <algorithm>

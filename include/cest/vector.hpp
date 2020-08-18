@@ -29,6 +29,34 @@ public:
 
   constexpr vector()  = default;
 
+  constexpr vector(const vector& other)
+  {
+    reserve(other.capacity());
+    m_size = other.size();
+    for (size_type i = 0; i < m_size; i++)
+      std::construct_at(&m_p[i], other.m_p[i]);
+  }
+
+  constexpr vector& operator=(const vector& other)
+  {
+    reserve(other.capacity());
+
+    size_type i = 0;
+    if (other.size() >= m_size) {
+      for (; i < m_size; i++)
+        m_p[i] = other.m_p[i];
+      for (; i < other.size(); i++)
+        std::construct_at(&m_p[i], other.m_p[i]);
+    } else {
+      for (; i < other.size(); i++)
+        m_p[i] = other.m_p[i];
+      std::destroy_n(&m_p[i], m_size - other.size());
+    }
+
+    m_size = other.size();
+    return *this;
+  }
+
   [[nodiscard]]
   constexpr bool            empty() const noexcept { return m_size == 0;  }
   constexpr size_type        size() const noexcept { return m_size;       }

@@ -127,8 +127,27 @@ constexpr bool vec_test9() {
   return b1 && b2 && b3;
 }
 
-template <bool SA, class V0, class V1, class V2, class V3,
-                   class V4, class V5, class V6, class V7, class V8, class V9>
+// copy ctor and operator=
+template <typename V>
+constexpr bool vec_test10() {
+  V v1, v2;
+  v1.push_back(42);
+  v2 = v1;
+  V v3 = v1;
+  bool b1 = v2[0]==v1[0];
+  bool b2 = v3[0]==v1[0];
+  v1.push_back(43);
+  v1.push_back(44);
+  v2[0] = 123;
+  bool b3 = 3==v1.size();
+  v1 = v2;
+  bool b4 = 1==v1.size() && 123==v1[0];
+  return b1 && b2 && b3 && b4;
+}
+
+template <bool SA, class V0, class V1, class V2, class V3, class V4,
+                   class V5, class V6, class V7, class V8, class V9,
+                   class V10>
 constexpr void doit()
 {
   assert(vec_test0<V0>());
@@ -141,6 +160,7 @@ constexpr void doit()
   assert(vec_test7<V7>());
   assert(vec_test8<V8>());
   assert(vec_test9<V9>());
+  assert(vec_test10<V10>());
 
   if constexpr (SA) {
     static_assert(vec_test0<V0>());
@@ -152,6 +172,7 @@ constexpr void doit()
     static_assert(vec_test6<V6>());
     static_assert(vec_test7<V7>());
     static_assert(vec_test9<V9>());
+    static_assert(vec_test10<V10>());
   }
 }
 
@@ -168,6 +189,7 @@ constexpr void tests_helper()
   using V7  = Vt<int>;
   using V8  = Vt<int>;
   using V9  = Vt<int>;
+  using V10 = Vt<int>;
 
   using Va0 = Vt<double, cea::mono_block_alloc<double>>;
   using Va1 = Vt<int,    cea::mono_block_alloc<int>>;
@@ -180,7 +202,7 @@ constexpr void tests_helper()
   using Va8 = Vt<int,    cea::mono_block_alloc<int>>;
   using Va9 = Vt<int,    cea::mono_block_alloc<int>>;
 
-  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9>();
+  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9, V10>();
 //  doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8, Va9>();
 }
 
@@ -190,7 +212,8 @@ void vector_tests()
 {
   using namespace v_tests;
 
-  tests_helper<CONSTEXPR_CEST,cest::vector>(); // true: constexpr tests
+  tests_helper<false,std::vector>();           // false: no constexpr tests
+  tests_helper<CONSTEXPR_CEST,cest::vector>(); // true:     constexpr tests
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

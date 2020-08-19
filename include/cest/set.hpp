@@ -105,16 +105,14 @@ public:
       insert(*it);
   }
 
-  constexpr ~set() {
-    auto dd = [this](node *n, auto &dd_rec) -> void {
-      if (n) {
-        dd_rec(n->l,dd_rec);
-        dd_rec(n->r,dd_rec);
-        std::destroy_at(n);
-        m_node_alloc.deallocate(n,1);
-      }
-    };
-    dd(m_root,dd);
+  constexpr ~set() { clear(); }
+
+  constexpr set& operator=(const set& other)
+  {
+    clear();
+    for (auto it = other.begin(); it != other.end(); ++it)
+      insert(*it);
+    return *this;
   }
 
 // This seems to exist in cppreference.com; but GCC doesn't have it, and
@@ -128,6 +126,23 @@ public:
   constexpr size_type        size() const noexcept { return m_size;    }
   [[nodiscard]]
   constexpr bool            empty() const noexcept { return 0==m_size; }
+
+  constexpr void clear() noexcept
+  {
+    auto dd = [this](node *n, auto &dd_rec) -> void {
+      if (n) {
+        dd_rec(n->l,dd_rec);
+        dd_rec(n->r,dd_rec);
+        std::destroy_at(n);
+        m_node_alloc.deallocate(n,1);
+      }
+    };
+    dd(m_root,dd);
+
+    m_root  = nullptr;
+    m_begin = nullptr;
+    m_size  = 0;
+  }
 
   constexpr       iterator find(const Key &key) {
     if (empty()) return end();
@@ -195,7 +210,8 @@ public:
     nary::swap(n,n->l,n->l->r, n->l->p,n->p,nlrp);
   };
 
-  constexpr std::pair<iterator,bool> insert(const value_type &value) {
+  constexpr std::pair<iterator,bool> insert(const value_type &value)
+  {
     bool added = false;
     node *ret_node = nullptr; // node added; or the one that prevents insertion
     auto ins = [this,&added,&value,&ret_node](node *&n, node *p, auto &ins_rec) {

@@ -262,8 +262,16 @@ constexpr bool set_test10()
 {
   S s1;
   inserts(s1,1,2,3);
-  S s2 = s1;
-  return 3==s1.size() && 3==s2.size();
+  const S s2 = s1;
+  S s3, s4;
+  inserts(s3,1,2,3,4,5);
+  s4 = s3;
+  s3 = s1;
+  S s5 = s1;
+  s5.clear();
+  
+  return 3==s1.size() && 3==s2.size() && 3==s3.size() && 5==s4.size() &&
+         s5.empty();
 }
 
 template <bool SA, class S1, class S2, class S3, class S4, class S5,

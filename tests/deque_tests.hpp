@@ -69,12 +69,24 @@ constexpr bool deque_test3()
   return b1 && b2;
 }
 
+template <typename D>
+constexpr bool deque_test4()
+{
+  D d1;
+  d1.push_front(3);
+  d1.push_front(2);
+  d1.push_front(1);
+  D d2 = d1;
+  return 3==d1.size() && 3==d2.size() && 1==d1[0] && 1==d2[0];
+}
+
 void deque_tests()
 {
 #if CONSTEXPR_CEST == 1
   static_assert(deque_test1<cest::deque<int>>());
   static_assert(deque_test2<cest::deque<int>>());
   static_assert(deque_test3<cest::deque<int>>());
+  static_assert(deque_test4<cest::deque<int>>());
 #endif
 
   assert((deque_test1< std::deque<int>>()));
@@ -83,6 +95,8 @@ void deque_tests()
   assert((deque_test2<cest::deque<int>>()));
   assert((deque_test3< std::deque<int>>()));
   assert((deque_test3<cest::deque<int>>()));
+  assert((deque_test4< std::deque<int>>()));
+  assert((deque_test4<cest::deque<int>>()));
 }
 
 #endif //  _CEST_DEQUE_TESTS_HPP_

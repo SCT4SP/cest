@@ -164,7 +164,31 @@ public:
       std::destroy_n(&(*this)[i], 1);
     for (auto p : m_chunks)
       m_alloc.deallocate(p, CHUNK_SIZE);
+    //clear();
   }
+
+  constexpr deque(const deque& other) : deque()
+  {
+    for (size_type i = 0; i < other.size(); ++i)
+      push_back(other[i]);
+  }
+
+  /*constexpr void clear() noexcept
+  {
+    for (size_type i = 0; i < size(); ++i)
+      std::destroy_n(&(*this)[i], 1);
+    for (auto p : m_chunks)
+      m_alloc.deallocate(p, CHUNK_SIZE);
+
+    m_chunks.clear();
+
+    value_type *p = m_alloc.allocate(CHUNK_SIZE);
+    m_front = CHUNK_SIZE / 2;
+    m_back  = CHUNK_SIZE / 2 - 1;
+    m_chunks.push_back(p);
+    m_front_chunk = m_back_chunk = 0;
+    m_size = 0;
+  }*/
 
   constexpr void push_front( const T& value )
   {

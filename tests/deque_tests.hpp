@@ -66,9 +66,12 @@ constexpr bool deque_test3()
   d.pop_front();
   d.pop_front();
   bool b2 = *it==4;
-  return b1 && b2;
+  d.clear();
+  bool b3 = d.empty();
+  return b1 && b2 && b3;
 }
 
+// Test copy constructor and operator=
 template <typename D>
 constexpr bool deque_test4()
 {
@@ -77,7 +80,12 @@ constexpr bool deque_test4()
   d1.push_front(2);
   d1.push_front(1);
   D d2 = d1;
-  return 3==d1.size() && 3==d2.size() && 1==d1[0] && 1==d2[0];
+  bool b1 = 3==d1.size() && 3==d2.size() && 1==d1[0] && 1==d2[0];
+  D d3;
+  d3.push_back(4);
+  d1 = d3;
+  bool b2 = 1==d1.size() && 4==d1[0];
+  return b1 && b2;
 }
 
 void deque_tests()

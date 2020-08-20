@@ -28,7 +28,7 @@ constexpr bool common_static_map_tests()
 }
 
 template <template <class...> class M, class T, class U>
-constexpr auto map_test1()
+constexpr bool map_test1()
 {
   M<T,U> m;
 
@@ -46,11 +46,15 @@ constexpr auto map_test1()
   const value_type v3 = std::make_pair('b',1);
   auto p4 = m.insert(v3);
 
-  return std::tuple{p1.second,p2.second,p3.second,p4.second};
+  constexpr const auto tup1 = std::tuple{true,false,false,true};
+
+
+  return p1.second && !p2.second && !p3.second && p4.second;
+//  return std::tuple{p1.second,p2.second,p3.second,p4.second};
 }
 
 template <template <class...> class M, class T, class U>
-constexpr auto map_test2()
+constexpr bool map_test2()
 {
   M<T,U> m;
 
@@ -65,24 +69,32 @@ constexpr auto map_test2()
   auto i2 = m.find('q');
   bool b2 = i2 != m.end();
 
-  return std::tuple{i1->first,i1->second,b1,b2};
+  bool b3 = 'a'==i1->first && 1==i1->second;
+
+  return b1 && !b2 && b3;
+}
+
+template <template <class...> class M, class T, class U>
+constexpr bool map_test3()
+{
+  return true;
 }
 
 void map_tests()
 {
-  constexpr const auto tup1 = std::tuple{true,false,false,true};
-  constexpr const auto tup2 = std::tuple{'a',1,true,false};
-
 #if CONSTEXPR_CEST == 1
   static_assert(common_static_map_tests());
-  static_assert((map_test1<cest::map,char,int>()) == tup1);
-  static_assert((map_test2<cest::map,char,int>()) == tup2);
+  static_assert(map_test1<cest::map,char,int>());
+  static_assert(map_test2<cest::map,char,int>());
+  static_assert(map_test3<cest::map,char,int>());
 #endif
 
-  assert((map_test1<std::map,char,int>()) == tup1);
-  assert((map_test2<std::map,char,int>()) == tup2);
-  assert((map_test1<cest::map,char,int>()) == tup1);
-  assert((map_test2<cest::map,char,int>()) == tup2);
+  assert((map_test1< std::map,char,int>()));
+  assert((map_test1<cest::map,char,int>()));
+  assert((map_test2< std::map,char,int>()));
+  assert((map_test2<cest::map,char,int>()));
+  assert((map_test3< std::map,char,int>()));
+  assert((map_test3<cest::map,char,int>()));
 }
 
 #endif // _CEST_MAP_TESTS_HPP_

@@ -53,12 +53,17 @@ constexpr bool vec_test4() {
   v.push_back(3.142f);
   v.push_back(3.142f);
   v.push_back(3.142f);
-  return 3==v.size() && 4==v.capacity();
+  bool b  = 3==v.size();
+  auto c1 = v.capacity();
+  v.clear();
+  auto c2 = v.capacity();
+  return b && v.empty() && c2==c1;
 }
 
 template <typename V>
 constexpr bool vec_test5() {
   V v;
+  v.clear();
   v.push_back(1);
   v.push_back(2);
   v.push_back(3);

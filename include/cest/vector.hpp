@@ -37,8 +37,9 @@ public:
       std::construct_at(&m_p[i], other.m_p[i]);
   }
 
-  constexpr ~vector() {
-    std::destroy_n(m_p,m_size);
+  constexpr ~vector()
+  {
+    clear();
     if (0 != m_capacity) m_alloc.deallocate(m_p,m_capacity);
   }
 
@@ -109,7 +110,14 @@ public:
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
 
-  constexpr void push_back(const value_type &value) {
+  constexpr void clear() noexcept
+  {
+    std::destroy_n(m_p,m_size);
+    m_size = 0;
+  }
+
+  constexpr void push_back(const value_type &value)
+  {
     if (0 == m_capacity) {
       reserve(1);
     } else if (m_capacity == m_size) {
@@ -118,7 +126,8 @@ public:
     std::construct_at(&m_p[m_size++],value);
   }
 
-  constexpr void push_back(value_type &&value) {
+  constexpr void push_back(value_type &&value)
+  {
     if (0 == m_capacity) {
       reserve(1);
     } else if (m_capacity == m_size) {
@@ -127,7 +136,8 @@ public:
     std::construct_at(&m_p[m_size++],std::forward<T>(value));
   }
 
-  constexpr iterator erase(iterator first, iterator last) {
+  constexpr iterator erase(iterator first, iterator last)
+  {
     iterator it1 = first, it2 = last;
     for (; it2 != end(); it2++)
       *it1++ = *it2;

@@ -46,17 +46,14 @@ constexpr bool map_test1()
   const value_type v3 = std::make_pair('b',1);
   auto p4 = m.insert(v3);
 
-  constexpr const auto tup1 = std::tuple{true,false,false,true};
-
-
   return p1.second && !p2.second && !p3.second && p4.second;
-//  return std::tuple{p1.second,p2.second,p3.second,p4.second};
 }
 
 template <template <class...> class M, class T, class U>
 constexpr bool map_test2()
 {
   M<T,U> m;
+  m.clear();
 
   using value_type = typename M<T,U>::value_type;
 
@@ -77,7 +74,20 @@ constexpr bool map_test2()
 template <template <class...> class M, class T, class U>
 constexpr bool map_test3()
 {
-  return true;
+  M<T,U> m1;
+  m1.insert({'a',1});
+  m1.insert({'b',2});
+  m1.insert({'c',3});
+  M<T,U> m2 = m1;
+  bool b1 = 3==m1.size() && 3==m2.size();
+
+  M<T,U> m3;
+  m3.insert({'d',4});
+  m1 = m3;
+  m3.clear();
+  bool b2 = 1==m1.size() && 'd'==m1.begin()->first && m3.empty();
+
+  return b1 && b2;
 }
 
 void map_tests()

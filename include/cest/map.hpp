@@ -161,8 +161,41 @@ public:
     eCol       c;
   };
 
-  constexpr  map() : m_root(nullptr), m_begin(nullptr), m_size(0) {}
-  constexpr ~map() {
+  constexpr  map() : m_root{}, m_begin{}, m_size{} {}
+  constexpr ~map() { clear(); }
+
+  constexpr map(const map& other) : map()
+  {
+    for (auto it = other.begin(); it != other.end(); ++it)
+      insert(*it);
+  }
+
+  constexpr map& operator=(const map& other)
+  {
+    clear();
+    for (auto it = other.begin(); it != other.end(); ++it)
+      insert(*it);
+    return *this;
+  }
+
+// This seems to exist in cppreference.com; but GCC's std::set doesn't have it,
+// and it results in the iterator's type failing std::weakly_incrementable etc.
+//  constexpr     iterator  begin()       noexcept { return iterator{m_begin}; }
+  constexpr const_iterator  begin() const noexcept {
+    return const_iterator{m_begin};
+  }
+  constexpr const_iterator cbegin() const noexcept {
+    return const_iterator{m_begin};
+  }
+  constexpr       iterator    end()       noexcept { return iterator(); }
+  constexpr const_iterator    end() const noexcept { return const_iterator(); }
+  constexpr const_iterator   cend() const noexcept { return const_iterator(); }
+  constexpr size_type        size() const noexcept { return m_size; }
+  [[nodiscard]]
+  constexpr bool            empty() const noexcept { return 0==m_size; }
+
+  constexpr void clear() noexcept
+  {
     auto dd = [this](node *n, auto &dd_rec) -> void {
       if (n) {
         dd_rec(n->l,dd_rec);
@@ -172,19 +205,12 @@ public:
       }
     };
     dd(m_root,dd);
+
+    m_root = nullptr;
+    m_begin = nullptr;
+    m_size = 0;
   }
 
-// This seems to exist in cppreference.com; but GCC's std::set doesn't have it,
-// and it results in the iterator's type failing std::weakly_incrementable etc.
-//  constexpr     iterator  begin()       noexcept { return {m_begin}; }
-  constexpr const_iterator  begin() const noexcept { return {m_begin}; }
-  constexpr const_iterator cbegin() const noexcept { return {m_begin}; }
-  constexpr       iterator    end()       noexcept { return iterator(); }
-  constexpr const_iterator    end() const noexcept { return const_iterator(); }
-  constexpr const_iterator   cend() const noexcept { return const_iterator(); }
-  constexpr size_type        size() const noexcept { return m_size;    }
-  [[nodiscard]]
-  constexpr bool            empty() const noexcept { return 0==m_size; }
 
   constexpr       iterator find(const Key &key) {
     if (empty()) return end();
@@ -252,7 +278,8 @@ public:
     nary::swap(n,n->l,n->l->r, n->l->p,n->p,nlrp);
   };
 
-  constexpr std::pair<iterator,bool> insert(const value_type &value) {
+  constexpr std::pair<iterator,bool> insert(const value_type &value)
+  {
     bool added = false;
     node *ret_node = nullptr; // node added; or the one that prevents insertion
     auto ins = [this,&added,&value,&ret_node](node *&n, node *p, auto &ins_rec) {

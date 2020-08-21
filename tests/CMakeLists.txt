@@ -9,7 +9,6 @@ set(CMAKE_CXX_COMPILER clang++)
 #set(CMAKE_CXX_COMPILER $ENV{MYCLANG}/bin/clang++)
 message("CMAKE_CXX_COMPILER is ${CMAKE_CXX_COMPILER}")
 set(CMAKE_CXX_FLAGS "-std=c++2a")
-#set(CMAKE_CXX_FLAGS "-std=c++2a")
 #set(CMAKE_CXX_FLAGS "-std=c++2a -stdlib=libc++")
 set(CMAKE_BUILD_TYPE Debug)
 

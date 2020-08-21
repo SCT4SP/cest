@@ -137,8 +137,22 @@ struct list {
     const node_base* m_node = nullptr;
   };
   
-  constexpr  list() = default;
+  constexpr list() : m_size{} {}
   constexpr ~list() { clear(); }
+
+  constexpr list(const list& other) : list()
+  {
+    for (auto it = other.cbegin(); it != other.cend(); ++it)
+      push_back(*it);
+  }
+
+  constexpr list& operator=(const list& other)
+  {
+    clear();
+    for (auto it = other.cbegin(); it != other.cend(); ++it)
+      push_back(*it);
+    return *this;
+  }
 
   constexpr allocator_type get_allocator() const noexcept {
     return m_node_alloc;
@@ -279,7 +293,7 @@ struct list {
   constexpr void pop_front() { erase(begin());       }
 
   node_base m_node;
-  size_type m_size = 0;
+  size_type m_size;
   typename std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 

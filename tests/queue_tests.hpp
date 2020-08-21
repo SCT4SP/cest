@@ -34,17 +34,39 @@ constexpr bool queue_test1()
                                                ef3==43 && eb3==43 && b4;
 }
 
+// tests copy ctor and operator=
+template <typename Q>
+constexpr bool queue_test2()
+{
+  Q q1;
+  q1.push(42);
+  Q q2 = q1;
+  Q q3;
+  q3 = q2;
+  return q1.size()==q2.size() && 42==q3.front();
+}
+
 void queue_tests()
 {
 #if CONSTEXPR_CEST == 1
   static_assert(queue_test1<cest::queue<int>>());
   static_assert(queue_test1<cest::queue<int,cest::list<int>>>());
+
+  static_assert(queue_test2<cest::queue<int>>());
+  static_assert(queue_test2<cest::queue<int,cest::list<int>>>());
 #endif
 
   assert((queue_test1< std::queue<int>>()));
   assert((queue_test1<cest::queue<int>>()));
   assert((queue_test1< std::queue<int,cest::list<int>>>()));
   assert((queue_test1<cest::queue<int,cest::list<int>>>()));
+  assert((queue_test1<cest::queue<int,std::list<int>>>()));
+
+  assert((queue_test2< std::queue<int>>()));
+  assert((queue_test2<cest::queue<int>>()));
+  assert((queue_test2< std::queue<int,cest::list<int>>>()));
+  assert((queue_test2<cest::queue<int,cest::list<int>>>()));
+  assert((queue_test2<cest::queue<int,std::list<int>>>()));
 }
 
 #endif // _CEST_QUEUE_TESTS_HPP_

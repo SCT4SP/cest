@@ -4,6 +4,7 @@
 #include "istream.hpp"
 #include "streambuf.hpp"
 #include "string.hpp"
+#include <limits>   // std::numeric_limits
 
 namespace cest {
 
@@ -108,11 +109,20 @@ protected:
     _M_pbump(char_type* __pbeg, char_type* __pend, off_type __off)
     {
       this->setp(__pbeg, __pend);
+#if !defined(_LIBCPP_VERSION)
       while (__off > __gnu_cxx::__numeric_traits<int>::__max)
   {
     this->pbump(__gnu_cxx::__numeric_traits<int>::__max);
     __off -= __gnu_cxx::__numeric_traits<int>::__max;
   }
+#else
+      while (__off > std::numeric_limits<int>::max())
+  {
+    this->pbump(std::numeric_limits<int>::max());
+    __off -=   std::numeric_limits<int>::max();
+  }
+#endif
+
       this->pbump(__off);
     }
 

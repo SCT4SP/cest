@@ -5,6 +5,18 @@
 #include "ios_base.hpp"
 #include <string>  // std::char_traits
 
+#if defined(_LIBCPP_VERSION)
+#if !defined(__cpp_exceptions)
+# define __throw_exception_again
+# define __try      if (true)
+# define __catch(X) if (false)
+#else
+# define __try      try
+# define __catch(X) catch(X)
+# define __throw_exception_again throw
+#endif // !__cpp_exceptions
+#endif // _LIBCPP_VERSION
+
 namespace cest {
 
 template <
@@ -133,8 +145,15 @@ _M_streambuf(0), _M_ctype(0), _M_num_put(0), _M_num_get(0)
       _M_streambuf_state = __state;   
     else
       _M_streambuf_state = __state | badbit;
-    if (this->exceptions() & this->rdstate())                
+    if (this->exceptions() & this->rdstate()) {
+// __throw_ios_failure and __N are libstdc++ specific, unfortunately libc++'s
+// ios throw is a class that's not 
+#if !defined(_LIBCPP_VERSION)
       std::__throw_ios_failure(__N("basic_ios::clear"));
+#else
+      std::__throw_failure("basic_ios::clear");
+#endif
+    }
   }
 
   template<typename _CharT, typename _Traits>

@@ -151,11 +151,13 @@ endl(basic_ostream<CharT, Traits> &os)
     if (this->rdbuf() && this->rdbuf()->pubsync() == -1)
       __err |= ios_base::badbit;
   }
+#if !defined(_LIBCPP_VERSION) // __forced_unwind is a libstdc++/gcc thing
       __catch(__cxxabiv1::__forced_unwind&)
   {
     this->_M_setstate(ios_base::badbit);
     __throw_exception_again;
   }
+#endif
       __catch(...)
   { this->_M_setstate(ios_base::badbit); }
       if (__err)
@@ -180,11 +182,13 @@ endl(basic_ostream<CharT, Traits> &os)
     if (__np.put(*this, *this, this->fill(), __v).failed())
       __err |= ios_base::badbit;
         }
+#if !defined(_LIBCPP_VERSION) // __forced_unwind is a libstdc++/gcc thing
       __catch(__cxxabiv1::__forced_unwind&)
         {
     this->_M_setstate(ios_base::badbit);
     __throw_exception_again;
         }
+#endif
       __catch(...)
         { this->_M_setstate(ios_base::badbit); }
       if (__err)

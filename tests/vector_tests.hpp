@@ -31,11 +31,11 @@ constexpr bool vec_test2() {
 }
 
 struct Bar {
-  constexpr Bar()             : m_x(42)     { }
-  constexpr Bar(int x)        : m_x(x)      { }
-  constexpr Bar(const Bar &f) : m_x(f.m_x)  { }
-  constexpr ~Bar()                          { }
-  int m_x;
+  constexpr Bar()             : m_p(new int(42))      { }
+  constexpr Bar(int x)        : m_p(new int(x))       { }
+  constexpr Bar(const Bar &f) : m_p(new int(*f.m_p))  { }
+  constexpr ~Bar() { delete m_p; }
+  int* m_p;
 };
 
 template <typename V>
@@ -43,8 +43,11 @@ constexpr bool vec_test3() {
   V v;
   Bar f(42);
   v.push_back(f);
-  v.push_back(f);
-  return 42==v.begin()->m_x && 2==v.size() && 2==v.capacity();
+  v.push_back(f); // ~Bar() (Bar destructor) called here (via reserve)
+  bool b1 = 42==*v.begin()->m_p && 2==v.size() && 2==v.capacity();
+  v.pop_back();   // ~Bar() (Bar destructor) called here
+  bool b2 = 1==v.size();
+  return b1 && b2;
 }
 
 template <typename V>

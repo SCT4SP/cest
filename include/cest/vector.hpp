@@ -4,6 +4,7 @@
 #include <memory>  // std::allocator
 #include <cstddef>
 #include <algorithm>
+#include <iostream>
 
 namespace cest {
 
@@ -106,7 +107,10 @@ public:
   constexpr const_reverse_iterator
   rend()   const noexcept { return const_reverse_iterator(begin()); }
 
-  constexpr void         pop_back()       { m_size--; }
+  constexpr void         pop_back()       {
+    m_size--;
+    std::destroy_n(&m_p[m_size],1);
+  }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
 

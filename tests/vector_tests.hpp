@@ -5,6 +5,7 @@
 #include "cest/mono_block_alloc.hpp"
 #include <cassert>
 #include <vector>
+#include "../tests/tests_util.hpp"
 
 namespace v_tests {
 
@@ -30,18 +31,10 @@ constexpr bool vec_test2() {
   return 2==v.size() && 2==v.capacity();
 }
 
-struct Bar {
-  constexpr Bar()             : m_p(new int(42))      { }
-  constexpr Bar(int x)        : m_p(new int(x))       { }
-  constexpr Bar(const Bar &f) : m_p(new int(*f.m_p))  { }
-  constexpr ~Bar() { delete m_p; }
-  int* m_p;
-};
-
 template <typename V>
 constexpr bool vec_test3() {
   V v;
-  Bar f(42);
+  tests_util::Bar f(42);
   v.push_back(f);
   v.push_back(f); // ~Bar() (Bar destructor) called here (via reserve)
   bool b1 = 42==*v.begin()->m_p && 2==v.size() && 2==v.capacity();
@@ -187,6 +180,8 @@ constexpr void doit()
 template <bool SA, template <class...> class Vt>
 constexpr void tests_helper()
 {
+  using tests_util::Bar;
+
   using V0  = Vt<double>;
   using V1  = Vt<int>;
   using V2  = Vt<double>;

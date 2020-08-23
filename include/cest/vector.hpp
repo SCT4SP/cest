@@ -4,7 +4,6 @@
 #include <memory>  // std::allocator
 #include <cstddef>
 #include <algorithm>
-#include <iostream>
 
 namespace cest {
 

@@ -10,6 +10,11 @@ struct Bar {
   constexpr Bar(int x)        : m_p(new int(x))       { }
   constexpr Bar(const Bar &f) : m_p(new int(*f.m_p))  { }
   constexpr ~Bar() { delete m_p; }
+  constexpr Bar& operator=(const Bar& other) {
+    delete m_p;
+    m_p = new int(*other.m_p);
+    return *this;
+  }
   int* m_p;
 };
 

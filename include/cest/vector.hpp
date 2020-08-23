@@ -115,7 +115,7 @@ public:
 
   constexpr void clear() noexcept
   {
-    std::destroy_n(m_p,m_size);
+    std::destroy_n(m_p, m_size);
     m_size = 0;
   }
 
@@ -142,9 +142,12 @@ public:
   constexpr iterator erase(iterator first, iterator last)
   {
     iterator it1 = first, it2 = last;
-    for (; it2 != end(); it2++)
+    for (; it2 != end(); it2++) {
       *it1++ = *it2;
-    m_size -= last - first;
+    }
+    const auto num_to_erase = last - first;
+    std::destroy_n(end() - num_to_erase, num_to_erase);
+    m_size -= num_to_erase;
     return first;
   }
 

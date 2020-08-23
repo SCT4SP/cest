@@ -37,6 +37,17 @@ constexpr bool push_front_dtor_test() {
   return b1 && b2;
 }
 
+template <typename C>
+constexpr bool push_dtor_test() {
+  C c;
+  tests_util::Bar f(42);
+  c.push(f);
+  c.push(f); // ~Bar() (Bar destructor) called here
+  bool b1 = 42==*c.front().m_p && 2==c.size();
+  c.pop();    // ~Bar() (Bar destructor) called here
+  bool b2 = 1==c.size();
+  return b1 && b2;
+}
 
 } // namespace tests_util
 

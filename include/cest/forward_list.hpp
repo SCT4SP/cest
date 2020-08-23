@@ -154,6 +154,8 @@ struct forward_list {
 
   constexpr void clear() noexcept { erase_after(before_begin(), end()); }
 
+  constexpr void pop_front()      { erase_after(before_begin());        }
+
   constexpr iterator erase_after(const_iterator first, const_iterator last)
   {
     node_base* p = const_cast<node_base*>(first.m_node);

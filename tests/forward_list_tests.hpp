@@ -3,6 +3,7 @@
 
 #include "cest/forward_list.hpp"
 #include "cest/mono_block_alloc.hpp"
+#include "../tests/tests_util.hpp"
 #include <forward_list>
 #include <cassert>
 
@@ -113,35 +114,42 @@ constexpr bool forward_list_test6() {
 }
 
 template <bool SA, class F1, class F2, class F3,
-                   class F4, class F5, class F6>
+                   class F4, class F5, class F6, class F7>
 constexpr void doit()
 {
+  using tests_util::push_front_dtor_test;
+
           assert(forward_list_test1<F1>());
           assert(forward_list_test2<F2>());
           assert(forward_list_test3<F3>());
           assert(forward_list_test4<F4>());
           assert(forward_list_test5<F5>());
           assert(forward_list_test6<F6>());
+          assert(push_front_dtor_test<F7>());
 
   if constexpr (SA) {
     static_assert(forward_list_test1<F1>());
     static_assert(forward_list_test2<F2>());
     static_assert(forward_list_test3<F3>());
     static_assert(forward_list_test4<F4>());
-//    static_assert(forward_list_test5<F5>()); // stdlib and std::allocator
+    static_assert(forward_list_test5<F5>());
     static_assert(forward_list_test6<F6>());
+    static_assert(push_front_dtor_test<F7>());
   }
 }
 
 template <bool SA, template <class...> class TT>
 constexpr void tests_helper()
 {
+  using tests_util::Bar;
+
   using FL1  = TT<int>;
   using FL2  = TT<int>;
   using FL3  = TT<int>;
   using FL4  = TT<int>;
   using FL5  = TT<int>;
   using FL6  = TT<Foo>;
+  using FL7  = TT<Bar>;
 
   using FLa1 = TT<int, cea::mono_block_alloc<int>>;
   using FLa2 = TT<int, cea::mono_block_alloc<int>>;
@@ -149,9 +157,10 @@ constexpr void tests_helper()
   using FLa4 = TT<int, cea::mono_block_alloc<int>>;
   using FLa5 = TT<int, cea::mono_block_alloc<int>>;
   using FLa6 = TT<Foo, cea::mono_block_alloc<Foo>>;
+  using FLa7 = TT<Bar, cea::mono_block_alloc<Bar>>;
 
-  doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6>();
-//  doit<SA, FLa1, FLa2, FLa3, FLa4, FLa5, FLa6>(); // valgrind unhappy
+  doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6, FL7>();
+//  doit<SA, FLa1, FLa2, FLa3, FLa4, FLa5, FLa6, FLa7>(); // valgrind unhappy
 }
 
 } // namespace fl_tests

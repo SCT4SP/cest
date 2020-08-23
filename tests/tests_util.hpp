@@ -1,6 +1,8 @@
 #ifndef _CEST_TESTS_UTIL_HPP_
 #define _CEST_TESTS_UTIL_HPP_
 
+#include <algorithm>
+
 namespace tests_util {
 
 struct Bar {
@@ -16,10 +18,22 @@ constexpr bool dtor_test() {
   C c;
   tests_util::Bar f(42);
   c.push_back(f);
-  c.push_back(f); // ~Bar() (Bar destructor) called here (via reserve w' vector)
-  bool b1 = 42==*c.begin()->m_p && 2==c.size();
+  c.push_back(f); // ~Bar() (Bar destructor) called here (by reserve w' vector)
+  bool b1 = 42==*c.begin()->m_p && 2==std::distance(c.begin(), c.end());
   c.pop_back();   // ~Bar() (Bar destructor) called here
-  bool b2 = 1==c.size();
+  bool b2 = 1==std::distance(c.begin(), c.end());
+  return b1 && b2;
+}
+
+template <typename C>
+constexpr bool push_front_dtor_test() {
+  C c;
+  tests_util::Bar f(42);
+  c.push_front(f);
+  c.push_front(f); // ~Bar() (Bar destructor) called here
+  bool b1 = 42==*c.begin()->m_p && 2==std::distance(c.begin(), c.end());
+  c.pop_front();    // ~Bar() (Bar destructor) called here
+  bool b2 = 1==std::distance(c.begin(), c.end());
   return b1 && b2;
 }
 

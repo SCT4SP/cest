@@ -2,6 +2,7 @@
 #define _CEST_LIST_TESTS_HPP_
 
 #include "cest/list.hpp"
+#include "../tests/tests_util.hpp"
 #include <list>
 #include <cassert>
 
@@ -121,11 +122,14 @@ constexpr bool list_test4()
 
 void list_tests()
 {
+  using namespace tests_util;
+
 #if CONSTEXPR_CEST == 1
   static_assert(list_test1<cest::list<int>>());
   static_assert(list_test2<cest::list<int>>());
   static_assert(list_test3<cest::list>());
   static_assert(list_test4<cest::list<int>>());
+  static_assert(dtor_test<cest::list<Bar>>());
 #endif
 
   assert(list_test1< std::list<int>>());
@@ -136,6 +140,8 @@ void list_tests()
   assert(list_test3<cest::list>());
   assert(list_test4< std::list<int>>());
   assert(list_test4<cest::list<int>>());
+  assert(dtor_test< std::list<Bar>>());
+  assert(dtor_test<cest::list<Bar>>());
 }
 
 #endif // _CEST_LIST_TESTS_HPP_

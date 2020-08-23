@@ -11,6 +11,19 @@ struct Bar {
   int* m_p;
 };
 
+template <typename C>
+constexpr bool dtor_test() {
+  C c;
+  tests_util::Bar f(42);
+  c.push_back(f);
+  c.push_back(f); // ~Bar() (Bar destructor) called here (via reserve w' vector)
+  bool b1 = 42==*c.begin()->m_p && 2==c.size();
+  c.pop_back();   // ~Bar() (Bar destructor) called here
+  bool b2 = 1==c.size();
+  return b1 && b2;
+}
+
+
 } // namespace tests_util
 
 #endif // _CEST_TESTS_UTIL_HPP_

@@ -3,9 +3,9 @@
 
 #include "cest/vector.hpp"
 #include "cest/mono_block_alloc.hpp"
+#include "../tests/tests_util.hpp"
 #include <cassert>
 #include <vector>
-#include "../tests/tests_util.hpp"
 
 namespace v_tests {
 
@@ -29,18 +29,6 @@ constexpr bool vec_test2() {
   v.push_back(3.142);
   v.push_back(d);
   return 2==v.size() && 2==v.capacity();
-}
-
-template <typename V>
-constexpr bool vec_test3() {
-  V v;
-  tests_util::Bar f(42);
-  v.push_back(f);
-  v.push_back(f); // ~Bar() (Bar destructor) called here (via reserve)
-  bool b1 = 42==*v.begin()->m_p && 2==v.size() && 2==v.capacity();
-  v.pop_back();   // ~Bar() (Bar destructor) called here
-  bool b2 = 1==v.size();
-  return b1 && b2;
 }
 
 template <typename V>
@@ -151,10 +139,12 @@ template <bool SA, class V0, class V1, class V2, class V3, class V4,
                    class V10>
 constexpr void doit()
 {
+  using namespace tests_util;
+
   assert(vec_test0<V0>());
   assert(vec_test1<V1>());
   assert(vec_test2<V2>());
-  assert(vec_test3<V3>());
+  assert(dtor_test<V3>());
   assert(vec_test4<V4>());
   assert(vec_test5<V5>());
   assert(vec_test6<V6>());
@@ -167,7 +157,7 @@ constexpr void doit()
     static_assert(vec_test0<V0>());
     static_assert(vec_test1<V1>());
     static_assert(vec_test2<V2>());
-    static_assert(vec_test3<V3>());
+    static_assert(dtor_test<V3>());
     static_assert(vec_test4<V4>());
     static_assert(vec_test5<V5>());
     static_assert(vec_test6<V6>());

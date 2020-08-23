@@ -2,6 +2,7 @@
 #define _CEST_DEQUE_TESTS_HPP_
 
 #include "cest/deque.hpp"
+#include "../tests/tests_util.hpp"
 #include <deque>
 #include <cassert>
 
@@ -90,11 +91,15 @@ constexpr bool deque_test4()
 
 void deque_tests()
 {
+  using namespace tests_util;
+
 #if CONSTEXPR_CEST == 1
   static_assert(deque_test1<cest::deque<int>>());
   static_assert(deque_test2<cest::deque<int>>());
   static_assert(deque_test3<cest::deque<int>>());
   static_assert(deque_test4<cest::deque<int>>());
+  static_assert(push_back_dtor_test<cest::deque<Bar>>());
+  static_assert(push_front_dtor_test<cest::deque<Bar>>());
 #endif
 
   assert((deque_test1< std::deque<int>>()));
@@ -105,6 +110,10 @@ void deque_tests()
   assert((deque_test3<cest::deque<int>>()));
   assert((deque_test4< std::deque<int>>()));
   assert((deque_test4<cest::deque<int>>()));
+  assert(push_back_dtor_test< std::deque<Bar>>());
+  assert(push_back_dtor_test<cest::deque<Bar>>());
+  assert(push_front_dtor_test< std::deque<Bar>>());
+  assert(push_front_dtor_test<cest::deque<Bar>>());
 }
 
 #endif //  _CEST_DEQUE_TESTS_HPP_

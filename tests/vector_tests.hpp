@@ -144,7 +144,7 @@ constexpr void doit()
   assert(vec_test0<V0>());
   assert(vec_test1<V1>());
   assert(vec_test2<V2>());
-  assert(dtor_test<V3>());
+  assert(push_back_dtor_test<V3>());
   assert(vec_test4<V4>());
   assert(vec_test5<V5>());
   assert(vec_test6<V6>());
@@ -157,7 +157,7 @@ constexpr void doit()
     static_assert(vec_test0<V0>());
     static_assert(vec_test1<V1>());
     static_assert(vec_test2<V2>());
-    static_assert(dtor_test<V3>());
+    static_assert(push_back_dtor_test<V3>());
     static_assert(vec_test4<V4>());
     static_assert(vec_test5<V5>());
     static_assert(vec_test6<V6>());

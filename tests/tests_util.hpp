@@ -14,7 +14,7 @@ struct Bar {
 };
 
 template <typename C>
-constexpr bool dtor_test() {
+constexpr bool push_back_dtor_test() {
   C c;
   tests_util::Bar f(42);
   c.push_back(f);

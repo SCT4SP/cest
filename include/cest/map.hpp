@@ -62,8 +62,7 @@ public:
       else 
       {
         node *pn = curr_node->p;
-        while (pn && pn->r && !m_comp(curr_node->x.first,pn->r->x.first) &&
-                              !m_comp(pn->r->x.first,curr_node->x.first))
+        while (pn && pn->r && curr_node->x.first == pn->r->x.first)
         {
           curr_node = pn;
           pn = pn->p;
@@ -81,7 +80,7 @@ public:
     }
 
     friend constexpr bool operator==(const tree_iter &x, const tree_iter &y) {
-      return x.curr_node == y.curr_node; // this should work constexpr. Test.
+      return x.curr_node == y.curr_node;
     }
 
     friend constexpr bool operator!=(const tree_iter &x, const tree_iter& y) {
@@ -89,7 +88,6 @@ public:
     }
 
     node *curr_node = nullptr;
-    key_compare m_comp; // needed above due to illegal constexpr ptr compare
   };
 
   struct const_tree_iter
@@ -119,8 +117,7 @@ public:
       else 
       {
         node *pn = curr_node->p;
-        while (pn && pn->r && !m_comp(curr_node->x.first,pn->r->x.first) &&
-                              !m_comp(pn->r->x.first,curr_node->x.first))
+        while (pn && pn->r && curr_node->x.first == pn->r->x.first)
         {
           curr_node = pn;
           pn = pn->p;
@@ -148,7 +145,6 @@ public:
     }
 
     node *curr_node = nullptr;
-    key_compare m_comp; // needed above due to illegal constexpr ptr compare
   };
 
   enum eCol { RED, BLACK };

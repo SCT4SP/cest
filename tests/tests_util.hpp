@@ -3,9 +3,11 @@
 
 #include <algorithm>
 
-namespace tests_util {
+namespace tests_util
+{
 
-struct Bar {
+struct Bar
+{
   constexpr Bar()             : m_p(new int(42))      { }
   constexpr Bar(int x)        : m_p(new int(x))       { }
   constexpr Bar(const Bar &f) : m_p(new int(*f.m_p))  { }

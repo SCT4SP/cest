@@ -9,11 +9,13 @@
 #include <algorithm>
 #include <iostream>
 
-namespace set_tests_ns {
+namespace set_tests_ns
+{
 
 // This is the style of output from implementation of Okasaki's Haskell RB tree
 template <template <typename...> typename S, typename ...Ts>
-constexpr void debug_print_set(S<Ts...> &s) {
+constexpr void debug_print_set(S<Ts...> &s)
+{
 #if CONSTEXPR_CEST == 0
   using namespace std;
   if constexpr (is_same_v<S<Ts...>,cest::set<Ts...>>) {
@@ -197,9 +199,6 @@ constexpr bool set_test6(T x, Ts ...xs)
     sum += prev;
   }
 
-//  using std::tuple;
-//  return tuple{r0,r,a1,b1,a12,b12,a2,b2,a3,b3,a4,b4,a5,r6,sum,inc,s.size()};
-//  constexpr const auto tup9 = tuple{true,true,6,8,8,11,15,17,1,6,11,13,27,true,145,true,10};
   return r0 && r && 6==a1 && 8==b1 && 8==a12 && 11==b12 && 15==a2 && 17==b2 &&
          1==a3 && 6==b3 && 11==a4 && 13==b4 && 27==a5 && r6 && 145==sum &&
          inc && 10==s.size();
@@ -207,7 +206,8 @@ constexpr bool set_test6(T x, Ts ...xs)
 
 // tests post-increment
 template <typename S>
-constexpr bool set_test7() {
+constexpr bool set_test7()
+{
   S s;
   inserts(s,1,5,4,2,3);
   auto it0 = s.begin();
@@ -215,7 +215,8 @@ constexpr bool set_test7() {
   return 2==*it0 && 1==*it1;
 }
 
-namespace test9 {
+namespace test9
+{
   struct FatKey   { int x; int data[1000]; };
   struct LightKey { int x; };
   constexpr
@@ -228,8 +229,8 @@ namespace test9 {
 
 // tests find
 template <typename S>
-constexpr bool set_test8() {
-
+constexpr bool set_test8()
+{
   S s;
   inserts(s,1,2,3,4);
   auto it = s.find(2);
@@ -238,8 +239,8 @@ constexpr bool set_test8() {
 }
 
 template <typename S>
-constexpr bool set_test9() {
-
+constexpr bool set_test9()
+{
   using namespace test9;
 
   LightKey lk = {2};
@@ -343,11 +344,7 @@ constexpr void tests_helper()
 void new_set_tests()
 {
   tests_helper<false,std::set>();
-//  tests_helper< true,std::set,cea::mono_block_alloc>();
-
   tests_helper<CONSTEXPR_CEST,cest::set>();
-//  tests_helper<true,cest::set,cea::mono_block_alloc>(); // ok, but distracting
-
 }
 
 } // namespace set_tests_ns

@@ -19,7 +19,8 @@
 #include <deque>
 
 template <template <typename...> typename V>
-constexpr auto iterator_test1() {
+constexpr auto iterator_test1()
+{
   V<int> v;
   using  it_t = typename V<int>::iterator;
   using cit_t = typename V<int>::const_iterator;
@@ -29,7 +30,8 @@ constexpr auto iterator_test1() {
 }
 
 template <typename It1, typename It2>
-constexpr bool iterator_test_helper() {
+constexpr bool iterator_test_helper()
+{
   using dt1_t = typename std::iterator_traits<It1>::difference_type;
   using dt2_t = typename std::iterator_traits<It2>::difference_type;
   using vt1_t = typename std::iterator_traits<It1>::value_type;
@@ -49,7 +51,8 @@ constexpr bool iterator_test_helper() {
 }
 
 template <typename T1, typename T2>
-constexpr bool static_iterator_test() {
+constexpr bool static_iterator_test()
+{
   using it1_t  = typename T1::iterator;
   using it2_t  = typename T2::iterator;
   using cit1_t = typename T1::const_iterator;

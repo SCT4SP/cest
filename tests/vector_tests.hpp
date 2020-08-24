@@ -2,7 +2,6 @@
 #define _CEST_VECTOR_TESTS_HPP_
 
 #include "cest/vector.hpp"
-#include "cest/mono_block_alloc.hpp"
 #include "../tests/tests_util.hpp"
 #include <cassert>
 #include <vector>
@@ -198,19 +197,7 @@ constexpr void tests_helper()
   using V10 = Vt<int>;
   using V11 = Vt<Bar>;
 
-  using Va0 = Vt<double, cea::mono_block_alloc<double>>;
-  using Va1 = Vt<int,    cea::mono_block_alloc<int>>;
-  using Va2 = Vt<double, cea::mono_block_alloc<double>>;
-  using Va3 = Vt<Bar,    cea::mono_block_alloc<Bar>>;
-  using Va4 = Vt<float,  cea::mono_block_alloc<float>>;
-  using Va5 = Vt<int,    cea::mono_block_alloc<int>>;
-  using Va6 = Vt<double, cea::mono_block_alloc<double>>;
-  using Va7 = Vt<int,    cea::mono_block_alloc<int>>;
-  using Va8 = Vt<int,    cea::mono_block_alloc<int>>;
-  using Va9 = Vt<int,    cea::mono_block_alloc<int>>;
-
   doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9, V10, V11>();
-//  doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8, Va9>();
 }
 
 } // namespace v_tests

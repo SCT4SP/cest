@@ -1,8 +1,6 @@
 #ifndef _CEST_ALLOCATOR_TESTS_HPP_
 #define _CEST_ALLOCATOR_TESTS_HPP_
 
-#include "cest/mono_block_alloc.hpp"
-#include "cest/mono_block_stack_alloc.hpp"
 #include <cassert>
 #include <memory>
 
@@ -44,9 +42,6 @@ constexpr bool alloc_test1()
   return true;
 }
 
-// This error first occurred when 3, 2 and 1 were inserted to a std::set
-// which uses the constexpr allocator mono_block_alloc. The issue is comparing
-// a stack address with a offset to a dynamically allocation.
 template <typename IntAlloc>
 constexpr bool alloc_test2()
 {
@@ -55,7 +50,10 @@ constexpr bool alloc_test2()
   int* p2 = alloc.allocate(1);
   int i;
 
-  if (&i == p2)  // compile error!
+  if (&i == p2)
+    return false;
+
+  if (p1 == p2)
     return false;
 
   alloc.deallocate(p2,1);
@@ -83,13 +81,7 @@ void allocator_tests()
 {
   using namespace alloc_tests;
 
-  tests_helper<true,std::allocator<int>>();  // true: constexpr tests
-  tests_helper<false,cea::mono_block_alloc<int>>(); // true fails on test2
-#ifdef __clang__
-  tests_helper<true,cea::mbsa<int>>();
-#else
-  tests_helper<false,cea::mbsa<int>>(); // GCC doesn't like the construct_at
-#endif
+  tests_helper<CONSTEXPR_CEST,std::allocator<int>>();  // true: constexpr tests
 }
 
 #endif // _CEST_ALLOCATOR_TESTS_HPP_

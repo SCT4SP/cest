@@ -2,7 +2,6 @@
 #define _CEST_FORWARD_LIST_TESTS_HPP_
 
 #include "cest/forward_list.hpp"
-#include "cest/mono_block_alloc.hpp"
 #include "../tests/tests_util.hpp"
 #include <forward_list>
 #include <cassert>
@@ -10,20 +9,23 @@
 namespace fl_tests {
 
 template <typename FL>
-constexpr bool forward_list_test1() {
+constexpr bool forward_list_test1()
+{
   FL fl;
   return fl.empty();
 }
 
 template <typename FL>
-constexpr bool forward_list_test2() {
+constexpr bool forward_list_test2()
+{
   FL fl;
   fl.push_front(42);
   return 42==fl.front();
 }
 
 template <typename FL>
-constexpr bool forward_list_test3() {
+constexpr bool forward_list_test3()
+{
   FL fl;
   fl.push_front(2);
   fl.push_front(1);
@@ -31,7 +33,8 @@ constexpr bool forward_list_test3() {
 }
 
 template <typename FL>
-constexpr bool forward_list_test4() {
+constexpr bool forward_list_test4()
+{
   FL fl;
   fl.insert_after(fl.before_begin(),123);  // l.begin() here is an error
   fl.insert_after(fl.begin(),1); // 123     -> 123 1
@@ -53,15 +56,9 @@ constexpr bool forward_list_test4() {
   return 3==fl.front() && 6==sum1 && 6==sum2 && b1 && b2 && 3==*it0;
 }
 
-// Problematic for the custom allocator: comparing nodes against the this
-// pointer will fail as this is not on the stack; as here we allocate
-// each forward_list using the new operator.
-// Try not doing this? It occurs within copy assignment, on line 149 of
-// forward_list.tcc
-// Would std::vector also have this issue?
-// cest::forward_list also has a problem here, but only with the new allocator
 template <typename FL>
-constexpr bool forward_list_test5() {
+constexpr bool forward_list_test5()
+{
   FL *p1 = new FL;
   FL *p2 = new FL;
 
@@ -85,7 +82,8 @@ constexpr bool forward_list_test5() {
 struct Foo { int x; int y; };
 
 template <typename FL>
-constexpr bool forward_list_test6() {
+constexpr bool forward_list_test6()
+{
   FL fl;
 
   fl.push_front(Foo{1,2});
@@ -151,16 +149,7 @@ constexpr void tests_helper()
   using FL6  = TT<Foo>;
   using FL7  = TT<Bar>;
 
-  using FLa1 = TT<int, cea::mono_block_alloc<int>>;
-  using FLa2 = TT<int, cea::mono_block_alloc<int>>;
-  using FLa3 = TT<int, cea::mono_block_alloc<int>>;
-  using FLa4 = TT<int, cea::mono_block_alloc<int>>;
-  using FLa5 = TT<int, cea::mono_block_alloc<int>>;
-  using FLa6 = TT<Foo, cea::mono_block_alloc<Foo>>;
-  using FLa7 = TT<Bar, cea::mono_block_alloc<Bar>>;
-
   doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6, FL7>();
-//  doit<SA, FLa1, FLa2, FLa3, FLa4, FLa5, FLa6, FLa7>(); // valgrind unhappy
 }
 
 } // namespace fl_tests
@@ -169,6 +158,7 @@ void forward_list_tests()
 {
   using namespace fl_tests;
 
+  tests_helper<false,          std::forward_list>();
   tests_helper<CONSTEXPR_CEST,cest::forward_list>();
 }
 

@@ -156,6 +156,7 @@ public:
     m_back  = CHUNK_SIZE / 2 - 1;
     m_chunks.push_back(p);
     m_front_chunk = m_back_chunk = 0;
+    m_size = 0;
   }
 
   constexpr ~deque()
@@ -341,7 +342,7 @@ private:
   size_type           m_back;
   size_type           m_front_chunk;
   size_type           m_back_chunk;
-  size_type           m_size  = 0;
+  size_type           m_size;
   vector<value_type*> m_chunks;
 };
 

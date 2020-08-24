@@ -139,7 +139,7 @@ public:
 
     friend constexpr bool operator==(const const_tree_iter &x,
                                      const const_tree_iter &y) {
-      return x.curr_node == y.curr_node; // this should work constexpr. Test.
+      return x.curr_node == y.curr_node;
     }
 
     friend constexpr bool operator!=(const const_tree_iter &x,

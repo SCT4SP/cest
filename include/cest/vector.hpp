@@ -27,9 +27,9 @@ public:
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  constexpr vector()  = default;
+  constexpr vector() : m_size{}, m_capacity{}, m_p{} {}
 
-  constexpr vector(const vector& other)
+  constexpr vector(const vector& other) : vector()
   {
     reserve(other.capacity());
     m_size = other.size();
@@ -152,9 +152,9 @@ public:
   }
 
   allocator_type  m_alloc;
-  size_type       m_size     = 0;
-  size_type       m_capacity = 0;
-  value_type     *m_p        = nullptr;
+  size_type       m_size;
+  size_type       m_capacity;
+  value_type     *m_p;
 };
 
 template <typename _Tp, typename _Alloc>

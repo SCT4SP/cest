@@ -37,7 +37,8 @@ public:
     basic_string( Allocator() ) {}
 
   explicit constexpr
-  basic_string(const Allocator& alloc) noexcept : m_alloc(alloc) {
+  basic_string(const Allocator& alloc) noexcept : m_alloc(alloc)
+  {
     m_capacity = 1;                                // Unlike 0, a scalable value
     m_p = m_alloc.allocate(m_capacity+1);          // +1 for the null terminator
     for (size_type i = 0; i < m_capacity+1; i++)
@@ -47,7 +48,8 @@ public:
 
   constexpr basic_string(const CharT* s,
                          size_type count,
-                         const Allocator& alloc = Allocator()) : m_alloc(alloc){
+                         const Allocator& alloc = Allocator()) : m_alloc(alloc)
+  {
     m_capacity = count+1;                    // ensure m_capacity is not 0
     m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
     for (size_type i = 0; i < m_capacity+1; i++)
@@ -231,21 +233,8 @@ public:
     return *this;
   }
 
-  constexpr basic_string& operator=(const basic_string& str)
-  {
+  constexpr basic_string& operator=(const basic_string& str) {
     return this->operator=(str.c_str());
-    /*const CharT* s  = str.c_str();
-    size_type count = traits_type::length(s);
-
-    if (m_capacity < str.m_capacity) {
-      m_alloc.deallocate(m_p, m_capacity+1);
-      m_capacity = count+1;                    // ensure m_capacity is not 0
-      m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
-    }
-    
-    traits_type::copy(m_p, s, count+1);
-    m_size = count;
-    return *this;*/
   }
 
   constexpr void reserve(size_type new_cap)

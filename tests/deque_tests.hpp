@@ -4,6 +4,7 @@
 #include "cest/deque.hpp"
 #include "../tests/tests_util.hpp"
 #include <deque>
+#include <initializer_list>
 #include <cassert>
 
 template <typename D>
@@ -89,6 +90,14 @@ constexpr bool deque_test4()
   return b1 && b2;
 }
 
+template <typename D>
+constexpr bool deque_test5()
+{
+  D d{1,2,3,4,5};
+  bool b = 1==d[0] && 5==d.size();
+  return b;
+}
+
 void deque_tests()
 {
   using namespace tests_util;
@@ -100,6 +109,7 @@ void deque_tests()
   static_assert(deque_test4<cest::deque<int>>());
   static_assert(push_back_dtor_test<cest::deque<Bar>>());
   static_assert(push_front_dtor_test<cest::deque<Bar>>());
+  static_assert(deque_test5<cest::deque<int>>());
 #endif
 
   assert((deque_test1< std::deque<int>>()));
@@ -114,6 +124,8 @@ void deque_tests()
   assert(push_back_dtor_test<cest::deque<Bar>>());
   assert(push_front_dtor_test< std::deque<Bar>>());
   assert(push_front_dtor_test<cest::deque<Bar>>());
+  assert((deque_test5< std::deque<int>>()));
+  assert((deque_test5<cest::deque<int>>()));
 }
 
 #endif //  _CEST_DEQUE_TESTS_HPP_

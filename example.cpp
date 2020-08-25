@@ -1,7 +1,10 @@
 #include "cest/iostream.hpp"
-#include "cest/deque.hpp"
 #include "cest/string.hpp"
 #include "cest/vector.hpp"
+#include "cest/deque.hpp"
+#include "cest/set.hpp"
+#include "cest/algorithm.hpp"
+#include "cest/numeric.hpp"
 
 // clang++ -std=c++2a -I include example.cpp
 
@@ -9,9 +12,16 @@ namespace ns = cest;
 
 constexpr int doit()
 {
-  ns::deque<int> dq;
-  dq.push_front(42);
-  ns::cout << "Hello World\n";
+  using namespace ns;
+  string str = "Hello";
+  vector<int> v{1,2,3};
+  deque<int> dq{2,3,4};
+  set<int> s;
+  set_intersection(dq.begin(), dq.end(),
+                    v.begin(),  v.end(),
+                   inserter(s, s.end()));
+  auto x = accumulate(s.begin(), s.end(), 0);
+  cout << str << " World " << x << endl;
   return 0;
 }
 

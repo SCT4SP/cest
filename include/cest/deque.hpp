@@ -4,6 +4,7 @@
 #include "vector.hpp"
 #include <memory>    // std::allocator_traits
 #include <algorithm> // std::rotate
+#include <initializer_list>
 
 #define CHUNK_SIZE 1024
 
@@ -159,17 +160,23 @@ public:
     m_size = 0;
   }
 
+  constexpr deque(const deque& other) : deque()
+  {
+    for (size_type i = 0; i < other.size(); ++i)
+      push_back(other[i]);
+  }
+
+  constexpr deque(std::initializer_list<T> init,
+                  const Allocator& alloc = Allocator()) : deque()
+  {
+    for (const auto &x : init) { push_back(x); }
+  }
+
   constexpr ~deque()
   {
     clear();
     for (auto p : m_chunks)
       m_alloc.deallocate(p, CHUNK_SIZE);
-  }
-
-  constexpr deque(const deque& other) : deque()
-  {
-    for (size_type i = 0; i < other.size(); ++i)
-      push_back(other[i]);
   }
 
   constexpr deque& operator=(const deque& other)

@@ -4,6 +4,7 @@
 #include <memory>  // std::allocator
 #include <cstddef>
 #include <algorithm>
+#include <initializer_list>
 
 namespace cest {
 
@@ -35,6 +36,12 @@ public:
     m_size = other.size();
     for (size_type i = 0; i < m_size; i++)
       std::construct_at(&m_p[i], other.m_p[i]);
+  }
+
+  constexpr vector(std::initializer_list<T> init,
+                   const Allocator& alloc = Allocator()) : vector()
+  {
+    for (const auto &x : init) { push_back(x); }
   }
 
   constexpr ~vector()

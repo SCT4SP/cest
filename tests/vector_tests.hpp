@@ -69,13 +69,7 @@ constexpr bool vec_test6() {
 
 template <typename V>
 constexpr bool vec_test7() {
-  V v;
-  v.push_back(1);
-  v.push_back(2);
-  v.push_back(3);
-  v.push_back(4);
-  v.push_back(5);
-  v.push_back(6);
+  V v = {1,2,3,4,5,6};
   auto it_erase = v.erase(v.begin()+2,v.begin()+4); // remove 3 & 4
   using int_t = typename V::value_type;
   int_t sum1 = 0;

@@ -8,25 +8,24 @@
 
 // clang++ -std=c++2a -I include example.cpp
 
-namespace ns = cest;
-
-constexpr int doit()
+constexpr bool doit()
 {
-  using namespace ns;
+  using namespace cest;
+
   string str = "Hello";
   vector<int> v{1,2,3};
   deque<int> dq{2,3,4};
   set<int> s;
-  set_intersection(dq.begin(), dq.end(),
-                    v.begin(),  v.end(),
-                   inserter(s, s.end()));
+
+  set_intersection(dq.begin(), dq.end(), v.begin(),  v.end(), inserter(s, s.end()));
   auto x = accumulate(s.begin(), s.end(), 0);
   cout << str << " World " << x << endl;
-  return 0;
+
+  return 5==x;
 }
 
 int main(int argc, char *argv[])
 {
-  static_assert(0 == doit());
-  return doit();
+  static_assert(doit());
+  return doit() ? 0 : 1;
 }

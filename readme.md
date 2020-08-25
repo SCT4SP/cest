@@ -1,6 +1,6 @@
 # C'est la vie
 
-The _cest_ project aims to provide a non-standard version of the C++
+The **cest** project aims to provide a non-standard version of the C++
 standard library with enhanced support for compile time evaluation
 (`constexpr`) for use in research.
 

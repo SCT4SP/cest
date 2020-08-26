@@ -3,10 +3,11 @@
 
 #include "ostream.hpp"
 #include "runtime_ostream.hpp"
-#include <string>   // std::char_traits
-#include <memory>   // std::allocator
-#include <iterator> // std::reverse_iterator
-#include <limits>   // std::numeric_limits
+#include <string>      // std::char_traits
+#include <memory>      // std::allocator
+#include <iterator>    // std::reverse_iterator
+#include <limits>      // std::numeric_limits
+#include <type_traits> // std::is_same_v
 
 namespace cest {
 
@@ -276,21 +277,15 @@ public:
   }
 
 private:
+
   static constexpr int _S_compare(size_type n1, size_type n2) noexcept
   {
     const difference_type d = difference_type(n1 - n2);
 
-#if !defined(_LIBCPP_VERSION)
-    if (d > __gnu_cxx::__numeric_traits<int>::__max)
-      return __gnu_cxx::__numeric_traits<int>::__max;
-    else if (d < __gnu_cxx::__numeric_traits<int>::__min)
-      return __gnu_cxx::__numeric_traits<int>::__min;
-#else
     if (d > std::numeric_limits<int>::max())
       return std::numeric_limits<int>::max();
     else if (d < std::numeric_limits<int>::min())
       return std::numeric_limits<int>::min();
-#endif
     else
       return int(d);
   }
@@ -310,11 +305,7 @@ template<typename _CharT, typename _Traits, typename _Alloc>
 
 template<typename _CharT>
   inline constexpr
-#if !defined(_LIBCPP_VERSION)
-  std::enable_if_t<std::__is_char<_CharT>::__value, bool>
-#else
-bool
-#endif 
+  std::enable_if_t<std::is_same_v<_CharT,char>, bool>
   operator==(const basic_string<_CharT>& __lhs,
              const basic_string<_CharT>& __rhs) noexcept
   { return (__lhs.size() == __rhs.size()

@@ -31,12 +31,12 @@ In time, it is likely that the C++ standard library will continue to include
 more and more `constexpr` support. Most containers will naturally accommodate
 this direction. IO and file access will present more choices. For now,
 **cest** does allow some IO commands to compile within constant expressions
-(e.g. `cest::cout << "Hello World\n"`) These is primarily to support the
+(e.g. `cest::cout << "Hello World\n"`) This is primarily to support the
 compile-time evaluation of existing code bases.
 
 The **cest** library has incomplete support for the following containers: `vector`, `string`, `forward_list`, `list`, `set`, `map`, `queue`, and `deque`. Given a `constexpr` container, most function templates from `algorithm` and `numeric` can now also be used within a constant expression.
 
-The code below provides a basic demonstration of some functionality. Executing the resulting program will output `Hello World 5`
+The code below provides a basic demonstration of some functionality. Executing the resulting program will output `Hello World 5`:
 
 ```cpp
 #include "cest/iostream.hpp"
@@ -80,12 +80,13 @@ clang++ -std=c++2a -I include example.cpp
 ```
 
 Compile-time and runtime tests are included within the `tests` directory. To
-build and run use the following commands. Expected output is included in
-`runtime_tests.cpp`.
+build and run the tests use the following commands. Expected output is included
+in `runtime_tests.cpp`.
 
 ```
 cd tests
 mkdir build
+cd build
 cmake ..
 make
 ./runtime_tests

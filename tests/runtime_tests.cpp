@@ -38,3 +38,18 @@ int main(int argc, char *argv[])
 
   return 0;
 }
+
+/*
+Expected runtime output from the program above:
+
+Zod
+Zod
+Hello World!
+Fire and Brimstone!
+42 42
+42 42
+Hello World!
+Fire and Brimstone!
+42 42
+42 42
+*/

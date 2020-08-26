@@ -38,7 +38,7 @@ The **cest** library has incomplete support for the following containers: `vecto
 
 The code below provides a basic demonstration of some functionality. Executing the resulting program will output `Hello World 5`
 
-```
+```cpp
 #include "cest/iostream.hpp"
 #include "cest/string.hpp"
 #include "cest/vector.hpp"

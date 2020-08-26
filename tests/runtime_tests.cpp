@@ -1,3 +1,7 @@
+#ifndef CONSTEXPR_CEST
+#define CONSTEXPR_CEST 1  // default: yes, test cest's constexpr functionality
+#endif
+
 #include "vector_tests.hpp"
 #include "forward_list_tests.hpp"
 #include "list_tests.hpp"

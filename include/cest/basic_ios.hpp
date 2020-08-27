@@ -3,7 +3,9 @@
 
 #include "streambuf.hpp"
 #include "ios_base.hpp"
-#include <string>  // std::char_traits
+#include <string>   // std::char_traits
+#include <locale>   // std::num_get, std::num_put, std::ctype
+#include <iterator> // std::ostreambuf_iterator, std::istreambuf_iterator
 
 #if defined(_LIBCPP_VERSION)
 #if !defined(__cpp_exceptions)

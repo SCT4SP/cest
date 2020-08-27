@@ -6,6 +6,9 @@
 #include "runtime_ostream.hpp" // cest::runtime_ostream 
 #include <string>              // std::char_traits
 #include <iostream>            // std::cout, std::cerr, std::clog
+#include <locale>              // std::ctype, std::num_put
+#include <iterator>            // std::ostreambuf_iterator
+#include <exception>           // std::uncaught_exception
 
 namespace cest {
 

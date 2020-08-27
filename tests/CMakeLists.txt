@@ -3,6 +3,7 @@ project(runtime_tests)
 
 #set(CMAKE_CXX_COMPILER $ENV{MYGCC}/bin/g++)
 set(CMAKE_CXX_COMPILER clang++)
+#set(CMAKE_CXX_COMPILER $ENV{CLANG_BIN}/clang++)
 #set(CMAKE_CXX_COMPILER $ENV{MYCLANG}/bin/clang++)
 message("CMAKE_CXX_COMPILER is ${CMAKE_CXX_COMPILER}")
 set(CMAKE_CXX_FLAGS "-std=c++2a")

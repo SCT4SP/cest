@@ -3,9 +3,11 @@
 
 #include "ostream.hpp"
 #include "runtime_ostream.hpp"
-#include <string>   // std::char_traits
-#include <memory>   // std::allocator
-#include <iterator> // std::reverse_iterator
+#include <string>      // std::char_traits
+#include <memory>      // std::allocator
+#include <iterator>    // std::reverse_iterator
+#include <limits>      // std::numeric_limits
+#include <type_traits> // std::is_same_v
 
 namespace cest {
 
@@ -36,7 +38,8 @@ public:
     basic_string( Allocator() ) {}
 
   explicit constexpr
-  basic_string(const Allocator& alloc) noexcept : m_alloc(alloc) {
+  basic_string(const Allocator& alloc) noexcept : m_alloc(alloc)
+  {
     m_capacity = 1;                                // Unlike 0, a scalable value
     m_p = m_alloc.allocate(m_capacity+1);          // +1 for the null terminator
     for (size_type i = 0; i < m_capacity+1; i++)
@@ -46,7 +49,8 @@ public:
 
   constexpr basic_string(const CharT* s,
                          size_type count,
-                         const Allocator& alloc = Allocator()) : m_alloc(alloc){
+                         const Allocator& alloc = Allocator()) : m_alloc(alloc)
+  {
     m_capacity = count+1;                    // ensure m_capacity is not 0
     m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
     for (size_type i = 0; i < m_capacity+1; i++)
@@ -230,21 +234,8 @@ public:
     return *this;
   }
 
-  constexpr basic_string& operator=(const basic_string& str)
-  {
+  constexpr basic_string& operator=(const basic_string& str) {
     return this->operator=(str.c_str());
-    /*const CharT* s  = str.c_str();
-    size_type count = traits_type::length(s);
-
-    if (m_capacity < str.m_capacity) {
-      m_alloc.deallocate(m_p, m_capacity+1);
-      m_capacity = count+1;                    // ensure m_capacity is not 0
-      m_p = m_alloc.allocate(m_capacity+1);    // +1 for the null terminator
-    }
-    
-    traits_type::copy(m_p, s, count+1);
-    m_size = count;
-    return *this;*/
   }
 
   constexpr void reserve(size_type new_cap)
@@ -286,14 +277,15 @@ public:
   }
 
 private:
+
   static constexpr int _S_compare(size_type n1, size_type n2) noexcept
   {
     const difference_type d = difference_type(n1 - n2);
 
-    if (d > __gnu_cxx::__numeric_traits<int>::__max)
-      return __gnu_cxx::__numeric_traits<int>::__max;
-    else if (d < __gnu_cxx::__numeric_traits<int>::__min)
-      return __gnu_cxx::__numeric_traits<int>::__min;
+    if (d > std::numeric_limits<int>::max())
+      return std::numeric_limits<int>::max();
+    else if (d < std::numeric_limits<int>::min())
+      return std::numeric_limits<int>::min();
     else
       return int(d);
   }
@@ -313,7 +305,7 @@ template<typename _CharT, typename _Traits, typename _Alloc>
 
 template<typename _CharT>
   inline constexpr
-  std::enable_if_t<std::__is_char<_CharT>::__value, bool>
+  std::enable_if_t<std::is_same_v<_CharT,char>, bool>
   operator==(const basic_string<_CharT>& __lhs,
              const basic_string<_CharT>& __rhs) noexcept
   { return (__lhs.size() == __rhs.size()

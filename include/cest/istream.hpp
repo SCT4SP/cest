@@ -87,7 +87,20 @@ using wistream = basic_istream<wchar_t>;
     __streambuf_type* __sb = __in.rdbuf();
     __int_type __c = __sb->sgetc();
 
+#if !defined(_LIBCPP_VERSION)
     const __ctype_type& __ct = __check_facet(__in._M_ctype);
+#else
+    // The way it should be done in libcxx, except that all of this is not 
+    // constexpr yet..
+    // const std::ctype<_CharT>& __ct = std::use_facet<std::ctype<_CharT> >(__in.getloc());
+
+    // No __check_facet in libcxx and std::use_facet requires a lot of 
+    // non-constexpr functionallity, so using a default in its place for now. So
+    // if we end up with some strange output this may be the cause.
+    struct __place_holder_ctype : std::ctype<char> {};
+    const __ctype_type& __ct = __place_holder_ctype();
+#endif
+    
     while (!traits_type::eq_int_type(__c, __eof)
            && __ct.is(std::ctype_base::space,
           traits_type::to_char_type(__c)))
@@ -100,11 +113,13 @@ using wistream = basic_istream<wchar_t>;
       __err |= ios_base::eofbit;
         }
     }
+#if !defined(_LIBCPP_VERSION)
   __catch(__cxxabiv1::__forced_unwind&)
     {
       __in._M_setstate(ios_base::badbit);
       __throw_exception_again;
     }
+#endif
   __catch(...)
     { __in._M_setstate(ios_base::badbit); }
 
@@ -140,11 +155,13 @@ using wistream = basic_istream<wchar_t>;
         else
     __err |= ios_base::eofbit;
       }
+#if !defined(_LIBCPP_VERSION)
     __catch(__cxxabiv1::__forced_unwind&)
       {
         this->_M_setstate(ios_base::badbit);
         __throw_exception_again;
       }
+#endif
     __catch(...)
       { this->_M_setstate(ios_base::badbit); }
   }
@@ -178,11 +195,13 @@ using wistream = basic_istream<wchar_t>;
       || traits_type::eq_int_type(__sb->sungetc(), __eof))
     __err |= ios_base::badbit;
       }
+#if !defined(_LIBCPP_VERSION)
     __catch(__cxxabiv1::__forced_unwind&)
       {
         this->_M_setstate(ios_base::badbit);
         __throw_exception_again;
       }
+#endif
     __catch(...)
       { this->_M_setstate(ios_base::badbit); }
     if (__err)

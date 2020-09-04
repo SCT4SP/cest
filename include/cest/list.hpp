@@ -1,8 +1,6 @@
 #ifndef _CEST_LIST_HPP_
 #define _CEST_LIST_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/list_tests.hpp
-
 #include <memory>
 #include <algorithm>
 
@@ -29,8 +27,9 @@ struct list {
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  struct        node_base {
-    constexpr void m_hook(node_base* const pos)   noexcept
+  struct node_base
+  {
+    constexpr void m_hook(node_base* const pos) noexcept
     {
       this->next      = pos;
       this->prev      = pos->prev;
@@ -38,7 +37,7 @@ struct list {
       pos->prev       = this;
     }
 
-    constexpr void m_unhook()                     noexcept
+    constexpr void m_unhook() noexcept
     {
       node_base* const next_node = this->next;
       node_base* const prev_node = this->prev;
@@ -50,11 +49,9 @@ struct list {
     node_base* prev = this;
   };
 
-  struct node : node_base {
+  struct node : node_base
+  {
     constexpr node(const value_type &v) : value(v) {}
-    // Is this constructor used?
-    constexpr node(const value_type &v, node_base* n, node_base* p)
-                                               : node_base(n,p), value(v) {}
     value_type value;
   };
 
@@ -139,8 +136,22 @@ struct list {
     const node_base* m_node = nullptr;
   };
   
-  constexpr  list() = default;
+  constexpr list() : m_size{} {}
   constexpr ~list() { clear(); }
+
+  constexpr list(const list& other) : list()
+  {
+    for (auto it = other.cbegin(); it != other.cend(); ++it)
+      push_back(*it);
+  }
+
+  constexpr list& operator=(const list& other)
+  {
+    clear();
+    for (auto it = other.cbegin(); it != other.cend(); ++it)
+      push_back(*it);
+    return *this;
+  }
 
   constexpr allocator_type get_allocator() const noexcept {
     return m_node_alloc;
@@ -225,13 +236,12 @@ struct list {
   }
 
   template <class... Args>
-  constexpr iterator emplace(const_iterator pos, Args&&... args) {
+  constexpr iterator emplace(const_iterator pos, Args&&... args)
+  {
     node_base*   p = const_cast<node_base*>(pos.m_node);
     node* new_node = m_node_alloc.allocate(1);
 
-    // Could a move constructor for node reduce this to one construct_at call?
     std::construct_at(new_node, value_type(std::forward<Args>(args)...));
-    //std::construct_at(&new_node->value, std::forward<Args>(args)...);
 
     // List_node_base::_M_hook
     new_node->next = p;
@@ -253,9 +263,7 @@ struct list {
     /*node_base* const next_node = p->next;
     node_base* const prev_node = p->prev;
     prev_node->next = next_node;
-    next_node->prev = prev_node;
-*/
-
+    next_node->prev = prev_node;*/
     p->m_unhook();
 
     node* tmp = static_cast<node*>(p);
@@ -266,13 +274,15 @@ struct list {
   }
 
   template <typename... Args >
-  constexpr reference emplace_front(Args&&... args) {
+  constexpr reference emplace_front(Args&&... args)
+  {
     insert(begin(), value_type(std::forward<Args>(args)...));
     return front();
   }
 
   template <typename... Args >
-  constexpr reference emplace_back(Args&&... args) {
+  constexpr reference emplace_back(Args&&... args)
+  {
     insert(end(), value_type(std::forward<Args>(args)...));
     return back();
   }
@@ -281,7 +291,7 @@ struct list {
   constexpr void pop_front() { erase(begin());       }
 
   node_base m_node;
-  size_type m_size = 0;
+  size_type m_size;
   typename std::allocator_traits<allocator_type>::template rebind_alloc<node> m_node_alloc;
 };
 

@@ -16,7 +16,8 @@
 #include <cassert>
 
 template <typename V, typename S>
-constexpr bool algorithm_test1() {
+constexpr bool algorithm_test1()
+{
   using namespace std;
   using arr_t = array<int,5>;
   arr_t a{1,2,3,4,5};
@@ -44,7 +45,8 @@ constexpr bool algorithm_test1() {
 }
 
 template <typename V, typename S>
-constexpr bool algorithm_test2() {
+constexpr bool algorithm_test2()
+{
   using namespace std;
   using arr_t = array<int,5>;
   arr_t a{1,2,3,4,5};
@@ -64,16 +66,9 @@ constexpr bool algorithm_test2() {
   return e==4 && b && 4==ve && vb && sze=='c' && szb;
 }
 
-template <typename It1, typename It2>
-constexpr auto iterator_ok() {
-  using it1_cat_t = typename It1::iterator_category;
-  using it2_cat_t = typename It2::iterator_category;
-  bool b1 = std::is_same<it1_cat_t, it2_cat_t>{};
-  return b1;
-}
-
 template <typename V, typename S, typename L, typename FL>
-constexpr bool algorithm_test3() {
+constexpr bool algorithm_test3()
+{
   using namespace std;
   using arr_t = array<int,5>;
   arr_t a{1,2,3,4,5};
@@ -100,7 +95,8 @@ template <
   template <typename...> typename L,
   template <typename...> typename FL
 >
-void rt_algorithm_tests() {
+void rt_algorithm_tests()
+{
   assert((algorithm_test1<S<int>,V<int>>()));
   assert((algorithm_test2<S<int>,V<int>>()));
   assert((algorithm_test3<S<int>,V<int>,L<int>,FL<int>>()));

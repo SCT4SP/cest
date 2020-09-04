@@ -1,11 +1,10 @@
 #ifndef _CEST_VECTOR_HPP_
 #define _CEST_VECTOR_HPP_
 
-// $MYGCC/bin/g++ -std=c++2a -I .. -c ../../tests/vector_tests.hpp
-
 #include <memory>  // std::allocator
 #include <cstddef>
 #include <algorithm>
+#include <initializer_list>
 
 namespace cest {
 
@@ -29,7 +28,47 @@ public:
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  constexpr vector()  = default;
+  constexpr vector() : m_size{}, m_capacity{}, m_p{} {}
+
+  constexpr vector(const vector& other) : vector()
+  {
+    reserve(other.capacity());
+    m_size = other.size();
+    for (size_type i = 0; i < m_size; i++)
+      std::construct_at(&m_p[i], other.m_p[i]);
+  }
+
+  constexpr vector(std::initializer_list<T> init,
+                   const Allocator& alloc = Allocator()) : vector()
+  {
+    for (const auto &x : init) { push_back(x); }
+  }
+
+  constexpr ~vector()
+  {
+    clear();
+    if (0 != m_capacity) m_alloc.deallocate(m_p,m_capacity);
+  }
+
+  constexpr vector& operator=(const vector& other)
+  {
+    reserve(other.capacity());
+
+    size_type i = 0;
+    if (other.size() >= m_size) {
+      for (; i < m_size; i++)
+        m_p[i] = other.m_p[i];
+      for (; i < other.size(); i++)
+        std::construct_at(&m_p[i], other.m_p[i]);
+    } else {
+      for (; i < other.size(); i++)
+        m_p[i] = other.m_p[i];
+      std::destroy_n(&m_p[i], m_size - other.size());
+    }
+
+    m_size = other.size();
+    return *this;
+  }
 
   [[nodiscard]]
   constexpr bool            empty() const noexcept { return m_size == 0;  }
@@ -74,11 +113,21 @@ public:
   constexpr const_reverse_iterator
   rend()   const noexcept { return const_reverse_iterator(begin()); }
 
-  constexpr void         pop_back()       { m_size--; }
+  constexpr void         pop_back()       {
+    m_size--;
+    std::destroy_n(&m_p[m_size],1);
+  }
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
 
-  constexpr void push_back(const value_type &value) {
+  constexpr void clear() noexcept
+  {
+    std::destroy_n(m_p, m_size);
+    m_size = 0;
+  }
+
+  constexpr void push_back(const value_type &value)
+  {
     if (0 == m_capacity) {
       reserve(1);
     } else if (m_capacity == m_size) {
@@ -86,7 +135,9 @@ public:
     }
     std::construct_at(&m_p[m_size++],value);
   }
-  constexpr void push_back(value_type &&value) {
+
+  constexpr void push_back(value_type &&value)
+  {
     if (0 == m_capacity) {
       reserve(1);
     } else if (m_capacity == m_size) {
@@ -94,22 +145,23 @@ public:
     }
     std::construct_at(&m_p[m_size++],std::forward<T>(value));
   }
-  constexpr iterator erase(iterator first, iterator last) {
+
+  constexpr iterator erase(iterator first, iterator last)
+  {
     iterator it1 = first, it2 = last;
-    for (; it2 != end(); it2++)
+    for (; it2 != end(); it2++) {
       *it1++ = *it2;
-    m_size -= last - first;
+    }
+    const auto num_to_erase = last - first;
+    std::destroy_n(end() - num_to_erase, num_to_erase);
+    m_size -= num_to_erase;
     return first;
-  }
-  constexpr ~vector() {
-    std::destroy_n(m_p,m_size);
-    if (0 != m_capacity) m_alloc.deallocate(m_p,m_capacity);
   }
 
   allocator_type  m_alloc;
-  size_type       m_size     = 0;
-  size_type       m_capacity = 0;
-  value_type     *m_p        = nullptr;
+  size_type       m_size;
+  size_type       m_capacity;
+  value_type     *m_p;
 };
 
 template <typename _Tp, typename _Alloc>

@@ -2,7 +2,7 @@
 #define _CEST_VECTOR_TESTS_HPP_
 
 #include "cest/vector.hpp"
-#include "cest/mono_block_alloc.hpp"
+#include "../tests/tests_util.hpp"
 #include <cassert>
 #include <vector>
 
@@ -30,35 +30,23 @@ constexpr bool vec_test2() {
   return 2==v.size() && 2==v.capacity();
 }
 
-struct Bar {
-  constexpr Bar()             : m_x(42)     { }
-  constexpr Bar(int x)        : m_x(x)      { }
-  constexpr Bar(const Bar &f) : m_x(f.m_x)  { }
-  constexpr ~Bar()                          { }
-  int m_x;
-};
-
-template <typename V>
-constexpr bool vec_test3() {
-  V v;
-  Bar f(42);
-  v.push_back(f);
-  v.push_back(f);
-  return 42==v.begin()->m_x && 2==v.size() && 2==v.capacity();
-}
-
 template <typename V>
 constexpr bool vec_test4() {
   V v;
   v.push_back(3.142f);
   v.push_back(3.142f);
   v.push_back(3.142f);
-  return 3==v.size() && 4==v.capacity();
+  bool b  = 3==v.size();
+  auto c1 = v.capacity();
+  v.clear();
+  auto c2 = v.capacity();
+  return b && v.empty() && c2==c1;
 }
 
 template <typename V>
 constexpr bool vec_test5() {
   V v;
+  v.clear();
   v.push_back(1);
   v.push_back(2);
   v.push_back(3);
@@ -81,13 +69,7 @@ constexpr bool vec_test6() {
 
 template <typename V>
 constexpr bool vec_test7() {
-  V v;
-  v.push_back(1);
-  v.push_back(2);
-  v.push_back(3);
-  v.push_back(4);
-  v.push_back(5);
-  v.push_back(6);
+  V v = {1,2,3,4,5,6};
   auto it_erase = v.erase(v.begin()+2,v.begin()+4); // remove 3 & 4
   using int_t = typename V::value_type;
   int_t sum1 = 0;
@@ -127,37 +109,75 @@ constexpr bool vec_test9() {
   return b1 && b2 && b3;
 }
 
-template <bool SA, class V0, class V1, class V2, class V3,
-                   class V4, class V5, class V6, class V7, class V8, class V9>
+// copy ctor and operator=
+template <typename V>
+constexpr bool vec_test10() {
+  V v1, v2;
+  v1.push_back(42);
+  v2 = v1;
+  V v3 = v1;
+  bool b1 = v2[0]==v1[0];
+  bool b2 = v3[0]==v1[0];
+  v1.push_back(43);
+  v1.push_back(44);
+  v2[0] = 123;
+  bool b3 = 3==v1.size();
+  v1 = v2;
+  bool b4 = 1==v1.size() && 123==v1[0];
+  return b1 && b2 && b3 && b4;
+}
+
+template <typename V>
+constexpr bool vec_test11()
+{
+  V v;
+  tests_util::Bar f(42);
+  v.push_back(f);
+  v.push_back(f);
+  v.erase(v.begin(), v.begin()+1);
+  return 1==v.size();
+}
+
+template <bool SA, class V0, class V1, class V2, class V3, class V4,
+                   class V5, class V6, class V7, class V8, class V9,
+                   class V10, class V11>
 constexpr void doit()
 {
+  using namespace tests_util;
+
   assert(vec_test0<V0>());
   assert(vec_test1<V1>());
   assert(vec_test2<V2>());
-  assert(vec_test3<V3>());
+  assert(push_back_dtor_test<V3>());
   assert(vec_test4<V4>());
   assert(vec_test5<V5>());
   assert(vec_test6<V6>());
   assert(vec_test7<V7>());
   assert(vec_test8<V8>());
   assert(vec_test9<V9>());
+  assert(vec_test10<V10>());
+  assert(vec_test11<V11>());
 
   if constexpr (SA) {
     static_assert(vec_test0<V0>());
     static_assert(vec_test1<V1>());
     static_assert(vec_test2<V2>());
-    static_assert(vec_test3<V3>());
+    static_assert(push_back_dtor_test<V3>());
     static_assert(vec_test4<V4>());
     static_assert(vec_test5<V5>());
     static_assert(vec_test6<V6>());
     static_assert(vec_test7<V7>());
     static_assert(vec_test9<V9>());
+    static_assert(vec_test10<V10>());
+    static_assert(vec_test11<V11>());
   }
 }
 
 template <bool SA, template <class...> class Vt>
 constexpr void tests_helper()
 {
+  using tests_util::Bar;
+
   using V0  = Vt<double>;
   using V1  = Vt<int>;
   using V2  = Vt<double>;
@@ -168,20 +188,10 @@ constexpr void tests_helper()
   using V7  = Vt<int>;
   using V8  = Vt<int>;
   using V9  = Vt<int>;
+  using V10 = Vt<int>;
+  using V11 = Vt<Bar>;
 
-  using Va0 = Vt<double, cea::mono_block_alloc<double>>;
-  using Va1 = Vt<int,    cea::mono_block_alloc<int>>;
-  using Va2 = Vt<double, cea::mono_block_alloc<double>>;
-  using Va3 = Vt<Bar,    cea::mono_block_alloc<Bar>>;
-  using Va4 = Vt<float,  cea::mono_block_alloc<float>>;
-  using Va5 = Vt<int,    cea::mono_block_alloc<int>>;
-  using Va6 = Vt<double, cea::mono_block_alloc<double>>;
-  using Va7 = Vt<int,    cea::mono_block_alloc<int>>;
-  using Va8 = Vt<int,    cea::mono_block_alloc<int>>;
-  using Va9 = Vt<int,    cea::mono_block_alloc<int>>;
-
-  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9>();
-//  doit<SA, Va0, Va1, Va2, Va3, Va4, Va5, Va6, Va7, Va8, Va9>();
+  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9, V10, V11>();
 }
 
 } // namespace v_tests
@@ -190,7 +200,8 @@ void vector_tests()
 {
   using namespace v_tests;
 
-  tests_helper<CONSTEXPR_CEST,cest::vector>(); // true: constexpr tests
+  tests_helper<false,std::vector>();           // false: no constexpr tests
+  tests_helper<CONSTEXPR_CEST,cest::vector>(); // true:     constexpr tests
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

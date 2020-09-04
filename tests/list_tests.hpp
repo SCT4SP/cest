@@ -2,6 +2,7 @@
 #define _CEST_LIST_TESTS_HPP_
 
 #include "cest/list.hpp"
+#include "../tests/tests_util.hpp"
 #include <list>
 #include <cassert>
 
@@ -69,7 +70,7 @@ constexpr auto list_test2()
 }
 
 template <template <typename ...> typename L>
-constexpr auto list_test3()
+constexpr bool list_test3()
 {
   struct Foo {
     // clang needs a ctor for std::list::emplace
@@ -103,12 +104,32 @@ constexpr auto list_test3()
          e5.i==i   && e5.s==s   && e5.p==&d  && sz3==2;
 }
 
+template <typename L>
+constexpr bool list_test4()
+{
+  L l1;
+  l1.push_back(1);
+  l1.push_back(2);
+  l1.push_back(3);
+  L l2 = l1;
+  bool b1 = l1.size() == l2.size() && l1.front()==l2.front();
+
+  L l3;
+  l3 = l1;
+  bool b2 = l1.size() == l3.size() && l1.front()==l3.front();
+  return b1 && b2;
+}
+
 void list_tests()
 {
+  using namespace tests_util;
+
 #if CONSTEXPR_CEST == 1
   static_assert(list_test1<cest::list<int>>());
   static_assert(list_test2<cest::list<int>>());
   static_assert(list_test3<cest::list>());
+  static_assert(list_test4<cest::list<int>>());
+  static_assert(push_back_dtor_test<cest::list<Bar>>());
 #endif
 
   assert(list_test1< std::list<int>>());
@@ -117,6 +138,10 @@ void list_tests()
   assert(list_test2<cest::list<int>>());
   assert(list_test3< std::list>());
   assert(list_test3<cest::list>());
+  assert(list_test4< std::list<int>>());
+  assert(list_test4<cest::list<int>>());
+  assert(push_back_dtor_test< std::list<Bar>>());
+  assert(push_back_dtor_test<cest::list<Bar>>());
 }
 
 #endif // _CEST_LIST_TESTS_HPP_

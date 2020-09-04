@@ -2,7 +2,9 @@
 #define _CEST_DEQUE_TESTS_HPP_
 
 #include "cest/deque.hpp"
+#include "../tests/tests_util.hpp"
 #include <deque>
+#include <initializer_list>
 #include <cassert>
 
 template <typename D>
@@ -66,15 +68,48 @@ constexpr bool deque_test3()
   d.pop_front();
   d.pop_front();
   bool b2 = *it==4;
+  d.clear();
+  bool b3 = d.empty();
+  return b1 && b2 && b3;
+}
+
+// Test copy constructor and operator=
+template <typename D>
+constexpr bool deque_test4()
+{
+  D d1;
+  d1.push_front(3);
+  d1.push_front(2);
+  d1.push_front(1);
+  D d2 = d1;
+  bool b1 = 3==d1.size() && 3==d2.size() && 1==d1[0] && 1==d2[0];
+  D d3;
+  d3.push_back(4);
+  d1 = d3;
+  bool b2 = 1==d1.size() && 4==d1[0];
   return b1 && b2;
+}
+
+template <typename D>
+constexpr bool deque_test5()
+{
+  D d{1,2,3,4,5};
+  bool b = 1==d[0] && 5==d.size();
+  return b;
 }
 
 void deque_tests()
 {
+  using namespace tests_util;
+
 #if CONSTEXPR_CEST == 1
   static_assert(deque_test1<cest::deque<int>>());
   static_assert(deque_test2<cest::deque<int>>());
   static_assert(deque_test3<cest::deque<int>>());
+  static_assert(deque_test4<cest::deque<int>>());
+  static_assert(push_back_dtor_test<cest::deque<Bar>>());
+  static_assert(push_front_dtor_test<cest::deque<Bar>>());
+  static_assert(deque_test5<cest::deque<int>>());
 #endif
 
   assert((deque_test1< std::deque<int>>()));
@@ -83,6 +118,14 @@ void deque_tests()
   assert((deque_test2<cest::deque<int>>()));
   assert((deque_test3< std::deque<int>>()));
   assert((deque_test3<cest::deque<int>>()));
+  assert((deque_test4< std::deque<int>>()));
+  assert((deque_test4<cest::deque<int>>()));
+  assert(push_back_dtor_test< std::deque<Bar>>());
+  assert(push_back_dtor_test<cest::deque<Bar>>());
+  assert(push_front_dtor_test< std::deque<Bar>>());
+  assert(push_front_dtor_test<cest::deque<Bar>>());
+  assert((deque_test5< std::deque<int>>()));
+  assert((deque_test5<cest::deque<int>>()));
 }
 
 #endif //  _CEST_DEQUE_TESTS_HPP_

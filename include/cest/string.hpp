@@ -87,7 +87,7 @@ public:
         if (__len == __capacity)
           {
             // Allocate more space.
-            __capacity = __len + 1;
+            __capacity = (__len + 1) * 2;
             pointer __another  = m_alloc.allocate(__capacity + 1);
             for (size_type i = 0; i < __capacity+1; i++)
               std::construct_at(&__another[i]);

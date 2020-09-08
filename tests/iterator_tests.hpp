@@ -8,7 +8,7 @@
 #include "cest/set.hpp"
 #include "cest/map.hpp"
 #include "cest/deque.hpp"
-#include "cest/queue.hpp"
+#include "cest/fstream.hpp"
 #include <cassert>
 #include <iterator>
 #include <vector>
@@ -17,6 +17,7 @@
 #include <set>
 #include <map>
 #include <deque>
+#include <fstream>
 
 template <template <typename...> typename V>
 constexpr auto iterator_test1()
@@ -62,6 +63,14 @@ constexpr bool static_iterator_test()
   return b1&&b2;
 }
 
+template <typename Ifs, typename Str, typename Iter>
+constexpr auto iterator_test2()
+{
+  Ifs file(__FILE__);
+  Str str(Iter(file), {});
+  return !str.empty();
+}
+
 void iterator_tests()
 {
   using namespace cest;
@@ -80,6 +89,11 @@ void iterator_tests()
   assert(iterator_test1<vector>());
   assert(iterator_test1<std::deque>());
   assert(iterator_test1<deque>());
+
+  using ifs  = std::ifstream;  using str  = std::string;
+  using ifs_ = cest::ifstream; using str_ = cest::string;
+  assert((iterator_test2<ifs,  str,   std::istreambuf_iterator<char>>()));
+  assert((iterator_test2<ifs_, str_, cest::istreambuf_iterator<char>>()));
 }
 
 #endif // _CEST_ITERATOR_TESTS_HPP_

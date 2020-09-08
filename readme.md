@@ -1,5 +1,9 @@
 # C'est la vie
 
+<p align="left">
+  <a href="https://github.com/pkeir/cest/actions"><img alt="GitHub Actions status" src="https://github.com/pkeir/cest/workflows/build-test/badge.svg"></a>
+</p>
+
 The **cest** project aims to provide a non-standard version of the C++
 standard library with enhanced support for compile time evaluation
 (`constexpr`) for use in research.

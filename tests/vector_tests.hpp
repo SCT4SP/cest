@@ -135,7 +135,16 @@ constexpr bool vec_test11()
   v.push_back(f);
   v.push_back(f);
   v.erase(v.begin(), v.begin()+1);
-  return 1==v.size();
+  bool b1 = 1==v.size();
+
+  V v2;
+  v2.resize(16);
+  bool b2 = 16==v2.size();
+
+  v2.resize(7);
+  bool b3 =  7==v2.size();
+  
+  return b1 && b2 && b3;
 }
 
 template <bool SA, class V0, class V1, class V2, class V3, class V4,

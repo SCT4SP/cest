@@ -90,6 +90,21 @@ public:
     }
   }
 
+  constexpr void resize(size_type sz)
+  {
+    // likely not the most optimal implementation
+    if (m_size < sz) {
+      reserve(sz);
+      // try to default fill the remaining elements that reserve has allocated
+      for (size_type i = m_size; i < m_capacity; i++)
+        std::construct_at(&m_p[i], value_type{});
+      m_size = sz;
+    } else if (m_size > sz) {
+      for (int i = m_size; i > sz; i--)
+        pop_back();
+    }
+  }
+
   constexpr iterator        begin()       noexcept { return {m_p};          }
   constexpr const_iterator  begin() const noexcept { return {m_p};          }
   constexpr const_iterator cbegin() const noexcept { return {m_p};          }

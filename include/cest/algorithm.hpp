@@ -5,9 +5,6 @@
 
 namespace cest {
 
-//  using std::copy;
-//  using std::find;
-//  using std::set_intersection;
   using std::all_of;
   using std::any_of;
   using std::none_of;

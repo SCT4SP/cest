@@ -17,6 +17,7 @@
 #include "iostream_tests.hpp"
 #include "allocator_tests.hpp"
 #include "stringstream_tests.hpp"
+#include "array_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
   iostream_tests();
   allocator_tests();
   stringstream_tests();
+  array_tests();
 
   return 0;
 }

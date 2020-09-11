@@ -5,6 +5,7 @@
 #include "cest/set.hpp"
 #include "cest/forward_list.hpp"
 #include "cest/list.hpp"
+#include "cest/array.hpp"
 #include <vector>
 #include <set>
 #include <forward_list>

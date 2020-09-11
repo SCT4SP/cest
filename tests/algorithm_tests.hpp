@@ -73,10 +73,14 @@ constexpr bool algorithm_test3()
   using arr_t = array<int,5>;
   arr_t a{1,2,3,4,5};
   auto sz1 = distance(a.begin(), a.end());
+  for_each(a.begin(), a.end(), [](auto &x) { x *= 2; });
+  auto asum_ok = 30==accumulate(a.begin(), a.end(), 0);
 
   V v;
   copy(a.begin(),a.end(),back_inserter(v));
-  auto sz2 = distance(a.begin(), a.end());
+  auto sz2 = distance(v.begin(), v.end());
+  for_each(v.begin(), v.end(), [](auto &x) { x *= 2; });
+  auto vsum_ok = 60==accumulate(v.begin(), v.end(), 0);
 
   L l;
   copy(a.begin(),a.end(),back_inserter(l));
@@ -86,7 +90,8 @@ constexpr bool algorithm_test3()
   copy(a.begin(),a.end(),front_inserter(fl));
   auto sz4 = distance(fl.begin(), fl.end());
 
-  return sz1==5 && sz2==5 && sz3==5 && sz4==5;
+  return sz1==5 && sz2==5 && sz3==5 && sz4==5 &&
+         asum_ok && vsum_ok;
 }
 
 template <

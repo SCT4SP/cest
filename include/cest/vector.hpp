@@ -132,6 +132,21 @@ public:
     m_size--;
     std::destroy_n(&m_p[m_size],1);
   }
+
+  constexpr reference at(size_type pos) {
+    if (pos >= m_size) {
+      throw std::out_of_range("error: index out of range in vector::at");
+    }
+    return m_p[pos];
+  }
+
+  constexpr const_reference at(size_type pos) const {
+    if (pos >= m_size) {
+      throw std::out_of_range("error: index out of range in vector::at const");
+    }
+    return m_p[pos];
+  }
+
   constexpr reference       operator[](size_type pos)       { return m_p[pos]; }
   constexpr const_reference operator[](size_type pos) const { return m_p[pos]; }
 

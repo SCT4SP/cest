@@ -54,7 +54,8 @@ constexpr bool vec_test5() {
   int_t sum = 0;
   for (auto it = v.begin(); it != v.end(); it++)
     sum += *it;
-  return 6==sum;
+  int_t sum2 = v.at(0) + v.at(1) + v.at(2);
+  return 6==sum && 6==sum2;
 }
 
 template <typename V>
@@ -86,15 +87,12 @@ constexpr bool vec_test7() {
 template <typename V>
 constexpr bool vec_test8() {
   V v;
-  auto sz0 = v.size();
-  v.reserve(3);
   auto sz1 = v.size();
-  v[0] = 1;
-  v[1] = 2;
-  v[2] = 3;
+  auto c1  = v.capacity();
+  v.reserve(3);
   auto sz2 = v.size();
-  auto sum = v[0] + v[1] + v[2];
-  return 0==sz0 && 0==sz1 && 0==sz2 && 6==sum;
+  auto c2  = v.capacity();
+  return 0==sz1 && 0==sz1 && c2>c1;
 }
 
 template <typename V>
@@ -176,6 +174,7 @@ constexpr void doit()
     static_assert(vec_test5<V5>());
     static_assert(vec_test6<V6>());
     static_assert(vec_test7<V7>());
+    static_assert(vec_test8<V8>());
     static_assert(vec_test9<V9>());
     static_assert(vec_test10<V10>());
     static_assert(vec_test11<V11>());

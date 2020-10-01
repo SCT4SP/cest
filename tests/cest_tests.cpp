@@ -18,6 +18,7 @@
 #include "allocator_tests.hpp"
 #include "stringstream_tests.hpp"
 #include "array_tests.hpp"
+#include "cstdio_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -37,6 +38,7 @@ int main(int argc, char *argv[])
   allocator_tests();
   stringstream_tests();
   array_tests();
+  cstdio_tests();
 
   return 0;
 }
@@ -54,4 +56,5 @@ Hello World!
 Fire and Brimstone!
 42 42
 42 42
+cstdio_test1: 1789 ok
 */

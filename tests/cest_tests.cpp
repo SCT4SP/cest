@@ -57,4 +57,5 @@ Fire and Brimstone!
 42 42
 42 42
 cstdio_test1: 1789 ok
+An error stream test message.
 */

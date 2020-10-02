@@ -17,6 +17,9 @@ ostream cout(&impl::cout);
 ostream cerr(&impl::cerr);
 ostream clog(&impl::clog);
 
+using iostream  = basic_iostream<char>;
+using wiostream = basic_iostream<wchar_t>;
+
 } // namespace cest
 
 #endif // _CEST_IOSTREAM_HPP_

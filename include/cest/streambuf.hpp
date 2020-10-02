@@ -69,6 +69,10 @@ public:
     return __ret;
   }
 
+  constexpr streamsize
+  sgetn(char_type* __s, streamsize __n)
+  { return this->xsgetn(__s, __n); }
+
   constexpr int_type
   sungetc()
   {
@@ -140,6 +144,42 @@ protected:
     }
     return __ret;
   }
+
+  constexpr void
+  __safe_gbump(streamsize __n) { _M_in_cur += __n; }
+
+    // from streambuf.tcc
+    virtual constexpr streamsize
+    xsgetn(char_type* __s, streamsize __n)
+    {
+      streamsize __ret = 0;
+      while (__ret < __n)
+  {
+    const streamsize __buf_len = this->egptr() - this->gptr();
+    if (__buf_len)
+      {
+        const streamsize __remaining = __n - __ret;
+        const streamsize __len = std::min(__buf_len, __remaining);
+        traits_type::copy(__s, this->gptr(), __len);
+        __ret += __len;
+        __s += __len;
+        this->__safe_gbump(__len);
+      }
+
+    if (__ret < __n)
+      {
+        const int_type __c = this->uflow();
+        if (!traits_type::eq_int_type(__c, traits_type::eof()))
+    {
+      traits_type::assign(*__s++, traits_type::to_char_type(__c));
+      ++__ret;
+    }
+        else
+    break;
+      }
+  }
+      return __ret;
+    }
 
   virtual constexpr int_type
   pbackfail(int_type __c _IsUnused  = traits_type::eof())

@@ -83,7 +83,8 @@ public:
   _M_insert(_ValueT __v);
 };
 
-using ostream = basic_ostream<char>;
+using  ostream = basic_ostream<char>;
+using wostream = basic_ostream<wchar_t>;
 
 template< class CharT, class Traits>
 constexpr basic_ostream<CharT,Traits>&

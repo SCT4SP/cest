@@ -43,6 +43,10 @@ public:
   __istream_type&
   unget();
 
+  constexpr
+  __istream_type&
+  read(char_type*, streamsize);
+
 protected:
   constexpr basic_istream() { }
 };
@@ -209,6 +213,37 @@ using wistream = basic_istream<wchar_t>;
   }
       return *this;
     }
+
+  // from istream.tcc
+  template<typename _CharT, typename _Traits>
+    constexpr basic_istream<_CharT, _Traits>&
+    basic_istream<_CharT, _Traits>::
+    read(char_type* __s, streamsize __n)
+    {
+      _M_gcount = 0;
+      sentry __cerb(*this, true);
+      if (__cerb)
+  {
+    ios_base::iostate __err = ios_base::goodbit;
+    __try
+      {
+        _M_gcount = this->rdbuf()->sgetn(__s, __n);
+        if (_M_gcount != __n)
+    __err |= (ios_base::eofbit | ios_base::failbit);
+      }
+    __catch(__cxxabiv1::__forced_unwind&)
+      {
+        this->_M_setstate(ios_base::badbit);
+        __throw_exception_again;
+      }
+    __catch(...)
+      { this->_M_setstate(ios_base::badbit); }
+    if (__err)
+      this->setstate(__err);
+  }
+      return *this;
+    }
+
 
   template<typename _CharT, typename _Traits>
     class basic_iostream

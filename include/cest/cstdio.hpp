@@ -2,10 +2,12 @@
 #define _CEST_CSTDIO_HPP_
 
 #include <cstdio>
+#include "cest/iostream.hpp"
+#include "cest/string.hpp"
 
 namespace cest {
 
-using FILE = std::FILE; // In libstdc++ FILE is a typedef of _IO_FILE struct
+using FILE = istream; // In libstdc++ FILE is a typedef of _IO_FILE struct
 
 constexpr FILE *stdin  = nullptr;
 constexpr FILE *stdout = nullptr;
@@ -55,33 +57,37 @@ constexpr int fprintf(FILE* stream, const char* format, Ts&&... xs)
   return 0;
 }
 
-constexpr FILE* fmemopen(void* buf, size_t size, const char* mode)
+template <typename T>
+constexpr FILE* fmemopen(T* buf, size_t size, const char* mode)
 {
-  if (!std::is_constant_evaluated())
+  /*if (!std::is_constant_evaluated())
   {
     return ::fmemopen(buf, size, mode);
-  }
+  }*/
 
-  return stdout;
+//  string str("ok");
+  istringstream* piss = new istringstream(string(buf,size));
+//  istringstream* piss = new istringstream(str);
+  return piss;
 }
 
 constexpr std::size_t fread(void* buffer, std::size_t size,
                             std::size_t count, FILE* stream)
 {
-  if (!std::is_constant_evaluated())
+  /*if (!std::is_constant_evaluated())
   {
     return std::fread(buffer, size, count, stream);
-  }
+  }*/
 
   return 0;
 }
 
 constexpr int fclose(FILE* stream)
 {
-  if (!std::is_constant_evaluated())
+  /*if (!std::is_constant_evaluated())
   {
     return std::fclose(stream);
-  }
+  }*/
 
   delete stream;
 

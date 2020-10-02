@@ -31,6 +31,11 @@ template <
   class _Traits = std::char_traits<_CharT>
 > class basic_istream;                        // forward declaration
 
+template <
+  class _CharT,
+  class _Traits = std::char_traits<_CharT>
+> class basic_iostream;                       // forward declaration
+
 extern basic_ostream<char> cout;
 extern basic_ostream<char> cerr;
 extern basic_ostream<char> clog;
@@ -55,8 +60,8 @@ public:
 
 protected:
   basic_ostream<_CharT, _Traits>*                _M_tie;
-  mutable char_type                              _M_fill;
-  mutable bool                                   _M_fill_init;
+  /*mutable*/ char_type                          _M_fill;
+  /*mutable*/ bool                               _M_fill_init;
   basic_streambuf<_CharT, _Traits>*              _M_streambuf;
 
   const __ctype_type*                            _M_ctype;

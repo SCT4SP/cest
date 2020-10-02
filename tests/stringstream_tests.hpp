@@ -43,7 +43,11 @@ constexpr bool istringstream_test2()
   s.str(std::move(str));
   char c;
   s.get(c);
-  return 'a' == c;
+  char buf[4];
+  s.read(buf,4);
+  bool b = 'a'==c && 'l'==buf[0] && 'p'==buf[1] && 'h'==buf[2] && 'a'==buf[3];
+  s.get(c);
+  return b && 'v'==c;
 }
 
 template <typename Ifs, typename S, typename Isbi>

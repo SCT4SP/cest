@@ -26,8 +26,8 @@ constexpr bool cstdio_test2()
 
   // cest::cout << buffer << " " << num_read << " " << ret << '\n';
 
-  // return 0==ret && 6==num_read;
-  return true;
+  return 0==ret && 6==num_read;
+  //return true;
 }
 
 void cstdio_tests()

@@ -57,8 +57,7 @@ constexpr int fprintf(FILE* stream, const char* format, Ts&&... xs)
   return 0;
 }
 
-template <typename T>
-constexpr FILE* fmemopen(T* buf, size_t size, const char* mode)
+constexpr FILE* fmemopen(char* buf, size_t size, const char* mode)
 {
   /*if (!std::is_constant_evaluated())
   {
@@ -71,15 +70,20 @@ constexpr FILE* fmemopen(T* buf, size_t size, const char* mode)
   return piss;
 }
 
-constexpr std::size_t fread(void* buffer, std::size_t size,
+// buffer is char* because:
+// 1) A void* can't be arg #1 of std::basic_istream<CharT,Traits>::read
+// 2) A T* template parameter implies types larger than char can be used, but
+//    with constexpr, they can't.
+constexpr std::size_t fread(char* buffer, std::size_t size,
                             std::size_t count, FILE* stream)
 {
   /*if (!std::is_constant_evaluated())
   {
     return std::fread(buffer, size, count, stream);
   }*/
-
-  return 0;
+  assert(size==sizeof(char));
+  stream->read(buffer, size*count);
+  return stream->gcount() / size;
 }
 
 constexpr int fclose(FILE* stream)

@@ -35,6 +35,10 @@ public:
   class sentry;
   friend class sentry;
 
+  constexpr streamsize
+  gcount() const
+  { return _M_gcount; }
+
   constexpr
   __istream_type&
   get(char_type& ch);

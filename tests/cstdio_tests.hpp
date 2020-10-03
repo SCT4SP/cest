@@ -43,16 +43,6 @@ void cstdio_tests()
 
   assert(cstdio_test1());
   assert(cstdio_test2());
-
-  const unsigned sz = 128;
-  static_assert(sizeof(short)==(2*sizeof(char)));
-
-  char buffer[sz];
-  std::string str = "Hello!";
-  std::FILE* in        = fmemopen(str.data(), str.size(), "rb");
-  std::size_t num_read = std::fread(buffer, sizeof buffer[0], sz, in);
-  int ret              = std::fclose(in);
-  assert(0==ret && 6==num_read && str[0]==buffer[0]);
 }
 
 #endif // _CEST_CSTDIO_TESTS_HPP_

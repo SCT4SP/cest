@@ -7,11 +7,14 @@
 
 namespace cest {
 
-using FILE = istream; // In libstdc++ FILE is a typedef of _IO_FILE struct
+// Here, we have istream, not iostream, as iostream misleadingly only inherits
+// from istream due to the prohibition of constexpr virtual inheritance.
+// (In libstdc++ FILE is a typedef of _IO_FILE struct.)
+using FILE = istream;
 
-constexpr FILE *stdin  = nullptr;
-constexpr FILE *stdout = nullptr;
-constexpr FILE *stderr = nullptr;
+constexpr FILE* stdin = &cest::cin;
+constexpr ostream* stdout = &cest::cout;
+constexpr ostream* stderr = &cest::cerr;
 
 // avoid warning: format string is not a string literal (-Wformat-security)
 constexpr int printf(const char* format)
@@ -35,23 +38,28 @@ constexpr int printf(const char* format, Ts&&... xs)
   return 0; // positive; not an error; 0 characters output (constexpr)
 }
 
-// avoid warning: format string is not a string literal (-Wformat-security)
-constexpr int fprintf(FILE* stream, const char* format)
+constexpr int fprintf(ostream* stream, const char* format)
 {
   if (!std::is_constant_evaluated())
   {
-    return std::printf("%s", format);
+    (*stream) << format;
   }
 
   return 0;
 }
 
+// FILE* for param 1 would itroduce the issues described above. 
 template <typename... Ts>
-constexpr int fprintf(FILE* stream, const char* format, Ts&&... xs)
+constexpr int fprintf(ostream* stream, const char* format, Ts&&... xs)
 {
   if (!std::is_constant_evaluated())
   {
-    return std::fprintf(stream, format, std::forward<Ts>(xs)...);
+    int nbytes = std::snprintf(nullptr, 0, format, std::forward<Ts>(xs)...);
+    char *psz = new char[nbytes+1];
+    std::snprintf(psz, nbytes+1, format, std::forward<Ts>(xs)...);
+    (*stream) << psz;
+    delete [] psz;
+    return nbytes;
   }
 
   return 0;
@@ -59,28 +67,17 @@ constexpr int fprintf(FILE* stream, const char* format, Ts&&... xs)
 
 constexpr FILE* fmemopen(char* buf, size_t size, const char* mode)
 {
-  /*if (!std::is_constant_evaluated())
-  {
-    return ::fmemopen(buf, size, mode);
-  }*/
-
-//  string str("ok");
-  istringstream* piss = new istringstream(string(buf,size));
-//  istringstream* piss = new istringstream(str);
-  return piss;
+  return new stringstream(string(buf,size));
 }
 
-// buffer is char* because:
+// Param #1 of fmemopen and fread is char* (instead of void*) because:
 // 1) A void* can't be arg #1 of std::basic_istream<CharT,Traits>::read
-// 2) A T* template parameter implies types larger than char can be used, but
-//    with constexpr, they can't.
+// 2) A T* template parameter alternative, would imply types larger than char
+//    can be used, but with constexpr, they can't.
+// 3) Also note C-style "FILE" type returned: istream (i.e. basic_istream<char>)
 constexpr std::size_t fread(char* buffer, std::size_t size,
                             std::size_t count, FILE* stream)
 {
-  /*if (!std::is_constant_evaluated())
-  {
-    return std::fread(buffer, size, count, stream);
-  }*/
   assert(size==sizeof(char));
   stream->read(buffer, size*count);
   return stream->gcount() / size;
@@ -88,13 +85,7 @@ constexpr std::size_t fread(char* buffer, std::size_t size,
 
 constexpr int fclose(FILE* stream)
 {
-  /*if (!std::is_constant_evaluated())
-  {
-    return std::fclose(stream);
-  }*/
-
   delete stream;
-
   return 0;
 }
 

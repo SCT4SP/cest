@@ -163,8 +163,47 @@ public:
   __stringbuf_type  _M_stringbuf;
 };
 
-using  istringstream = basic_istringstream<char>;
+using istringstream = basic_istringstream<char>;
 using wistringstream = basic_istringstream<wchar_t>;
+
+template <
+  class _CharT,
+  class _Traits = std::char_traits<_CharT>,
+  class _Alloc = std::allocator<_CharT>
+> class basic_stringstream : public basic_iostream<_CharT, _Traits>
+{
+public:
+  using char_type   = _CharT;
+  using traits_type = _Traits;
+  using int_type    = typename traits_type::int_type;
+  using pos_type    = typename traits_type::pos_type;
+  using off_type    = typename traits_type::off_type;
+  using allocator_type = _Alloc;
+
+  typedef basic_string<_CharT, _Traits, _Alloc>  __string_type;
+  typedef basic_stringbuf<_CharT, _Traits, _Alloc>  __stringbuf_type;
+  typedef basic_iostream<char_type, traits_type> __iostream_type;
+
+  constexpr basic_stringstream()
+  : __iostream_type(), _M_stringbuf(ios_base::out | ios_base::in)
+  { this->init(&_M_stringbuf); }
+
+  explicit
+  constexpr basic_stringstream(const __string_type& __str,
+   ios_base::openmode __m = ios_base::out | ios_base::in)
+  : __iostream_type(), _M_stringbuf(__str, __m)
+  { this->init(&_M_stringbuf); }
+
+  constexpr __string_type str() const { return _M_stringbuf.str(); }
+  constexpr void str(const __string_type& __s) { _M_stringbuf.str(__s); }
+
+  constexpr ~basic_stringstream() {}
+
+  __stringbuf_type  _M_stringbuf;
+};
+
+using stringstream = basic_stringstream<char>;
+using wstringstream = basic_stringstream<wchar_t>;
 
 } // namespace cest
 

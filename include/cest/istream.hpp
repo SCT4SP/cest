@@ -28,6 +28,11 @@ protected:
   streamsize    _M_gcount;
 
 public:
+  explicit constexpr
+  basic_istream(__streambuf_type* __sb)
+  : _M_gcount(streamsize(0))
+  { this->init(__sb); }
+
   virtual constexpr
   ~basic_istream()
   { _M_gcount = streamsize(0); }
@@ -52,10 +57,12 @@ public:
   read(char_type*, streamsize);
 
 protected:
-  constexpr basic_istream() { }
+  constexpr basic_istream()
+  : _M_gcount(streamsize(0))
+  { this->init(0); }
 };
 
-using  istream = basic_istream<char>;
+using istream = basic_istream<char>;
 using wistream = basic_istream<wchar_t>;
 
   template<typename _CharT, typename _Traits>

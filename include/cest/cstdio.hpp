@@ -65,7 +65,7 @@ constexpr int fprintf(ostream* stream, const char* format, Ts&&... xs)
   return 0;
 }
 
-constexpr FILE* fmemopen(char* buf, size_t size, const char* mode)
+constexpr FILE* fmemopen(char* buf, size_t size, const char* /*mode*/)
 {
   return new stringstream(string(buf,size));
 }

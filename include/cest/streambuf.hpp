@@ -94,7 +94,7 @@ protected:
 //  _M_buf_locale(locale())
   { }
 
-  constexpr basic_streambuf(const basic_streambuf& rhs) {}
+  constexpr basic_streambuf(const basic_streambuf& /*rhs*/) {}
 
   constexpr char_type*
   eback() const { return _M_in_beg; }

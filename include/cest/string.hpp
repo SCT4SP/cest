@@ -139,7 +139,7 @@ public:
     return this->find(str.data(), pos);
   }
 
-  constexpr size_type find(CharT ch, size_type pos = 0) const noexcept {
+  constexpr size_type find(CharT ch, size_type /*pos*/ = 0) const noexcept {
     auto *p = traits_type::find(this->data(), this->size(), ch);
     return p ? (p-this->data()) : npos;
   }

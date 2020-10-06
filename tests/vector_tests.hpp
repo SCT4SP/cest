@@ -145,6 +145,12 @@ constexpr bool vec_test11()
   return b1 && b2 && b3;
 }
 
+template <typename T>
+struct my_allocator : std::allocator<T>
+{
+  constexpr my_allocator() : std::allocator<T>{} {}
+};
+
 template <typename V>
 constexpr bool vec_test12()
 {
@@ -207,7 +213,7 @@ constexpr void tests_helper()
   using V9  = Vt<int>;
   using V10 = Vt<int>;
   using V11 = Vt<Bar>;
-  using V12 = Vt<int>;
+  using V12 = Vt<Bar,my_allocator<Bar>>;
 
   doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9, V10, V11, V12>();
 }

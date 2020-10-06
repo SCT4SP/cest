@@ -28,7 +28,7 @@ public:
   using reverse_iterator      = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  constexpr vector() : m_size{}, m_capacity{}, m_p{} {}
+  constexpr vector() : m_size{}, m_capacity{}, m_p{}, m_alloc{} {}
 
   constexpr vector(const vector& other) : vector()
   {
@@ -39,7 +39,8 @@ public:
   }
 
   constexpr vector(size_type count,
-                   const Allocator& alloc = Allocator()) : vector()
+                   const Allocator& alloc = Allocator())
+    : m_size{}, m_capacity{}, m_p{}, m_alloc(alloc)
   {
     reserve(count);
     m_size = count;
@@ -48,7 +49,8 @@ public:
   }
 
   constexpr vector(std::initializer_list<T> init,
-                   const Allocator& alloc = Allocator()) : vector()
+                   const Allocator& alloc = Allocator())
+    : m_size{}, m_capacity{}, m_p{}, m_alloc(alloc)
   {
     for (const auto &x : init) { push_back(x); }
   }

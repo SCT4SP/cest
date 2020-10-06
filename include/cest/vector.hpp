@@ -38,6 +38,15 @@ public:
       std::construct_at(&m_p[i], other.m_p[i]);
   }
 
+  constexpr vector(size_type count,
+                   const Allocator& alloc = Allocator()) : vector()
+  {
+    reserve(count);
+    m_size = count;
+    for (size_type i = 0; i < m_size; i++)
+      std::construct_at(&m_p[i]);
+  }
+
   constexpr vector(std::initializer_list<T> init,
                    const Allocator& alloc = Allocator()) : vector()
   {

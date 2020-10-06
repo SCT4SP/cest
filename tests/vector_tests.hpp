@@ -145,9 +145,16 @@ constexpr bool vec_test11()
   return b1 && b2 && b3;
 }
 
+template <typename V>
+constexpr bool vec_test12()
+{
+  V v(16);
+  return 16==v.size();
+}
+
 template <bool SA, class V0, class V1, class V2, class V3, class V4,
                    class V5, class V6, class V7, class V8, class V9,
-                   class V10, class V11>
+                   class V10, class V11, class V12>
 constexpr void doit()
 {
   using namespace tests_util;
@@ -164,6 +171,7 @@ constexpr void doit()
   assert(vec_test9<V9>());
   assert(vec_test10<V10>());
   assert(vec_test11<V11>());
+  assert(vec_test12<V12>());
 
   if constexpr (SA) {
     static_assert(vec_test0<V0>());
@@ -178,6 +186,7 @@ constexpr void doit()
     static_assert(vec_test9<V9>());
     static_assert(vec_test10<V10>());
     static_assert(vec_test11<V11>());
+    static_assert(vec_test12<V12>());
   }
 }
 
@@ -198,8 +207,9 @@ constexpr void tests_helper()
   using V9  = Vt<int>;
   using V10 = Vt<int>;
   using V11 = Vt<Bar>;
+  using V12 = Vt<int>;
 
-  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9, V10, V11>();
+  doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9, V10, V11, V12>();
 }
 
 } // namespace v_tests

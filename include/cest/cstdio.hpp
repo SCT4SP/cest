@@ -2,6 +2,7 @@
 #define _CEST_CSTDIO_HPP_
 
 #include <cstdio>
+#include <cassert>
 #include "cest/iostream.hpp"
 #include "cest/string.hpp"
 

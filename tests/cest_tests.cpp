@@ -19,6 +19,7 @@
 #include "stringstream_tests.hpp"
 #include "array_tests.hpp"
 #include "cstdio_tests.hpp"
+#include "cstdlib_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -39,6 +40,7 @@ int main(int argc, char *argv[])
   stringstream_tests();
   array_tests();
   cstdio_tests();
+  cstdlib_tests();
 
   return 0;
 }

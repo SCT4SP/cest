@@ -23,7 +23,9 @@ The cest library is not standalone, and requires standard library support;
 including `std::construct_at`. Version 10 of GCC's libstdc++ is sufficient, and
 while not included by default on Ubuntu 20.04, this is available as a package
 (libstdc++-10-dev). Clang uses libstdc++ on Ubuntu by default, and will use
-version 10 if it is available.
+version 10 if it is available. C'est also uses code from libstdc++;
+as seen in `basic_ios.hpp`, `ios_base.hpp`, `istream.hpp`, `ostream.hpp`,
+`sstream.hpp`, `streambuf.hpp` and elsewhere.
 
 Header files in **cest** are named after those in the standard library; where
 you would normally have `#include <vector>`, you should use `#include

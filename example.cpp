@@ -6,6 +6,8 @@
 #include "cest/algorithm.hpp"
 #include "cest/numeric.hpp"
 
+// Copyright (c) 2020 Paul Keir, University of the West of Scotland.
+
 // clang++ -std=c++2a -I include example.cpp
 
 constexpr bool doit()

@@ -2,6 +2,8 @@
 #define CONSTEXPR_CEST 1  // default: yes, test cest's constexpr functionality
 #endif
 
+// Copyright (c) 2020 Paul Keir, University of the West of Scotland.
+
 #include "vector_tests.hpp"
 #include "forward_list_tests.hpp"
 #include "list_tests.hpp"

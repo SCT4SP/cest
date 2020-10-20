@@ -246,10 +246,12 @@ constexpr bool set_test9()
   LightKey lk = {2};
 
   S s;
-  FatKey fk{42,{}};
+  FatKey fk{2,{}};
   inserts(s, FatKey{1,{}}, FatKey{2,{}}, FatKey{3,{}}, FatKey{4,{}});
   auto it = s.find(lk);    // The C++14 template version of find
-  int   x = it->x;
+  auto itf = s.find(fk);   // ""
+  int x = it->x;
+  int xf = itf->x;
   bool ok = it != s.end();
 
   auto it2 = ++it;
@@ -257,7 +259,7 @@ constexpr bool set_test9()
   auto it3 = it2++;
   auto  x3 = it3->x;
 
-  return ok && 2==x && 3==x2 && 3==x3;
+  return ok && 2==x && 2==xf && 3==x2 && 3==x3;
 }
 
 template <typename S>

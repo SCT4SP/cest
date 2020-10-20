@@ -133,9 +133,9 @@ constexpr bool string_test10() {
   str.reserve(32);
   auto len2 = Traits::length(str.c_str());
   str2 = str;
-  bool b = str[0]==str2[0] && str[1]==str2[1] && str[2]==str2[2];
   auto len3 = Traits::length(str2.c_str());
-  return len1==len2 && len1==len3;
+  bool b = str[0]==str2[0] && str[1]==str2[1] && str[2]==str2[2];
+  return len1==len2 && len1==len3 && b;
 }
 
 void string_tests()

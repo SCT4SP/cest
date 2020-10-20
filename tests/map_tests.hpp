@@ -61,6 +61,7 @@ constexpr bool map_test2()
 
   const value_type v1 = std::make_pair('a',1);
   auto p1 = m.insert(v1);
+  bool b0 = v1==*p1.first && p1.second;
 
   auto i1 = m.find('a');
   bool b1 = i1 != m.end();
@@ -70,7 +71,7 @@ constexpr bool map_test2()
 
   bool b3 = 'a'==i1->first && 1==i1->second;
 
-  return b1 && !b2 && b3;
+  return b0 && b1 && !b2 && b3;
 }
 
 template <template <class...> class M, class T, class U>

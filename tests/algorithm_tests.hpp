@@ -42,6 +42,8 @@ constexpr bool algorithm_test1()
                                inserter(sres,sres.end()));
   auto ssum = accumulate(sres.begin(), sres.end(), 0);
 
+  *vend; // no-op
+  *send; // no-op
   return sum==12 && vsum==12 && ssum==12; // 3+4+5 == 12
 }
 

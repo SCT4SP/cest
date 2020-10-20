@@ -92,7 +92,7 @@ constexpr bool vec_test8() {
   v.reserve(3);
   auto sz2 = v.size();
   auto c2  = v.capacity();
-  return 0==sz1 && 0==sz1 && c2>c1;
+  return 0==sz1 && 0==sz2 && c2>c1;
 }
 
 template <typename V>

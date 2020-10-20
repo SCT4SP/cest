@@ -6,7 +6,7 @@ set(CMAKE_CXX_COMPILER clang++-10)
 #set(CMAKE_CXX_COMPILER $ENV{CLANGOZ}/bin/clang++)
 #set(CMAKE_CXX_COMPILER $ENV{MYCLANG}/bin/clang++)
 #set(CMAKE_CXX_COMPILER $ENV{MYGCC}/bin/g++)
-set(CMAKE_CXX_FLAGS "-std=c++2a")
+set(CMAKE_CXX_FLAGS "-std=c++2a -Wall")
 #set(CMAKE_CXX_FLAGS "-std=c++2a -stdlib=libc++")
 #set(CMAKE_BUILD_TYPE Debug)
 

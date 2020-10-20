@@ -23,6 +23,7 @@
 #include "cstdio_tests.hpp"
 #include "cstdlib_tests.hpp"
 #include "memory_tests.hpp"
+#include "utility_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -45,6 +46,7 @@ int main(int argc, char *argv[])
   cstdio_tests();
   cstdlib_tests();
   memory_tests();
+  utility_tests();
 
   return 0;
 }

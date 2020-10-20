@@ -199,10 +199,10 @@ public:
     return first;
   }
 
-  allocator_type  m_alloc;
   size_type       m_size;
   size_type       m_capacity;
   value_type     *m_p;
+  allocator_type  m_alloc;
 };
 
 template <typename _Tp, typename _Alloc>

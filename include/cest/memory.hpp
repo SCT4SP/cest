@@ -24,25 +24,25 @@ public:
 
   // Constructors
 
-  inline constexpr unique_ptr(unique_ptr const&) = delete;
-  inline constexpr unique_ptr& operator=(unique_ptr const&) = delete;
+  constexpr unique_ptr(unique_ptr const&) = delete;
+  constexpr unique_ptr& operator=(unique_ptr const&) = delete;
 
-  inline constexpr unique_ptr() noexcept
+  constexpr unique_ptr() noexcept
     : ptr_(nullptr)
   {}
 
-  inline constexpr unique_ptr(T* ptr) noexcept
+  constexpr unique_ptr(T* ptr) noexcept
     : ptr_(ptr)
   {}
 
-  inline constexpr unique_ptr(unique_ptr&& other) noexcept
+  constexpr unique_ptr(unique_ptr&& other) noexcept
     : unique_ptr()
   {
     using std::swap;
     swap(other.ptr_, ptr_);
   };
 
-  inline constexpr unique_ptr& operator=(unique_ptr&& other) noexcept
+  constexpr unique_ptr& operator=(unique_ptr&& other) noexcept
   {
     using std::swap;
     swap(other.ptr_, ptr_);
@@ -51,7 +51,7 @@ public:
 
   // Destructor
 
-  inline constexpr ~unique_ptr() noexcept
+  constexpr ~unique_ptr() noexcept
   {
     if (ptr_)
       delete ptr_;
@@ -59,16 +59,16 @@ public:
 
   // Getters/Setters
 
-  inline constexpr const pointer get() const noexcept { return ptr_; }
+  constexpr const pointer get() const noexcept { return ptr_; }
 
-  inline constexpr pointer release() noexcept
+  constexpr pointer release() noexcept
   {
     auto ptr = ptr_;
     ptr_ = nullptr;
     return ptr;
   }
 
-  inline constexpr void reset(pointer n_ptr = pointer()) noexcept
+  constexpr void reset(pointer n_ptr = pointer()) noexcept
   {
     auto ptr = ptr_;
 
@@ -78,55 +78,55 @@ public:
       delete ptr;
   }
 
-  inline constexpr element_type const& operator*() const noexcept
+  constexpr element_type const& operator*() const noexcept
   {
     return *ptr_;
   }
-  inline constexpr element_type& operator*() noexcept { return *ptr_; }
+  constexpr element_type& operator*() noexcept { return *ptr_; }
 
-  inline constexpr operator bool() const noexcept { return bool(ptr_); }
+  constexpr operator bool() const noexcept { return bool(ptr_); }
 };
 
 //------------------------------------------------------------------------------
 // Comparison operators
 
 template<typename T>
-inline constexpr bool
+constexpr bool
 operator==(unique_ptr<T> const& a, unique_ptr<T> const& b) noexcept
 {
   return a.get() == b.get();
 }
 
 template<typename T>
-inline constexpr bool
+constexpr bool
 operator!=(unique_ptr<T> const& a, unique_ptr<T> const& b) noexcept
 {
   return a.get() != b.get();
 }
 
 template<typename T>
-inline constexpr bool
+constexpr bool
 operator<(unique_ptr<T> const& a, unique_ptr<T> const& b) noexcept
 {
   return a.get() < b.get();
 }
 
 template<typename T>
-inline constexpr bool
+constexpr bool
 operator<=(unique_ptr<T> const& a, unique_ptr<T> const& b) noexcept
 {
   return a.get() <= b.get();
 }
 
 template<typename T>
-inline constexpr bool
+constexpr bool
 operator>(unique_ptr<T> const& a, unique_ptr<T> const& b) noexcept
 {
   return a.get() > b.get();
 }
 
 template<typename T>
-inline constexpr bool
+constexpr bool
 operator>=(unique_ptr<T> const& a, unique_ptr<T> const& b) noexcept
 {
   return a.get() >= b.get();

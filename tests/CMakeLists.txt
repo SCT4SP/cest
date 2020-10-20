@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 set(name cest_tests)
 project(${name})
 
-set(CMAKE_CXX_COMPILER clang++-10)
+#set(CMAKE_CXX_COMPILER clang++-10)
 #set(CMAKE_CXX_COMPILER $ENV{CLANGOZ}/bin/clang++)
 #set(CMAKE_CXX_COMPILER $ENV{MYCLANG}/bin/clang++)
 #set(CMAKE_CXX_COMPILER $ENV{MYGCC}/bin/g++)

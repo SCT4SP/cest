@@ -157,7 +157,7 @@ constexpr bool set_test6(T x, Ts ...xs)
   bool r12  = ip12.second;
   auto it12 = ip12.first;
   auto a12  = *it12;
-  ++it12; // 8 -> 11 
+  ++it12; // 8 -> 11
   auto b12  = *it12;
 
   auto ip2 = s.insert(15);
@@ -272,7 +272,7 @@ constexpr bool set_test10()
   s3 = s1;
   S s5 = s1;
   s5.clear();
-  
+
   return 3==s1.size() && 3==s2.size() && 3==s3.size() && 5==s4.size() &&
          s5.empty();
 }

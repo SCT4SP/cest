@@ -3,17 +3,20 @@
 
 #include <cest/iostream.hpp>
 #include <cest/memory.hpp>
+#include <memory>
+#include <cassert>
 
+template <typename U>
 constexpr bool
 constexpr_mem_test()
 {
   // Construction
-  cest::unique_ptr<int> v_int(new int(2));
+  U v_int(new int(2));
   if (!v_int || *v_int != 2)
     return false;
 
   // Assign
-  v_int = cest::unique_ptr<int>(new int(5));
+  v_int = U(new int(5));
   if (!v_int || *v_int != 5)
     return false;
 
@@ -49,8 +52,13 @@ constexpr_mem_test()
 void
 memory_tests()
 {
-  static_assert(constexpr_mem_test(), "unique_ptr: Tests failed!");
-  return;
+#if CONSTEXPR_CEST == 1
+  static_assert(constexpr_mem_test<cest::unique_ptr<int>>(),
+                "unique_ptr: Tests failed!");
+#endif
+
+  assert(constexpr_mem_test<std::unique_ptr<int>>());
+  assert(constexpr_mem_test<cest::unique_ptr<int>>());
 }
 
 #endif

@@ -22,6 +22,7 @@
 #include "array_tests.hpp"
 #include "cstdio_tests.hpp"
 #include "cstdlib_tests.hpp"
+#include "memory_tests.hpp"
 #include "utility_tests.hpp"
 
 int main(int argc, char *argv[])
@@ -44,6 +45,7 @@ int main(int argc, char *argv[])
   array_tests();
   cstdio_tests();
   cstdlib_tests();
+  memory_tests();
   utility_tests();
 
   return 0;

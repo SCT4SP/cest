@@ -30,12 +30,26 @@ public:
 
   constexpr vector() : m_size{}, m_capacity{}, m_p{}, m_alloc{} {}
 
+  constexpr void swap(vector& other)
+  {
+    using std::swap;
+    swap(m_size, other.m_size);
+    swap(m_capacity, other.m_capacity);
+    swap(m_p, other.m_p);
+    swap(m_alloc, other.m_alloc);
+  }
+
   constexpr vector(const vector& other) : vector()
   {
     reserve(other.capacity());
     m_size = other.size();
     for (size_type i = 0; i < m_size; i++)
       std::construct_at(&m_p[i], other.m_p[i]);
+  }
+
+  constexpr vector(vector&& other) : vector()
+  {
+    swap(other);
   }
 
   constexpr vector(size_type count,
@@ -59,6 +73,11 @@ public:
   {
     clear();
     if (0 != m_capacity) m_alloc.deallocate(m_p,m_capacity);
+  }
+
+  constexpr vector& operator=(vector&& other)
+  {
+    swap(other);
   }
 
   constexpr vector& operator=(const vector& other)

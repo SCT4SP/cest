@@ -110,8 +110,12 @@ public:
     {
       value_type *p = m_alloc.allocate(new_cap);
       for (size_type i = 0; i < m_size; i++)
-        std::construct_at(&p[i], m_p[i]);
+        // FIXME: T's copy-constructor should be called if T's move constructor
+        // isn't noexcept but T's copy-constructor is
+        std::construct_at(&p[i], std::move(m_p[i]));
+
       if (0 != m_capacity) {
+        // FIXME: Is destroy_n relevant anymore ?
         std::destroy_n(m_p,m_size);
         m_alloc.deallocate(m_p,m_capacity);
       }

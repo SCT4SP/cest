@@ -9,10 +9,11 @@ namespace cest {
 
   // some forward declarations so the function ordering below doesn't matter
   // mainly so they can be put in alphabetical order or shuffled as required
-  constexpr double abs(const double x);
-  constexpr double pow(double base, int exponent);
-  constexpr double sqrt(const double x);
-  constexpr double sin(const double x);
+  constexpr double abs(double);
+  constexpr double pow(double, int);
+  constexpr double sqrt(double);
+  constexpr double sin(double);
+  constexpr double sinh(double);
   
   namespace {
     constexpr double tol = 0.001;
@@ -25,8 +26,9 @@ namespace cest {
       return x*x*x;
     }
 
+    // https://www.cse.wustl.edu/~ychen/131/Notes/SquareRoot/sqrt.html
     constexpr double sqrt_helper(const double x, const double g) {
-      return abs(g-x/g) < tol ? g : sqrt_helper(x,(g+x/g)/2.0);
+      return abs(g-x/g) < (tol*g) ? g : sqrt_helper(x,(g+x/g)/2.0);
     }
     
     constexpr double sin_helper(const double x) {
@@ -102,15 +104,15 @@ namespace cest {
 
   } // anonymous namespace
 
-  constexpr double abs(const double x) {
+  constexpr double abs(double x) {
     return x < 0.0 ? -x : x; 
   }
   
-  constexpr double atan(const double x) {
+  constexpr double atan(double x) {
     return (x >= 0) ? atan_cmplmntry(x) : -atan_cmplmntry(-x);
   }
   
-  constexpr double atan2(const double y, const double x) {
+  constexpr double atan2(double y, double x) {
     return           x >  0 ? atan(y/x)        : 
            y >= 0 && x <  0 ? atan(y/x) + CEST_M_PI :
            y <  0 && x <  0 ? atan(y/x) - CEST_M_PI :
@@ -118,19 +120,19 @@ namespace cest {
            y <  0 && x == 0 ? -CEST_M_PI_2          : 0;   // 0 == undefined
   }
 
-  inline constexpr int ceil(const double v) {
+  constexpr int ceil(double v) {
     return ((double)(int)v != v && v > 0) ?  v + 1 : v;
   }
   
-  constexpr double cos(const double x) {
+  constexpr double cos(double x) {
     return sin(CEST_M_PI_2 - x); 
   }
 
-  constexpr double cosh(const double x) {
+  constexpr double cosh(double x) {
     return sqrt(1.0 + square(sinh(x)));
   }
 
-  inline constexpr int floor(const double v) {
+  constexpr int floor(double v) {
     return ((double)(int)v != v && v < 0) ?  v - 1 : v;
   }
 
@@ -141,25 +143,25 @@ namespace cest {
            base * pow(base,exponent-1);
   }
 
-  constexpr double sqrt(const double x) {
+  constexpr double sqrt(double x) {
     return sqrt_helper(x,1.0);
   }
 
-  constexpr double sin(const double x) { 
+  constexpr double sin(double x) { 
     return sin_helper(x < 0 ? -x+CEST_M_PI : x);
   }
 
-  constexpr double sinh(const double x) {
+  constexpr double sinh(double x) {
     return x < 0 ? -sinh_helper(-x) : sinh_helper(x);
   }
 
   // exp(x) = e^n . e^r (where n is an integer, and -0.5 > r < 0.5
   // exp(r) = e^r = 1 + r + r^2/2 + r^3/6 + r^4/24 + r^5/120
-  constexpr double exp(const double x) {
+  constexpr double exp(double x) {
     return pow(CEST_M_E,nearest(x)) * exp_helper(fraction(x));
   }
 
-  constexpr double log(const double x) {
+  constexpr double log(double x) {
     return x == 0 ? -std::numeric_limits<double>::infinity() :
            x <  0 ?  std::numeric_limits<double>::quiet_NaN() :
            2.0 * log_helper(sqrt(mantissa(x))) + 2.3025851 * exponent(x);

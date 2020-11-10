@@ -1,7 +1,6 @@
 #ifndef _CEST_MEMORY_TESTS_HPP_
 #define _CEST_MEMORY_TESTS_HPP_
 
-#include <cest/iostream.hpp>
 #include <cest/memory.hpp>
 #include <memory>
 #include <cassert>

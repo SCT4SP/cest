@@ -2,9 +2,16 @@
 #define _CEST_TESTS_UTIL_HPP_
 
 #include <algorithm>
+#include <cmath>
 
 namespace tests_util
 {
+
+template <typename T>
+constexpr bool comparable(const T&x, const T&y, const T tolerance = 0.01)
+{
+  return std::abs(x-y) < x*tolerance;
+}
 
 struct Bar
 {

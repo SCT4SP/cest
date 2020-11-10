@@ -24,6 +24,8 @@
 #include "cstdlib_tests.hpp"
 #include "memory_tests.hpp"
 #include "utility_tests.hpp"
+#include "cmath_tests.hpp"
+#include "complex_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -47,6 +49,8 @@ int main(int argc, char *argv[])
   cstdlib_tests();
   memory_tests();
   utility_tests();
+  cmath_tests();
+  complex_tests();
 
   return 0;
 }

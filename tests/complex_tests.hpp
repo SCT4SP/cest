@@ -4,7 +4,6 @@
 #include "tests_util.hpp"
 #include "cest/complex.hpp"
 #include <complex>
-#include <cmath> // std::abs
 #include <cassert>
 
 template <typename Cx>

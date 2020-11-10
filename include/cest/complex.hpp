@@ -17,11 +17,6 @@
 # define __cpp_lib_constexpr_complex 201711L
 #endif
 
-#if _GLIBCXX_USE_C99_COMPLEX
-#define _RESTORE_GLIBCXX_USE_C99_COMPLEX _GLIBCXX_USE_C99_COMPLEX
-#undef  _GLIBCXX_USE_C99_COMPLEX
-#endif
-
 namespace cest
 {
   /**
@@ -591,7 +586,7 @@ namespace cest
   { return __builtin_cabsl(__z); }
 
   template<typename _Tp>
-    inline _Tp
+    constexpr _Tp
     abs(const complex<_Tp>& __z) { return __complex_abs(__z.__rep()); }
 #else
   template<typename _Tp>
@@ -1047,10 +1042,5 @@ namespace cest
     }
 
 } // namespace cest
-
-#if _GLIBCXX_USE_C99_COMPLEX
-#define _GLIBCXX_USE_C99_COMPLEX _RESTORE_GLIBCXX_USE_C99_COMPLEX
-#undef _RESTORE_GLIBCXX_USE_C99_COMPLEX
-#endif
 
 #endif // _CEST_COMPLEX_HPP_

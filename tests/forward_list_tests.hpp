@@ -147,7 +147,7 @@ constexpr void tests_helper()
   using FL4  = TT<int>;
   using FL5  = TT<int>;
   using FL6  = TT<Foo>;
-  using FL7  = TT<Bar>;
+  using FL7  = TT<Bar<>>;
 
   doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6, FL7>();
 }

@@ -1,10 +1,12 @@
 #ifndef _CEST_VECTOR_TESTS_HPP_
 #define _CEST_VECTOR_TESTS_HPP_
 
-#include "cest/vector.hpp"
 #include "../tests/tests_util.hpp"
-#include <cassert>
+#include "cest/vector.hpp"
+#include "cest/memory.hpp"
 #include <vector>
+#include <memory>
+#include <cassert>
 
 namespace v_tests {
 
@@ -129,7 +131,7 @@ template <typename V>
 constexpr bool vec_test11()
 {
   V v;
-  tests_util::Bar f(42);
+  tests_util::Bar<> f(42);
   v.push_back(f);
   v.push_back(f);
   v.erase(v.begin(), v.begin()+1);
@@ -146,10 +148,7 @@ constexpr bool vec_test11()
 }
 
 template <typename T>
-struct my_allocator : std::allocator<T>
-{
-  constexpr my_allocator() : std::allocator<T>{} {}
-};
+struct my_allocator : std::allocator<T> { };
 
 template <typename V>
 constexpr bool vec_test12()
@@ -196,7 +195,7 @@ constexpr void doit()
   }
 }
 
-template <bool SA, template <class...> class Vt>
+template <bool SA, template <class...> class Vt, typename T>
 constexpr void tests_helper()
 {
   using tests_util::Bar;
@@ -204,16 +203,16 @@ constexpr void tests_helper()
   using V0  = Vt<double>;
   using V1  = Vt<int>;
   using V2  = Vt<double>;
-  using V3  = Vt<Bar>;
+  using V3  = Vt<Bar<false>>;
   using V4  = Vt<float>;
   using V5  = Vt<int>;
   using V6  = Vt<double>;
   using V7  = Vt<int>;
-  using V8  = Vt<int>;
+  using V8  = Vt<T>;
   using V9  = Vt<int>;
   using V10 = Vt<int>;
-  using V11 = Vt<Bar>;
-  using V12 = Vt<Bar,my_allocator<Bar>>;
+  using V11 = Vt<Bar<>>;
+  using V12 = Vt<Bar<>,my_allocator<Bar<>>>;
 
   doit<SA, V0,  V1,  V2,  V3,  V4,  V5,  V6,  V7,  V8,  V9, V10, V11, V12>();
 }
@@ -224,8 +223,9 @@ void vector_tests()
 {
   using namespace v_tests;
 
-  tests_helper<false,std::vector>();           // false: no constexpr tests
-  tests_helper<CONSTEXPR_CEST,cest::vector>(); // true:     constexpr tests
+  // true: constexpr tests        false: no constexpr tests
+  tests_helper<false,std::vector,std::unique_ptr<int>>();
+  tests_helper<CONSTEXPR_CEST,cest::vector,cest::unique_ptr<int>>();
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

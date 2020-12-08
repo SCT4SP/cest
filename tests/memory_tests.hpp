@@ -5,17 +5,17 @@
 #include <memory>
 #include <cassert>
 
-template <typename U>
+template <template<typename...>typename U>
 constexpr bool
 constexpr_mem_test()
 {
   // Construction
-  U v_int(new int(2));
+  U<int> v_int(new int(2));
   if (!v_int || *v_int != 2)
     return false;
 
   // Assign
-  v_int = U(new int(5));
+  v_int = U<int>(new int(5));
   if (!v_int || *v_int != 5)
     return false;
 
@@ -37,6 +37,18 @@ constexpr_mem_test()
   if (some_bool)
     return false;
 
+  // operator->
+  {
+    struct dummy_t
+    {
+      int val;
+      constexpr int foo() const { return val; }
+    };
+
+    U<dummy_t> dummy_ptr(new dummy_t{42});
+    if(dummy_ptr->foo() != 42)
+      return false;
+  }
 
   // TODO:
   // - const pointer get() const noexcept { return ptr_; }
@@ -52,12 +64,12 @@ void
 memory_tests()
 {
 #if CONSTEXPR_CEST == 1
-  static_assert(constexpr_mem_test<cest::unique_ptr<int>>(),
+  static_assert(constexpr_mem_test<cest::unique_ptr>(),
                 "unique_ptr: Tests failed!");
 #endif
 
-  assert(constexpr_mem_test<std::unique_ptr<int>>());
-  assert(constexpr_mem_test<cest::unique_ptr<int>>());
+  assert(constexpr_mem_test<std::unique_ptr>());
+  assert(constexpr_mem_test<cest::unique_ptr>());
 }
 
 #endif

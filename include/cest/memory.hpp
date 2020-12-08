@@ -132,7 +132,7 @@ operator>=(unique_ptr<T> const& a, unique_ptr<T> const& b) noexcept
 }
 
 template<typename T, typename... Args>
-unique_ptr<T> make_unique( Args&&... args )
+constexpr unique_ptr<T> make_unique( Args&&... args )
 {
   return { new T{ std::forward<Args>(args)... } };
 }

@@ -78,6 +78,7 @@ public:
   constexpr vector& operator=(vector&& other)
   {
     swap(other);
+    return *this;
   }
 
   constexpr vector& operator=(const vector& other)

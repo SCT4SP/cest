@@ -35,19 +35,17 @@ public:
     : ptr_(ptr)
   {}
 
-  constexpr unique_ptr(unique_ptr&& other) noexcept
-    : unique_ptr()
-  {
-    using std::swap;
-    swap(other.ptr_, ptr_);
-  };
+  template<typename U>
+  constexpr unique_ptr(unique_ptr<U>&& other) noexcept
+    : unique_ptr(other.release())
+  {}
 
   constexpr unique_ptr& operator=(unique_ptr&& other) noexcept
   {
     using std::swap;
     swap(other.ptr_, ptr_);
     return *this;
-  };
+  }
 
   // Destructor
 
@@ -83,6 +81,7 @@ public:
     return *ptr_;
   }
   constexpr element_type& operator*() noexcept { return *ptr_; }
+  constexpr pointer operator->() const noexcept { return ptr_; }
 
   constexpr operator bool() const noexcept { return bool(ptr_); }
 };
@@ -130,6 +129,12 @@ constexpr bool
 operator>=(unique_ptr<T> const& a, unique_ptr<T> const& b) noexcept
 {
   return a.get() >= b.get();
+}
+
+template<typename T, typename... Args>
+unique_ptr<T> make_unique( Args&&... args )
+{
+  return { new T{ std::forward<Args>(args)... } };
 }
 
 //------------------------------------------------------------------------------

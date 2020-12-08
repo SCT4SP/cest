@@ -60,16 +60,54 @@ constexpr_mem_test()
   return true;
 }
 
+constexpr bool make_unique_test()
+{
+  // Virtual polymorphism
+
+  struct a_t {
+    constexpr virtual int foo() { return 0; }
+    constexpr virtual ~a_t() = default;
+  };
+
+  struct b_t : a_t {
+    constexpr int foo() override { return 1; }
+  };
+
+  cest::unique_ptr<a_t> a_v = cest::make_unique<a_t>();
+  cest::unique_ptr<a_t> b_v = cest::make_unique<b_t>();
+
+  if(a_v->foo() != 0 || b_v->foo() != 1)
+    return false;
+
+  // Forwarding
+
+  class m_t
+  {
+    int v_;
+  public:
+    constexpr m_t(int && v): v_(v) {}
+    constexpr int get_v() { return v_; }
+  };
+
+  auto m_v = cest::make_unique<m_t>(2);
+  if(m_v->get_v() != 2)
+    return false;
+
+  return true;
+}
+
 void
 memory_tests()
 {
 #if CONSTEXPR_CEST == 1
   static_assert(constexpr_mem_test<cest::unique_ptr>(),
                 "unique_ptr: Tests failed!");
+  static_assert(make_unique_test(), "make_unique: Tests failed!");
 #endif
 
   assert(constexpr_mem_test<std::unique_ptr>());
   assert(constexpr_mem_test<cest::unique_ptr>());
+  assert(make_unique_test());
 }
 
 #endif

@@ -5,6 +5,7 @@
 
 #include <cest/iostream.hpp>
 #include <cest/swap.hpp>
+#include "cest/shared_ptr.hpp"
 
 namespace cest {
 

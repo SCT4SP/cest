@@ -96,6 +96,27 @@ constexpr bool make_unique_test()
   return true;
 }
 
+template <template <typename ...> typename St>
+constexpr bool shared_ptr_test()
+{
+  St<int> sp1{new int{123}};
+  auto sp2 = sp1;
+  bool b1 = 123==*sp1 && 123==*sp1.get() && 123==*sp2 && 123==*sp2.get();
+  b1 = b1 && 2==sp1.use_count() && 2==sp2.use_count();
+
+  St<int[]> spa1{new int[4]{1,2,3,4}};
+  auto spa2 = spa1;
+  bool b2 = 1==spa1[0] && 2==spa1[1] && 3==spa1[2] && 4==spa1[3];
+  bool b3 = 1==spa2[0] && 2==spa2[1] && 3==spa2[2] && 4==spa2[3];
+
+  /*struct del { void operator()(int*) { ++i_; } int& i_; };
+  int i{41};
+  del d{i};
+  St<int> sp3{new int{123}, d};*/
+
+  return b1 && b2 && b3;
+}
+
 void
 memory_tests()
 {
@@ -108,6 +129,13 @@ memory_tests()
   assert(constexpr_mem_test<std::unique_ptr>());
   assert(constexpr_mem_test<cest::unique_ptr>());
   assert(make_unique_test());
+
+  static_assert(std::is_same_v<std::shared_ptr<int>::element_type, int>);
+  static_assert(std::is_same_v<std::shared_ptr<int[]>::element_type, int>);
+  static_assert(std::is_same_v<cest::shared_ptr<int>::element_type, int>);
+  static_assert(std::is_same_v<cest::shared_ptr<int[]>::element_type, int>);
+  assert(shared_ptr_test<std::shared_ptr>());
+  assert(shared_ptr_test<cest::shared_ptr>());
 }
 
 #endif

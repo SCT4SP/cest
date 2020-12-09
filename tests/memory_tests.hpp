@@ -96,6 +96,8 @@ constexpr bool make_unique_test()
   return true;
 }
 
+constexpr void int_array_deleter(int* p) { delete [] p; }
+
 template <template <typename ...> typename St>
 constexpr bool shared_ptr_test()
 {
@@ -103,23 +105,34 @@ constexpr bool shared_ptr_test()
   auto sp2 = sp1;
   bool b1 = 123==*sp1 && 123==*sp1.get() && 123==*sp2 && 123==*sp2.get();
   b1 = b1 && 2==sp1.use_count() && 2==sp2.use_count();
+  b1 = b1 && nullptr==get_deleter<void>(sp1);
 
-  /*St<int[]> spa1{new int[4]{1,2,3,4}};
+  St<int[]> spa1{new int[4]{1,2,3,4}};
   auto spa2 = spa1;
   bool b2 = 1==spa1[0] && 2==spa1[1] && 3==spa1[2] && 4==spa1[3];
   bool b3 = 1==spa2[0] && 2==spa2[1] && 3==spa2[2] && 4==spa2[3];
-*/
+
   int i{41};
+  bool b4{false};
   int *p = new int{123};
   {
     struct del { constexpr void operator()(int*) { ++i_; } int& i_; };
-    del d{i};
-    St<int> sp3{p, d};
+    del d1{i};
+    St<int> sp3{p, d1};
+    auto d2 = get_deleter<del>(sp3);
+    b4 = d1.i_==d2->i_;
+    auto d3 = [](int* p) { delete p; };
+    auto d3b = [](int* p) { delete p; };
+    St<int>   sp4{new int, d3};
+    b4 = b4 && nullptr!=get_deleter<decltype(d3)>(sp4);
+    b4 = b4 && nullptr==get_deleter<decltype(d3b)>(sp4);
+    St<int[]> sp5{new int[4], int_array_deleter};
+    b4 = b4 && nullptr!=get_deleter<void(*)(int*)>(sp5);
   }
-  bool b4 = 42==i;
+  bool b5 = 42==i;
   delete p;
 
-  return b1 && /*b2 && b3 &&*/ b4;
+  return b1 && b2 && b3 && b4 && b5;
 }
 
 void

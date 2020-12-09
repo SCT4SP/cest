@@ -8,11 +8,53 @@
 
 namespace cest {
 
+template <class T>
+struct default_delete
+{
+  constexpr default_delete() noexcept = default;
+
+  template <class U>
+  constexpr default_delete(const default_delete<U>& d) noexcept {}
+
+  constexpr void operator()(T* ptr) const { delete ptr; }
+};
+
+template <class T>
+struct default_delete<T[]>
+{
+  constexpr default_delete() noexcept = default;
+
+  template<class U>
+  constexpr default_delete(const default_delete<U[]>& d) noexcept {}
+
+  template <class U>
+  constexpr void operator()(U* ptr) const { delete [] ptr; }
+};
+
 namespace impl {
 
 template <typename T>
 class shared_ptr_base
 {
+  struct ctrl
+  {
+    constexpr ctrl() : count_(1) {}
+    virtual constexpr void destroy() = 0;
+    virtual constexpr ~ctrl() {}
+
+    long count_;
+  };
+
+  template <class U, class Deleter>
+  struct ctrl_derived : public ctrl
+  {
+    constexpr ctrl_derived(U* ptr, Deleter del) : ptr_{ptr}, del_{del} {}
+    virtual constexpr void destroy() { del_(ptr_); }
+
+    U* ptr_;
+    Deleter del_;
+  };
+
 public:
   using element_type = std::remove_extent_t<T>;
   using weak_type = std::weak_ptr<T>;
@@ -22,23 +64,27 @@ public:
 
   template <class Y>
   explicit constexpr shared_ptr_base(Y* ptr)
-    : ptr_{ptr}, p_use_count_{new long{1}} {}
+    : ptr_{ptr}, pctrl_{new ctrl_derived<Y,default_delete<T>>{ptr,default_delete<T>{}}} {}
 
   template <class Y, class Deleter>
   constexpr shared_ptr_base(Y* ptr, Deleter del)
-    : ptr_{ptr}, del_{del} {}
+    : ptr_{ptr}, pctrl_{new ctrl_derived<Y,Deleter>{ptr,del}} {}
 
   constexpr shared_ptr_base(const shared_ptr_base& other) noexcept
-    : ptr_{other.ptr_}, p_use_count_{&++*other.p_use_count_}, del_{other.del_}{}
+    : ptr_{other.ptr_}, pctrl_{other.pctrl_} { ++pctrl_->count_; }
 
   constexpr ~shared_ptr_base()
   {
-    if (--*p_use_count_) return; // return: other references still exist
-    delete p_use_count_;
-    del_ ? del_(ptr_) : delete ptr_;
+    if (pctrl_ && !--pctrl_->count_)
+    {
+      pctrl_->destroy();
+      delete pctrl_;
+    }
   }
 
-  constexpr long use_count() const noexcept { return *p_use_count_; }
+  constexpr long use_count() const noexcept {
+    return pctrl_ ? pctrl_->count_ : 0;
+  }
 
   constexpr element_type* get() const noexcept { return ptr_; }
 
@@ -52,8 +98,7 @@ public:
 
 private:
   T* ptr_{};
-  long* p_use_count_{};
-  void(*del_)(T*){}; // todo
+  ctrl *pctrl_{};
 };
 
 } // namespace impl

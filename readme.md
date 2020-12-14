@@ -40,7 +40,7 @@ this direction. IO and file access will present more choices. For now,
 (e.g. `cest::cout << "Hello World\n"`). This is primarily to support the
 compile-time evaluation of existing code bases.
 
-The **C'est** library has incomplete support for the following containers: `vector`, `string`, `forward_list`, `list`, `set`, `map`, `queue`, and `deque`. Given a `constexpr` container, most function templates from `algorithm` and `numeric` can now also be used within a constant expression.
+The **C'est** library has incomplete support for the following containers: `vector`, `string`, `forward_list`, `list`, `set`, `map`, `queue`, `deque`, `unique_ptr` and `shared_ptr`. Given a `constexpr` container, most function templates from `algorithm` and `numeric` can now also be used within a constant expression.
 
 The code below provides a basic demonstration of some functionality. Executing the resulting program will output `Hello World 5`:
 
@@ -98,4 +98,7 @@ make
 ./cest_tests
 ```
 
-For a more extensive example of using **C'est** see the compile-time Metamath database verifier: [ctcheckmm](https://github.com/pkeir/ctcheckmm).
+## Projects using C'est
+
+* [ctcheckmm](https://github.com/pkeir/ctcheckmm): a compile-time Metamath proof database verifier
+* [poacher](https://gitlri.lri.fr/jpenuchot/poacher): a constexpr Brainfuck compiler, with proper AST and code generation (see examples/brainfuck)

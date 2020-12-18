@@ -80,8 +80,12 @@ public:
   constexpr shared_ptr_base(Y* ptr, Deleter del)
     : ptr_{ptr}, pctrl_{new ctrl_derived<Y,Deleter>{ptr,del}} {}
 
-  constexpr shared_ptr_base(const shared_ptr_base& other) noexcept
-    : ptr_{other.ptr_}, pctrl_{other.pctrl_} { ++pctrl_->count_; }
+  constexpr shared_ptr_base(const shared_ptr_base& r) noexcept
+    : ptr_{r.ptr_}, pctrl_{r.pctrl_} { ++pctrl_->count_; }
+
+  template <class Y>
+  constexpr shared_ptr_base(const shared_ptr<Y>& r, element_type* ptr) noexcept
+    : ptr_{ptr}, pctrl_{r.pctrl_} { ++pctrl_->count_; }
 
   constexpr ~shared_ptr_base()
   {

@@ -135,6 +135,28 @@ constexpr bool shared_ptr_test()
   return b1 && b2 && b3 && b4 && b5;
 }
 
+// test the aliasing constructor
+template <template <typename ...> typename St>
+constexpr bool shared_ptr_test2()
+{
+  bool b1{false}, b2{false};
+  int i{41};
+  {
+    St<int[]> sp8{new int[8]{1,2,3,4,5,6,7,8}};
+    St<int[]> sp4{sp8, sp8.get() + 4};
+    b1 = 1==sp8[0] && 5==sp4[0];
+
+    struct del { constexpr void operator()(char*) { ++i_; } int& i_; };
+    del d{i};
+    char *p = new char[9]{"abcdefgh"};
+    St<char[]> sp8b{p,d};
+    St<char[]> sp4b{sp8b, sp8b.get() + 4};
+    b2 = 'a'==sp8b[0] && 'e'==sp4b[0];
+    delete [] p;
+  }
+  return b1 && b2 && 42==i;
+}
+
 void
 memory_tests()
 {
@@ -143,6 +165,7 @@ memory_tests()
                 "unique_ptr: Tests failed!");
   static_assert(make_unique_test(), "make_unique: Tests failed!");
   static_assert(shared_ptr_test<cest::shared_ptr>());
+  static_assert(shared_ptr_test2<cest::shared_ptr>());
 #endif
 
   assert(constexpr_mem_test<std::unique_ptr>());
@@ -155,6 +178,8 @@ memory_tests()
   static_assert(std::is_same_v<cest::shared_ptr<int[]>::element_type, int>);
   assert(shared_ptr_test<std::shared_ptr>());
   assert(shared_ptr_test<cest::shared_ptr>());
+  assert(shared_ptr_test2<std::shared_ptr>());
+  assert(shared_ptr_test2<cest::shared_ptr>());
 }
 
 #endif

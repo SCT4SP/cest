@@ -102,10 +102,18 @@ namespace cest {
 
   } // anonymous namespace
 
-  constexpr double abs(const double x) {
+  constexpr double abs(double x) {
     return x < 0.0 ? -x : x; 
   }
   
+  constexpr int abs(int x) { 
+    return x < 0 ? -x : x;
+  }
+
+  constexpr double fabs(double x) {
+    return abs(x);
+  }
+
   constexpr double atan(const double x) {
     return (x >= 0) ? atan_cmplmntry(x) : -atan_cmplmntry(-x);
   }

@@ -6,7 +6,9 @@
 namespace cest {
 
   using std::size_t;
-  constexpr int abs(int n) { return (n<0) ? -n : n; }
+
+  using cest::abs;
+  using cest::fabs;
 
 } // namespace cest
 

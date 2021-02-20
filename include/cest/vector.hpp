@@ -78,6 +78,7 @@ public:
   constexpr vector& operator=(vector&& other)
   {
     swap(other);
+    return *this;
   }
 
   constexpr vector& operator=(const vector& other)
@@ -110,7 +111,7 @@ public:
     {
       value_type *p = m_alloc.allocate(new_cap);
       for (size_type i = 0; i < m_size; i++)
-        std::construct_at(&p[i], m_p[i]);
+        std::construct_at(&p[i], std::move_if_noexcept(m_p[i]));
       if (0 != m_capacity) {
         std::destroy_n(m_p,m_size);
         m_alloc.deallocate(m_p,m_capacity);
@@ -120,19 +121,17 @@ public:
     }
   }
 
-  constexpr void resize(size_type sz)
+  constexpr void resize(size_type count)
   {
-    // likely not the most optimal implementation
-    if (m_size < sz) {
-      reserve(sz);
-      // try to default fill the remaining elements that reserve has allocated
-      for (size_type i = m_size; i < m_capacity; i++)
-        std::construct_at(&m_p[i], value_type{});
-      m_size = sz;
-    } else if (m_size > sz) {
-      for (int i = m_size; i > sz; i--)
-        pop_back();
+    if (count > m_size)
+    {
+      reserve(count);
+      for (size_type i = m_size; i < count; i++)
+        std::construct_at(&m_p[i]);
+    } else if (count < m_size) {
+      std::destroy_n(&m_p[count], m_size-count);
     }
+    m_size = count;
   }
 
   constexpr iterator        begin()       noexcept { return {m_p};          }
@@ -158,10 +157,7 @@ public:
   constexpr const_reverse_iterator
   rend()   const noexcept { return const_reverse_iterator(begin()); }
 
-  constexpr void         pop_back()       {
-    m_size--;
-    std::destroy_n(&m_p[m_size],1);
-  }
+  constexpr void pop_back() { std::destroy_n(&m_p[--m_size],1); }
 
   constexpr reference at(size_type pos) {
     if (pos >= m_size) {

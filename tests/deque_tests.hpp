@@ -107,8 +107,8 @@ void deque_tests()
   static_assert(deque_test2<cest::deque<int>>());
   static_assert(deque_test3<cest::deque<int>>());
   static_assert(deque_test4<cest::deque<int>>());
-  static_assert(push_back_dtor_test<cest::deque<Bar>>());
-  static_assert(push_front_dtor_test<cest::deque<Bar>>());
+  static_assert(push_back_dtor_test<cest::deque<Bar<>>>());
+  static_assert(push_front_dtor_test<cest::deque<Bar<>>>());
   static_assert(deque_test5<cest::deque<int>>());
 #endif
 
@@ -120,10 +120,10 @@ void deque_tests()
   assert((deque_test3<cest::deque<int>>()));
   assert((deque_test4< std::deque<int>>()));
   assert((deque_test4<cest::deque<int>>()));
-  assert(push_back_dtor_test< std::deque<Bar>>());
-  assert(push_back_dtor_test<cest::deque<Bar>>());
-  assert(push_front_dtor_test< std::deque<Bar>>());
-  assert(push_front_dtor_test<cest::deque<Bar>>());
+  assert(push_back_dtor_test< std::deque<Bar<>>>());
+  assert(push_back_dtor_test<cest::deque<Bar<>>>());
+  assert(push_front_dtor_test< std::deque<Bar<>>>());
+  assert(push_front_dtor_test<cest::deque<Bar<>>>());
   assert((deque_test5< std::deque<int>>()));
   assert((deque_test5<cest::deque<int>>()));
 }

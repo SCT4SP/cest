@@ -129,7 +129,7 @@ void list_tests()
   static_assert(list_test2<cest::list<int>>());
   static_assert(list_test3<cest::list>());
   static_assert(list_test4<cest::list<int>>());
-  static_assert(push_back_dtor_test<cest::list<Bar>>());
+  static_assert(push_back_dtor_test<cest::list<Bar<>>>());
 #endif
 
   assert(list_test1< std::list<int>>());
@@ -140,8 +140,8 @@ void list_tests()
   assert(list_test3<cest::list>());
   assert(list_test4< std::list<int>>());
   assert(list_test4<cest::list<int>>());
-  assert(push_back_dtor_test< std::list<Bar>>());
-  assert(push_back_dtor_test<cest::list<Bar>>());
+  assert(push_back_dtor_test< std::list<Bar<>>>());
+  assert(push_back_dtor_test<cest::list<Bar<>>>());
 }
 
 #endif // _CEST_LIST_TESTS_HPP_

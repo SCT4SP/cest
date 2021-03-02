@@ -181,7 +181,8 @@ public:
     std::destroy_n(m_p, m_size);
     m_size = 0;
   }
-
+  
+  constexpr auto data() { return m_p; }
   constexpr void push_back(const value_type &value)
   {
     if (0 == m_capacity) {

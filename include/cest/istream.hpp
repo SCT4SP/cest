@@ -242,11 +242,13 @@ using wistream = basic_istream<wchar_t>;
         if (_M_gcount != __n)
     __err |= (ios_base::eofbit | ios_base::failbit);
       }
+#if !defined(_LIBCPP_VERSION)
     __catch(__cxxabiv1::__forced_unwind&)
       {
         this->_M_setstate(ios_base::badbit);
         __throw_exception_again;
       }
+#endif
     __catch(...)
       { this->_M_setstate(ios_base::badbit); }
     if (__err)

@@ -144,6 +144,8 @@ public:
   constexpr const_reference front() const          { return *begin();       }
   constexpr reference        back()                { return *(end()-1);     }
   constexpr const_reference  back() const          { return *(end()-1);     }
+  constexpr T*               data()       noexcept { return m_p;            }
+  constexpr const T*         data()       noexcept { return m_p;            }
 
   constexpr reverse_iterator
   rbegin()       noexcept { return reverse_iterator(end()); }
@@ -181,8 +183,7 @@ public:
     std::destroy_n(m_p, m_size);
     m_size = 0;
   }
-  
-  constexpr auto data() { return m_p; }
+
   constexpr void push_back(const value_type &value)
   {
     if (0 == m_capacity) {

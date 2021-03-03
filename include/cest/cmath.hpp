@@ -14,14 +14,14 @@ namespace cest {
   constexpr double sqrt(double);
   constexpr double sin(double);
   constexpr double sinh(double);
-  
+
   namespace {
     constexpr double tol = 0.001;
 
     constexpr double square(const double x) {
       return x*x;
     }
-    
+
     constexpr double cube(const double x) {
       return x*x*x;
     }
@@ -30,7 +30,7 @@ namespace cest {
     constexpr double sqrt_helper(const double x, const double g) {
       return abs(g-x/g) < (tol*g) ? g : sqrt_helper(x,(g+x/g)/2.0);
     }
-    
+
     constexpr double sin_helper(const double x) {
       return x < tol ? x : 3*(sin_helper(x/3.0)) - 4*cube(sin_helper(x/3.0));
     }
@@ -66,7 +66,7 @@ namespace cest {
                        pow(r,4)/24.0  + pow(r,5)/120.0 +
                        pow(r,6)/720.0 + pow(r,7)/5040.0;
     }
-    
+
     constexpr int exponent_helper(const double x, const int e) {
       return x >= 10.0 ? exponent_helper(x *  0.1, e+1) :
              x <  1.0  ? exponent_helper(x * 10.0, e-1) :
@@ -105,9 +105,9 @@ namespace cest {
   } // anonymous namespace
 
   constexpr double abs(double x) {
-    return x < 0.0 ? -x : x; 
+    return x < 0.0 ? -x : x;
   }
-  
+
   constexpr double fabs(double x) {
     return abs(x);
   }
@@ -115,9 +115,9 @@ namespace cest {
   constexpr double atan(double x) {
     return (x >= 0) ? atan_cmplmntry(x) : -atan_cmplmntry(-x);
   }
-  
+
   constexpr double atan2(double y, double x) {
-    return           x >  0 ? atan(y/x)        : 
+    return           x >  0 ? atan(y/x)        :
            y >= 0 && x <  0 ? atan(y/x) + CEST_M_PI :
            y <  0 && x <  0 ? atan(y/x) - CEST_M_PI :
            y >  0 && x == 0 ?  CEST_M_PI_2          :
@@ -127,9 +127,9 @@ namespace cest {
   constexpr int ceil(double v) {
     return ((double)(int)v != v && v > 0) ?  v + 1 : v;
   }
-  
+
   constexpr double cos(double x) {
-    return sin(CEST_M_PI_2 - x); 
+    return sin(CEST_M_PI_2 - x);
   }
 
   constexpr double cosh(double x) {

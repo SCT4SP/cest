@@ -145,7 +145,7 @@ public:
   constexpr reference        back()                { return *(end()-1);     }
   constexpr const_reference  back() const          { return *(end()-1);     }
   constexpr T*               data()       noexcept { return m_p;            }
-  constexpr const T*         data()       noexcept { return m_p;            }
+  constexpr const T*         data() const noexcept { return m_p;            }
 
   constexpr reverse_iterator
   rbegin()       noexcept { return reverse_iterator(end()); }

@@ -2,7 +2,7 @@
 #define CONSTEXPR_CEST 1  // default: yes, test cest's constexpr functionality
 #endif
 
-// Copyright (c) 2020 Paul Keir, University of the West of Scotland.
+// Copyright (c) 2020-2021 Paul Keir, University of the West of Scotland.
 
 #include "vector_tests.hpp"
 #include "forward_list_tests.hpp"
@@ -26,6 +26,7 @@
 #include "utility_tests.hpp"
 #include "cmath_tests.hpp"
 #include "complex_tests.hpp"
+#include "functional_tests.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
   utility_tests();
   cmath_tests();
   complex_tests();
+  functional_tests();
 
   return 0;
 }

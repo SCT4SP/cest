@@ -40,7 +40,7 @@ this direction. IO and file access will present more choices. For now,
 (e.g. `cest::cout << "Hello World\n"`). This is primarily to support the
 compile-time evaluation of existing code bases.
 
-The **C'est** library has incomplete support for the following containers: `vector`, `string`, `forward_list`, `list`, `set`, `map`, `queue`, `deque`, `unique_ptr` and `shared_ptr`. Given a `constexpr` container, most function templates from `algorithm` and `numeric` can now also be used within a constant expression.
+The **C'est** library has incomplete support for the following class templates: `vector`, `string`, `forward_list`, `list`, `set`, `map`, `queue`, `deque`, `unique_ptr`, `shared_ptr` and `function`. Given a `constexpr` container, most function templates from `algorithm` and `numeric` can now also be used within a constant expression.
 
 The code below provides a basic demonstration of some functionality. Executing the resulting program will output `Hello World 5`:
 
@@ -52,6 +52,7 @@ The code below provides a basic demonstration of some functionality. Executing t
 #include "cest/set.hpp"
 #include "cest/algorithm.hpp"
 #include "cest/numeric.hpp"
+#include "cest/functional.hpp"
 
 // clang++ -std=c++2a -I include example.cpp
 
@@ -65,7 +66,8 @@ constexpr bool doit()
   set<int> s;
 
   set_intersection(dq.begin(), dq.end(), v.begin(),  v.end(), inserter(s, s.end()));
-  auto x = accumulate(s.begin(), s.end(), 0);
+  function<int()> f = [&]() { return accumulate(s.begin(), s.end(), 0); };
+  auto x = f();
   cout << str << " World " << x << endl;
 
   return 5==x;

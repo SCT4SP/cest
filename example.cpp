@@ -5,8 +5,9 @@
 #include "cest/set.hpp"
 #include "cest/algorithm.hpp"
 #include "cest/numeric.hpp"
+#include "cest/functional.hpp"
 
-// Copyright (c) 2020 Paul Keir, University of the West of Scotland.
+// Copyright (c) 2020-2021 Paul Keir, University of the West of Scotland.
 
 // clang++ -std=c++2a -I include example.cpp
 
@@ -20,7 +21,8 @@ constexpr bool doit()
   set<int> s;
 
   set_intersection(dq.begin(), dq.end(), v.begin(),  v.end(), inserter(s, s.end()));
-  auto x = accumulate(s.begin(), s.end(), 0);
+  function<int()> f = [&]() { return accumulate(s.begin(), s.end(), 0); };
+  auto x = f();
   cout << str << " World " << x << endl;
 
   return 5==x;

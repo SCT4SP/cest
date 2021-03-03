@@ -108,10 +108,6 @@ namespace cest {
     return x < 0.0 ? -x : x; 
   }
   
-  constexpr int abs(int x) { 
-    return x < 0 ? -x : x;
-  }
-
   constexpr double fabs(double x) {
     return abs(x);
   }

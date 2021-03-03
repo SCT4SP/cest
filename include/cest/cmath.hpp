@@ -1,6 +1,8 @@
 #ifndef _CEST_CMATH_HPP_
 #define _CEST_CMATH_HPP_
 
+#include "cest/bits/abs.hpp"
+
 namespace cest {
 
 #define CEST_M_PI   3.141592653589793
@@ -9,7 +11,6 @@ namespace cest {
 
   // some forward declarations so the function ordering below doesn't matter
   // mainly so they can be put in alphabetical order or shuffled as required
-  constexpr double abs(double);
   constexpr double pow(double, int);
   constexpr double sqrt(double);
   constexpr double sin(double);
@@ -103,14 +104,6 @@ namespace cest {
     }
 
   } // anonymous namespace
-
-  constexpr double abs(double x) {
-    return x < 0.0 ? -x : x;
-  }
-
-  constexpr double fabs(double x) {
-    return abs(x);
-  }
 
   constexpr double atan(double x) {
     return (x >= 0) ? atan_cmplmntry(x) : -atan_cmplmntry(-x);

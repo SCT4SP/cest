@@ -93,7 +93,7 @@ expected console output is listed in `cest_tests.cpp`.
 cd tests
 mkdir build
 cd build
-cmake -DCMAKE_CXX_COMPILER=clang++-10 ..
+cmake -DCMAKE_CXX_COMPILER=clang++ ..
 make
 ./cest_tests
 ```

@@ -103,4 +103,4 @@ make
 ## Projects using C'est
 
 * [ctcheckmm](https://github.com/pkeir/ctcheckmm): a compile-time Metamath proof database verifier
-* [poacher](https://gitlri.lri.fr/jpenuchot/poacher): a constexpr Brainfuck compiler, with proper AST and code generation (see examples/brainfuck)
+* [poacher](https://github.com/JPenuchot/poacher): a constexpr Brainfuck compiler, with proper AST and code generation (see examples/brainfuck)

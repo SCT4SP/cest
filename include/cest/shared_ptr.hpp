@@ -105,7 +105,7 @@ public:
   constexpr T& operator*() const noexcept { return *ptr_; }
   constexpr T* operator->() const noexcept { return ptr_; }
 
-  constexpr operator bool() const noexcept { return ptr_; }
+  explicit constexpr operator bool() const noexcept { return ptr_; }
 
   template <class Deleter, class U>
   friend constexpr Deleter* get_deleter(const shared_ptr<U>&) noexcept;

@@ -220,6 +220,7 @@ memory_tests()
 
   assert((shared_ptr_compare_test<int, int*>()));
   assert((shared_ptr_compare_test<int, std::shared_ptr<int[]>>()));
+  assert((shared_ptr_compare_test<int, cest::shared_ptr<int[]>>()));
 }
 
 #endif

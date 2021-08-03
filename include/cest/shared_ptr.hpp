@@ -5,9 +5,11 @@
 // https://www.justsoftwaresolutions.co.uk/cplusplus/shared-ptr-secret-constructor.html
 
 #include <type_traits>
+#include <compare> // std::strong_ordering
 
 #include "cest/iostream.hpp"
 #include "cest/swap.hpp"
+#include "cest/compare.hpp"
 
 namespace cest {
 
@@ -27,7 +29,7 @@ struct default_delete<T[]>
 {
   constexpr default_delete() noexcept = default;
 
-  template<class U>
+  template <class U>
   constexpr default_delete(const default_delete<U[]>&) noexcept {}
 
   template <class U>
@@ -105,7 +107,7 @@ public:
   constexpr T& operator*() const noexcept { return *ptr_; }
   constexpr T* operator->() const noexcept { return ptr_; }
 
-  constexpr operator bool() const noexcept { return ptr_; }
+  explicit constexpr operator bool() const noexcept { return ptr_; }
 
   template <class Deleter, class U>
   friend constexpr Deleter* get_deleter(const shared_ptr<U>&) noexcept;
@@ -126,8 +128,8 @@ constexpr Deleter* get_deleter(const shared_ptr<U>& p) noexcept
       typename shared_ptr<U>::template ctrl_derived<elem_t,Deleter>;
     auto ptr = dynamic_cast<ctrl_derived_t*>(p.pctrl_);
     return ptr ? &ptr->del_ : nullptr;
-  } 
-  
+  }
+
   return nullptr;
 }
 
@@ -168,6 +170,40 @@ operator<<(cest::ostream& o, shared_ptr<T> const& p)
   if (!std::is_constant_evaluated())
     return o << p.get();
   return o;
+}
+
+template <class T, class U>
+constexpr bool operator==(const shared_ptr<T>& lhs,
+                          const shared_ptr<U>& rhs) noexcept
+{
+  return lhs.get() == rhs.get();
+}
+
+template <class T>
+constexpr bool operator==(const shared_ptr<T>& lhs, std::nullptr_t) noexcept
+{ return !lhs; }
+
+template <class T>
+bool operator==(std::nullptr_t, const shared_ptr<T>& rhs) noexcept
+{ return !rhs; }
+
+template <class T, class U>
+constexpr std::strong_ordering operator<=>(const shared_ptr<T>& lhs,
+                                           const shared_ptr<U>& rhs) noexcept
+{
+//  return std::compare_three_way{}(lhs.get(), rhs.get());
+  return cest::compare_three_way{}(lhs.get(), rhs.get());
+}
+
+template <class T>
+constexpr std::strong_ordering operator<=>(const shared_ptr<T>& lhs,
+                                           std::nullptr_t) noexcept
+{
+//  return std::compare_three_way{}(
+  return cest::compare_three_way{}(
+    lhs.get(),
+    static_cast<typename shared_ptr<T>::element_type*>(nullptr)
+  );
 }
 
 } // namespace cest

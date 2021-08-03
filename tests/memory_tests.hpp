@@ -157,6 +157,41 @@ constexpr bool shared_ptr_test2()
   return b1 && b2 && 42==i;
 }
 
+template <typename T, typename P>
+constexpr bool shared_ptr_compare_test()
+{
+  bool b = true;
+  P p(nullptr), q(nullptr);
+  b = b && p==q && !(p!=q) && p<=q && p>=q && !(p<q) && !(p>q);
+
+  auto test_arr2 = [&](auto p, auto q) {
+    b = b && !(p==q) && p!=q && p<=q && !(p>=q) && p<q && !(p>q);
+  };
+
+  {
+    T arr[2];
+    if constexpr (std::is_pointer_v<P>) {  // a raw pointer
+      test_arr2(&arr[0], &arr[1]);
+    } else {
+      P p(&arr[0],[](int*){}), q(p, p.get()+1); // null deleter
+      test_arr2(p, q);
+    }
+  }
+
+  {
+    T* arr = new T[2];
+    if constexpr (std::is_pointer_v<P>) {  // a raw pointer
+      test_arr2(&arr[0], &arr[1]);
+      delete [] arr;
+    } else {
+      P p(&arr[0]), q(p, p.get()+1); // non-null deleter
+      test_arr2(p, q);
+    }
+  }
+
+  return b;
+}
+
 void
 memory_tests()
 {
@@ -166,6 +201,8 @@ memory_tests()
   static_assert(make_unique_test(), "make_unique: Tests failed!");
   static_assert(shared_ptr_test<cest::shared_ptr>());
   static_assert(shared_ptr_test2<cest::shared_ptr>());
+  static_assert(shared_ptr_compare_test<int, int*>());
+  static_assert(shared_ptr_compare_test<int,cest::shared_ptr<int[]>>());
 #endif
 
   assert(constexpr_mem_test<std::unique_ptr>());
@@ -180,6 +217,10 @@ memory_tests()
   assert(shared_ptr_test<cest::shared_ptr>());
   assert(shared_ptr_test2<std::shared_ptr>());
   assert(shared_ptr_test2<cest::shared_ptr>());
+
+  assert((shared_ptr_compare_test<int, int*>()));
+  assert((shared_ptr_compare_test<int, std::shared_ptr<int[]>>()));
+  assert((shared_ptr_compare_test<int, cest::shared_ptr<int[]>>()));
 }
 
 #endif

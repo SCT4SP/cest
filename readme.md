@@ -91,7 +91,7 @@ expected console output is listed in `cest_tests.cpp`.
 cd tests
 mkdir build
 cd build
-cmake -DCMAKE_CXX_COMPILER=clang++ ..
+cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug ..
 make
 ./cest_tests
 ```

@@ -8,6 +8,7 @@
 #include "cest/list.hpp"
 #include "cest/map.hpp"
 #include "cest/set.hpp"
+#include "cest/string.hpp"
 #include "cest/vector.hpp"
 #include <cassert>
 #include <deque>

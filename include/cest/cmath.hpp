@@ -1,9 +1,21 @@
 #ifndef _CEST_CMATH_HPP_
 #define _CEST_CMATH_HPP_
 
+#include <type_traits>
+
 #include "cest/bits/abs.hpp"
 
 namespace cest {
+
+constexpr float fabs(float x) { return abs(x); }
+constexpr float fabsf(float x) { return abs(x); }
+constexpr double fabs(double x) { return abs(x); }
+constexpr long double fabs(long double x) { return abs(x); }
+constexpr long double fabsl(long double x) { return abs(x); }
+template <typename T>
+constexpr std::enable_if_t<std::is_integral_v<T>, double> fabs(T x) {
+  return static_cast<double>(abs(x));
+}
 
 #define CEST_M_PI 3.141592653589793
 #define CEST_M_PI_2 1.570796326794897

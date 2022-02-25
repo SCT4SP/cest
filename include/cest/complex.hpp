@@ -8,6 +8,7 @@
 // namespace __gnu_cxx are also omitted.
 
 #include "cest/algorithm.hpp"
+#include "cest/istream.hpp"
 #include <type_traits>
 
 // Get rid of a macro possibly defined in <complex.h>

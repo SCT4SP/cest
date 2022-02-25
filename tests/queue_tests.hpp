@@ -5,6 +5,7 @@
 #include "cest/list.hpp"
 #include "cest/queue.hpp"
 #include <cassert>
+#include <list>
 #include <queue>
 
 template <typename Q> constexpr bool queue_test1() {

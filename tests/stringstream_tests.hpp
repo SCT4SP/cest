@@ -1,6 +1,7 @@
 #ifndef _CEST_STRINGSTREAM_TESTS_HPP_
 #define _CEST_STRINGSTREAM_TESTS_HPP_
 
+#include "cest/iterator.hpp"
 #include "cest/sstream.hpp"
 #include "cest/string.hpp"
 #include <cassert>

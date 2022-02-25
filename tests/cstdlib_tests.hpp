@@ -13,10 +13,10 @@ constexpr bool cstdlib_test1(auto abs) {
 
 void cstdlib_tests() {
 #if CONSTEXPR_CEST == 1
-  static_assert(cstdlib_test1(cest::abs));
+  static_assert(cstdlib_test1(static_cast<int (*)(int)>(cest::abs)));
 #endif
 
-  assert(cstdlib_test1(cest::abs));
+  assert(cstdlib_test1(static_cast<int (*)(int)>(cest::abs)));
 }
 
 #endif // _CEST_CSTDLIB_TESTS_HPP_

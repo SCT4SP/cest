@@ -21,7 +21,7 @@ template <typename Dq> constexpr bool numeric_test1() {
 
 void numeric_tests() {
 #if CONSTEXPR_CEST == 1
-  static_assert(deque_test1<cest::deque<int>>());
+  static_assert(numeric_test1<cest::deque<int>>());
 #endif
 
   assert((numeric_test1<std::deque<int>>()));

@@ -6,7 +6,7 @@
 
 namespace cest {
 
-  using std::size_t;
+using std::size_t;
 
 } // namespace cest
 

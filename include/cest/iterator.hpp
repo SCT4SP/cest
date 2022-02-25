@@ -5,9 +5,9 @@
 
 namespace cest {
 
-  using std::inserter;
-  using std::back_inserter;
-  using std::istreambuf_iterator;
+using std::back_inserter;
+using std::inserter;
+using std::istreambuf_iterator;
 
 } // namespace cest
 

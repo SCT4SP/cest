@@ -5,11 +5,10 @@
 
 namespace cest {
 
-struct compare_three_way
-{
+struct compare_three_way {
   template <class T, class U>
-    requires std::three_way_comparable_with<T, U>
-  constexpr auto operator()(T&& t, U&& u) const {
+  requires std::three_way_comparable_with<T, U>
+  constexpr auto operator()(T &&t, U &&u) const {
     return std::forward<T>(t) <=> std::forward<U>(u);
   }
 

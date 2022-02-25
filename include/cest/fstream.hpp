@@ -5,7 +5,7 @@
 
 namespace cest {
 
-  using std::ifstream;
+using std::ifstream;
 
 } // namespace cest
 

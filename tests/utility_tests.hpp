@@ -2,18 +2,16 @@
 #define _CEST_UTILITY_TESTS_HPP_
 
 #include "cest/utility.hpp"
-#include <utility>
 #include <cassert>
+#include <utility>
 
-template <template <typename,typename> typename P>
-constexpr bool pair_test1()
-{
-  P p = {42,true};
-  return p.first==42 && p.second;
+template <template <typename, typename> typename P>
+constexpr bool pair_test1() {
+  P p = {42, true};
+  return p.first == 42 && p.second;
 }
 
-void utility_tests()
-{
+void utility_tests() {
 #if CONSTEXPR_CEST == 1
   static_assert(pair_test1<cest::pair>());
 #endif

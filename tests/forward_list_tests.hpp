@@ -1,49 +1,41 @@
 #ifndef _CEST_FORWARD_LIST_TESTS_HPP_
 #define _CEST_FORWARD_LIST_TESTS_HPP_
 
-#include "cest/forward_list.hpp"
 #include "../tests/tests_util.hpp"
-#include <forward_list>
+#include "cest/forward_list.hpp"
 #include <cassert>
+#include <forward_list>
 
 namespace fl_tests {
 
-template <typename FL>
-constexpr bool forward_list_test1()
-{
+template <typename FL> constexpr bool forward_list_test1() {
   FL fl;
   return fl.empty();
 }
 
-template <typename FL>
-constexpr bool forward_list_test2()
-{
+template <typename FL> constexpr bool forward_list_test2() {
   FL fl;
   fl.push_front(42);
-  return 42==fl.front();
+  return 42 == fl.front();
 }
 
-template <typename FL>
-constexpr bool forward_list_test3()
-{
+template <typename FL> constexpr bool forward_list_test3() {
   FL fl;
   fl.push_front(2);
   fl.push_front(1);
-  return 1==fl.front();
+  return 1 == fl.front();
 }
 
-template <typename FL>
-constexpr bool forward_list_test4()
-{
+template <typename FL> constexpr bool forward_list_test4() {
   FL fl;
-  fl.insert_after(fl.before_begin(),123);  // l.begin() here is an error
-  fl.insert_after(fl.begin(),1); // 123     -> 123 1
-  fl.push_front(2);             // 123 1   -> 2 123 1
-  fl.erase_after(fl.begin());    // 2 123 1 -> 2 1
-  auto it0 = fl.insert_after(fl.before_begin(),3); // same as l.push_front(3)
+  fl.insert_after(fl.before_begin(), 123); // l.begin() here is an error
+  fl.insert_after(fl.begin(), 1);          // 123     -> 123 1
+  fl.push_front(2);                        // 123 1   -> 2 123 1
+  fl.erase_after(fl.begin());              // 2 123 1 -> 2 1
+  auto it0 = fl.insert_after(fl.before_begin(), 3); // same as l.push_front(3)
 
   int sum1 = 0, sum2 = 0;
-  for (auto it = fl.begin(); it != fl.end(); it++)    // 3 + 2 + 1
+  for (auto it = fl.begin(); it != fl.end(); it++) // 3 + 2 + 1
     sum1 += *it;
 
   using cit_t = typename FL::const_iterator;
@@ -53,12 +45,10 @@ constexpr bool forward_list_test4()
 
   bool b1 = it == fl.end();
   bool b2 = fl.end() == it;
-  return 3==fl.front() && 6==sum1 && 6==sum2 && b1 && b2 && 3==*it0;
+  return 3 == fl.front() && 6 == sum1 && 6 == sum2 && b1 && b2 && 3 == *it0;
 }
 
-template <typename FL>
-constexpr bool forward_list_test5()
-{
+template <typename FL> constexpr bool forward_list_test5() {
   FL *p1 = new FL;
   FL *p2 = new FL;
 
@@ -71,7 +61,7 @@ constexpr bool forward_list_test5()
 
   bool b1 = a == p1->front();
   bool b2 = a == p2->front();
-  bool b3 = a ==   l.front();
+  bool b3 = a == l.front();
 
   delete p1;
   delete p2;
@@ -79,14 +69,15 @@ constexpr bool forward_list_test5()
   return b1 && b2 && b3;
 }
 
-struct Foo { int x; int y; };
+struct Foo {
+  int x;
+  int y;
+};
 
-template <typename FL>
-constexpr bool forward_list_test6()
-{
+template <typename FL> constexpr bool forward_list_test6() {
   FL fl;
 
-  fl.push_front(Foo{1,2});
+  fl.push_front(Foo{1, 2});
   auto it1 = fl.begin();
   bool b1 = 1 == it1->x && 2 == (*it1).y;
 
@@ -94,9 +85,9 @@ constexpr bool forward_list_test6()
   bool b2 = it2 == fl.end() && fl.empty();
 
   Foo *fp = fl.get_allocator().allocate(1);
-  fl.get_allocator().deallocate(fp,1);
+  fl.get_allocator().deallocate(fp, 1);
 
-  Foo o{3,4};
+  Foo o{3, 4};
   fl.push_front(o);
   fl.erase_after(fl.before_begin(), fl.end()); // remove all elements
   bool b3 = fl.empty();
@@ -104,26 +95,25 @@ constexpr bool forward_list_test6()
   fl.erase_after(fl.before_begin(), fl.end()); // do it again!
   bool b4 = fl.empty();
 
-  fl.push_front(Foo{1,2});
+  fl.push_front(Foo{1, 2});
   fl.clear();
   bool b5 = fl.empty();
 
   return b1 && b2 && b3 && b4 && b5;
 }
 
-template <bool SA, class F1, class F2, class F3,
-                   class F4, class F5, class F6, class F7>
-constexpr void doit()
-{
+template <bool SA, class F1, class F2, class F3, class F4, class F5, class F6,
+          class F7>
+constexpr void doit() {
   using tests_util::push_front_dtor_test;
 
-          assert(forward_list_test1<F1>());
-          assert(forward_list_test2<F2>());
-          assert(forward_list_test3<F3>());
-          assert(forward_list_test4<F4>());
-          assert(forward_list_test5<F5>());
-          assert(forward_list_test6<F6>());
-          assert(push_front_dtor_test<F7>());
+  assert(forward_list_test1<F1>());
+  assert(forward_list_test2<F2>());
+  assert(forward_list_test3<F3>());
+  assert(forward_list_test4<F4>());
+  assert(forward_list_test5<F5>());
+  assert(forward_list_test6<F6>());
+  assert(push_front_dtor_test<F7>());
 
   if constexpr (SA) {
     static_assert(forward_list_test1<F1>());
@@ -136,30 +126,27 @@ constexpr void doit()
   }
 }
 
-template <bool SA, template <class...> class TT>
-constexpr void tests_helper()
-{
+template <bool SA, template <class...> class TT> constexpr void tests_helper() {
   using tests_util::Bar;
 
-  using FL1  = TT<int>;
-  using FL2  = TT<int>;
-  using FL3  = TT<int>;
-  using FL4  = TT<int>;
-  using FL5  = TT<int>;
-  using FL6  = TT<Foo>;
-  using FL7  = TT<Bar<>>;
+  using FL1 = TT<int>;
+  using FL2 = TT<int>;
+  using FL3 = TT<int>;
+  using FL4 = TT<int>;
+  using FL5 = TT<int>;
+  using FL6 = TT<Foo>;
+  using FL7 = TT<Bar<>>;
 
-  doit<SA, FL1,  FL2,  FL3,  FL4,  FL5,  FL6, FL7>();
+  doit<SA, FL1, FL2, FL3, FL4, FL5, FL6, FL7>();
 }
 
 } // namespace fl_tests
 
-void forward_list_tests()
-{
+void forward_list_tests() {
   using namespace fl_tests;
 
-  tests_helper<false,          std::forward_list>();
-  tests_helper<CONSTEXPR_CEST,cest::forward_list>();
+  tests_helper<false, std::forward_list>();
+  tests_helper<CONSTEXPR_CEST, cest::forward_list>();
 }
 
 #endif // _CEST_FORWARD_LIST_TESTS_HPP_

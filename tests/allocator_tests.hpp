@@ -6,24 +6,27 @@
 
 namespace alloc_tests {
 
-struct Foo { int a; char b; float c; double d; };
+struct Foo {
+  int a;
+  char b;
+  float c;
+  double d;
+};
 
-template <class IntAlloc>
-constexpr bool alloc_test1()
-{
-  using alloc_int_t    = IntAlloc;
-  using alloc_double_t = typename std::allocator_traits<IntAlloc>::
-                           template rebind_alloc<double>;
-  alloc_int_t    alloc_i;
+template <class IntAlloc> constexpr bool alloc_test1() {
+  using alloc_int_t = IntAlloc;
+  using alloc_double_t =
+      typename std::allocator_traits<IntAlloc>::template rebind_alloc<double>;
+  alloc_int_t alloc_i;
   alloc_double_t alloc_d;
-  alloc_int_t    alloc_i2(alloc_d); // double free here?
+  alloc_int_t alloc_i2(alloc_d); // double free here?
   static_assert(std::is_same_v<decltype(alloc_i2), alloc_int_t>);
 
   int *pi = alloc_i.allocate(4);
 
   // this simply calls the At<Foo> constructor
-  typename std::allocator_traits<decltype(alloc_i)>::
-    template rebind_alloc<Foo> ralloc_foo;
+  typename std::allocator_traits<decltype(alloc_i)>::template rebind_alloc<Foo>
+      ralloc_foo;
 
   Foo *pf = ralloc_foo.allocate(4);
   std::construct_at(pf);
@@ -42,12 +45,10 @@ constexpr bool alloc_test1()
   return true;
 }
 
-template <typename IntAlloc>
-constexpr bool alloc_test2()
-{
+template <typename IntAlloc> constexpr bool alloc_test2() {
   IntAlloc alloc;
-  int* p1 = alloc.allocate(1);
-  int* p2 = alloc.allocate(1);
+  int *p1 = alloc.allocate(1);
+  int *p2 = alloc.allocate(1);
   int i;
 
   if (&i == p2)
@@ -56,15 +57,13 @@ constexpr bool alloc_test2()
   if (p1 == p2)
     return false;
 
-  alloc.deallocate(p2,1);
-  alloc.deallocate(p1,1);
+  alloc.deallocate(p2, 1);
+  alloc.deallocate(p1, 1);
 
   return true;
 }
 
-template <bool SA, class IntAlloc>
-constexpr void tests_helper()
-{
+template <bool SA, class IntAlloc> constexpr void tests_helper() {
   assert(alloc_test1<IntAlloc>());
   assert(alloc_test2<IntAlloc>());
   if constexpr (SA) {
@@ -75,13 +74,12 @@ constexpr void tests_helper()
   }
 }
 
-} // namespae alloc_tests
+} // namespace alloc_tests
 
-void allocator_tests()
-{
+void allocator_tests() {
   using namespace alloc_tests;
 
-  tests_helper<CONSTEXPR_CEST,std::allocator<int>>();  // true: constexpr tests
+  tests_helper<CONSTEXPR_CEST, std::allocator<int>>(); // true: constexpr tests
 }
 
 #endif // _CEST_ALLOCATOR_TESTS_HPP_

@@ -1,35 +1,34 @@
 #ifndef CONSTEXPR_CEST
-#define CONSTEXPR_CEST 1  // default: yes, test cest's constexpr functionality
+#define CONSTEXPR_CEST 1 // default: yes, test cest's constexpr functionality
 #endif
 
 // Copyright (c) 2020-2021 Paul Keir, University of the West of Scotland.
 
-#include "vector_tests.hpp"
-#include "forward_list_tests.hpp"
-#include "list_tests.hpp"
-#include "set_tests.hpp"
-#include "map_tests.hpp"
-#include "string_tests.hpp"
-#include "cctype_tests.hpp"
-#include "deque_tests.hpp"
-#include "queue_tests.hpp"
-#include "iterator_tests.hpp"
 #include "algorithm_tests.hpp"
-#include "numeric_tests.hpp"
-#include "iostream_tests.hpp"
 #include "allocator_tests.hpp"
-#include "stringstream_tests.hpp"
 #include "array_tests.hpp"
-#include "cstdio_tests.hpp"
-#include "cstdlib_tests.hpp"
-#include "memory_tests.hpp"
-#include "utility_tests.hpp"
+#include "cctype_tests.hpp"
 #include "cmath_tests.hpp"
 #include "complex_tests.hpp"
+#include "cstdio_tests.hpp"
+#include "cstdlib_tests.hpp"
+#include "deque_tests.hpp"
+#include "forward_list_tests.hpp"
 #include "functional_tests.hpp"
+#include "iostream_tests.hpp"
+#include "iterator_tests.hpp"
+#include "list_tests.hpp"
+#include "map_tests.hpp"
+#include "memory_tests.hpp"
+#include "numeric_tests.hpp"
+#include "queue_tests.hpp"
+#include "set_tests.hpp"
+#include "string_tests.hpp"
+#include "stringstream_tests.hpp"
+#include "utility_tests.hpp"
+#include "vector_tests.hpp"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   vector_tests();
   forward_list_tests();
   list_tests();

@@ -5,9 +5,8 @@
 
 namespace cest {
 
-  using std::array;
+using std::array;
 
 } // namespace cest
-
 
 #endif // _CEST_ARRAY_HPP_

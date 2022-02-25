@@ -2,12 +2,11 @@
 #define _CEST_CCTYPE_TESTS_HPP_
 
 #include "cest/cctype.hpp"
-#include <cctype>
 #include <cassert>
+#include <cctype>
 #include <limits>
 
-void cctype_tests()
-{
+void cctype_tests() {
 #if CONSTEXPR_CEST == 1
   static_assert(cest::isalnum('q') != 0);
   static_assert(cest::isalnum('!') == 0);
@@ -17,21 +16,22 @@ void cctype_tests()
   static_assert(cest::isupper('!') == 0);
 #endif
 
-  assert( std::isalnum('q') != 0);
+  assert(std::isalnum('q') != 0);
   assert(cest::isalnum('q') != 0);
-  assert( std::isalnum('!') == 0);
+  assert(std::isalnum('!') == 0);
   assert(cest::isalnum('!') == 0);
 
-  assert( std::isupper('W') != 0);
+  assert(std::isupper('W') != 0);
   assert(cest::isupper('W') != 0);
-  assert( std::isupper('a') == 0);
+  assert(std::isupper('a') == 0);
   assert(cest::isupper('a') == 0);
-  assert( std::isupper('!') == 0);
+  assert(std::isupper('!') == 0);
   assert(cest::isupper('!') == 0);
 
-  for (auto c = std::numeric_limits<char>::lowest(); ; ++c) {
+  for (auto c = std::numeric_limits<char>::lowest();; ++c) {
     assert(std::isalnum(c) == cest::isalnum(c));
-    if (c == std::numeric_limits<char>::max()) break;
+    if (c == std::numeric_limits<char>::max())
+      break;
   }
 }
 

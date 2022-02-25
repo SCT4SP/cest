@@ -2,7 +2,7 @@
 #define CONSTEXPR_CEST 1 // default: yes, test cest's constexpr functionality
 #endif
 
-// Copyright (c) 2020-2021 Paul Keir, University of the West of Scotland.
+// Copyright (c) 2020-2022 Paul Keir, University of the West of Scotland.
 
 #include "algorithm_tests.hpp"
 #include "allocator_tests.hpp"

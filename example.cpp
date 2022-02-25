@@ -7,9 +7,9 @@
 #include "cest/string.hpp"
 #include "cest/vector.hpp"
 
-// Copyright (c) 2020-2021 Paul Keir, University of the West of Scotland.
+// Copyright (c) 2020-2022 Paul Keir, University of the West of Scotland.
 
-// clang++ -std=c++2a -I include example.cpp
+// clang++ -std=c++20 -I include example.cpp
 
 constexpr bool doit() {
   using namespace cest;

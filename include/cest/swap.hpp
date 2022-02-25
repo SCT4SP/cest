@@ -1,7 +1,7 @@
 #ifndef _NARY_SWAP_HPP_
 #define _NARY_SWAP_HPP_
 
-// Copyright (c) 2019-2020 Paul Keir, University of the West of Scotland.
+// Copyright (c) 2019-2022 Paul Keir, University of the West of Scotland.
 
 // A version of std::swap which works for 0 or more variables using C++17 fold
 // expressions. See https://pkeir.github.io/blog/2019/01/08/nary-swap/

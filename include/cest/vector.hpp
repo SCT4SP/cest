@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <cstddef>
 #include <initializer_list>
-#include <memory> // std::allocator
-#include <stdexcept>  // std::out_of_range
+#include <memory>    // std::allocator
+#include <stdexcept> // std::out_of_range
 
 namespace cest {
 

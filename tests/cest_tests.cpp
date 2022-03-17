@@ -13,6 +13,7 @@
 #include "cstdio_tests.hpp"
 #include "cstdlib_tests.hpp"
 #include "deque_tests.hpp"
+#include "exception_tests.hpp"
 #include "forward_list_tests.hpp"
 #include "functional_tests.hpp"
 #include "iostream_tests.hpp"
@@ -52,6 +53,7 @@ int main(int argc, char *argv[]) {
   cmath_tests();
   complex_tests();
   functional_tests();
+  exception_tests();
 
   return 0;
 }

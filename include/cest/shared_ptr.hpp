@@ -6,7 +6,6 @@
 
 #include <compare> // std::strong_ordering
 #include <type_traits>
-#include <utility> // std::forward
 
 #include "cest/compare.hpp"
 #include "cest/iostream.hpp"

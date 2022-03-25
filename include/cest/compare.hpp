@@ -2,6 +2,7 @@
 #define _CEST_COMPARE_HPP_
 
 #include <compare>
+#include <utility> // std::forward
 
 namespace cest {
 

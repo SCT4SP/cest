@@ -189,6 +189,15 @@ public:
     std::construct_at(&m_p[m_size++], std::forward<T>(value));
   }
 
+  template <typename... Args> constexpr void emplace_back(Args &&...args) {
+    if (0 == m_capacity) {
+      reserve(1);
+    } else if (m_capacity == m_size) {
+      reserve(m_capacity * 2);
+    }
+    std::construct_at(&m_p[m_size++], std::forward<Args>(args)...);
+  }
+
   constexpr iterator erase(iterator first, iterator last) {
     iterator it1 = first, it2 = last;
     for (; it2 != end(); it2++) {

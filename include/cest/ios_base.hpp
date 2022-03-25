@@ -1,6 +1,8 @@
 #ifndef _CEST_IOS_BASE_HPP_
 #define _CEST_IOS_BASE_HPP_
 
+#include <iosfwd> // std::streamsize
+
 namespace cest {
 
 enum _Ios_Fmtflags {

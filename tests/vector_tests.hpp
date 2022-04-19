@@ -120,7 +120,7 @@ template <typename V> constexpr bool vec_test10() {
 template <typename V> constexpr bool vec_test11() {
   V v;
   tests_util::Bar<> f(42);
-  v.push_back(f);
+  v.push_back(tests_util::Bar<>{42});
   v.push_back(f);
   v[1] = std::move(f);
   v.erase(v.begin(), v.begin() + 1);

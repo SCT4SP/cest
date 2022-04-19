@@ -1,7 +1,6 @@
 #ifndef _CEST_VECTOR_HPP_
 #define _CEST_VECTOR_HPP_
 
-#include <algorithm>
 #include <cstddef>
 #include <initializer_list>
 #include <memory>    // std::allocator

@@ -122,6 +122,7 @@ template <typename V> constexpr bool vec_test11() {
   tests_util::Bar<> f(42);
   v.push_back(f);
   v.push_back(f);
+  v[1] = std::move(f);
   v.erase(v.begin(), v.begin() + 1);
   bool b1 = 1 == v.size();
 

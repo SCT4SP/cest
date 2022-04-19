@@ -27,8 +27,7 @@ template <bool TestAssert = true> struct Bar {
     return *this;
   }
   constexpr Bar &operator=(Bar &&other) {
-    m_p = other.m_p;
-    other.m_p = nullptr;
+    std::swap(m_p, other.m_p);
     return *this;
   }
   int *m_p;

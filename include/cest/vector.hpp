@@ -37,8 +37,10 @@ public:
   constexpr vector(const vector &other) : vector() {
     reserve(other.capacity());
     m_size = other.size();
+    using alloc_traits = std::allocator_traits<allocator_type>;
+    allocator_type alloc2 = get_allocator();
     for (size_type i = 0; i < m_size; i++)
-      std::construct_at(&m_p[i], other.m_p[i]);
+      alloc_traits::construct(alloc2, &m_p[i], other.m_p[i]);
   }
 
   constexpr vector(vector &&other) : vector() { swap(other); }
@@ -47,8 +49,10 @@ public:
       : m_size{}, m_capacity{}, m_p{}, m_alloc(alloc) {
     reserve(count);
     m_size = count;
+    using alloc_traits = std::allocator_traits<allocator_type>;
+    allocator_type alloc2 = get_allocator();
     for (size_type i = 0; i < m_size; i++)
-      std::construct_at(&m_p[i]);
+      alloc_traits::construct(alloc2, &m_p[i]);
   }
 
   constexpr vector(std::initializer_list<T> init,
@@ -88,6 +92,8 @@ public:
     m_size = other.size();
     return *this;
   }
+
+  constexpr allocator_type get_allocator() const noexcept { return m_alloc; }
 
   [[nodiscard]] constexpr bool empty() const noexcept { return m_size == 0; }
   constexpr size_type size() const noexcept { return m_size; }

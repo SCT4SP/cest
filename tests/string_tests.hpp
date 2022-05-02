@@ -171,4 +171,4 @@ void string_tests() {
   assert(string_test10<cest::string>());
 }
 
-#endif // _CEST_ALGORITHM_TESTS_HPP_
+#endif // _CEST_STRING_TESTS_HPP_

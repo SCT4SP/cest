@@ -142,6 +142,8 @@ void string_tests() {
   static_assert(string_test4<cest::string>());
   static_assert(string_test5<cest::string>());
   static_assert(string_test6<cest::string>(cest::cout, cest_endl));
+  static_assert(string_test7<cest::string>());
+  static_assert(string_test8<cest::string>());
   static_assert(string_test9<cest::string>());
   static_assert(string_test10<cest::string>());
 #endif
@@ -155,7 +157,6 @@ void string_tests() {
 
   assert(string_test4<cest::string>());
   assert(string_test4<std::string>());
-  assert(string_test4<cest::string>());
 
   assert(string_test5<std::string>());
   assert(string_test5<cest::string>());

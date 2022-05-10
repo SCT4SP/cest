@@ -1,11 +1,6 @@
 #ifndef _CEST_ALGORITHM_TESTS_HPP_
 #define _CEST_ALGORITHM_TESTS_HPP_
 
-#include "cest/array.hpp"
-#include "cest/forward_list.hpp"
-#include "cest/list.hpp"
-#include "cest/set.hpp"
-#include "cest/vector.hpp"
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -32,6 +27,7 @@ template <typename V, typename S> constexpr bool algorithm_test1() {
   copy(b.begin(), b.end(), back_inserter(v2)); // ""
   auto vend = set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(),
                                back_inserter(vres));
+  vend = 6; // insert a 6 at the back; becomes 3,4,5,6
   auto vsum = accumulate(vres.begin(), vres.end(), 0);
 
   S s1, s2, sres;
@@ -39,11 +35,10 @@ template <typename V, typename S> constexpr bool algorithm_test1() {
   copy(b.begin(), b.end(), inserter(s2, s2.end()));
   auto send = set_intersection(s1.begin(), s1.end(), s2.begin(), s2.end(),
                                inserter(sres, sres.end()));
+  send = 6; // insert a 6 at the back; becomes 3,4,5,6
   auto ssum = accumulate(sres.begin(), sres.end(), 0);
 
-  *vend;                                        // no-op
-  *send;                                        // no-op
-  return sum == 12 && vsum == 12 && ssum == 12; // 3+4+5 == 12
+  return sum == 12 && vsum == 18 && ssum == 18; // 3+4+5==12 3+4+5+6==18
 }
 
 template <typename V, typename S> constexpr bool algorithm_test2() {
@@ -102,14 +97,13 @@ void rt_algorithm_tests() {
 
 void algorithm_tests() {
 #if CONSTEXPR_CEST == 1
-  static_assert((algorithm_test1<cest::vector<int>, cest::set<int>>()));
-  static_assert((algorithm_test2<cest::vector<int>, cest::set<int>>()));
-  static_assert((algorithm_test3<cest::vector<int>, cest::set<int>,
-                                 cest::list<int>, cest::forward_list<int>>()));
+  static_assert((algorithm_test1<std::vector<int>, std::set<int>>()));
+  static_assert((algorithm_test2<std::vector<int>, std::set<int>>()));
+  static_assert((algorithm_test3<std::vector<int>, std::set<int>,
+                                 std::list<int>, std::forward_list<int>>()));
 #endif
 
   rt_algorithm_tests<std::vector, std::set, std::list, std::forward_list>();
-  rt_algorithm_tests<cest::vector, cest::set, cest::list, cest::forward_list>();
 }
 
 #endif // _CEST_ALGORITHM_TESTS_HPP_

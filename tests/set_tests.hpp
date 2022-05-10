@@ -1,7 +1,6 @@
 #ifndef _CEST_SET_TESTS_HPP_
 #define _CEST_SET_TESTS_HPP_
 
-#include "cest/set.hpp"
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -46,7 +45,6 @@ constexpr bool common_static_set_tests() {
   };
 
   f.operator()<std::set>();
-  f.operator()<cest::set>();
 
   return true;
 }
@@ -352,7 +350,9 @@ constexpr void tests_helper() {
 
 void new_set_tests() {
   tests_helper<false, std::set>();
-  tests_helper<CONSTEXPR_CEST, cest::set>();
+#if CONSTEXPR_CEST == 1
+  tests_helper<true, std::set>();
+#endif
 }
 
 } // namespace set_tests_ns

@@ -1,7 +1,6 @@
 #ifndef _CEST_MAP_TESTS_HPP_
 #define _CEST_MAP_TESTS_HPP_
 
-#include "cest/map.hpp"
 #include <cassert>
 #include <map>
 
@@ -21,7 +20,6 @@ constexpr bool common_static_map_tests() {
   };
 
   f.operator()<std::map>();
-  f.operator()<cest::map>();
 
   return true;
 }
@@ -90,17 +88,14 @@ constexpr bool map_test3() {
 void map_tests() {
 #if CONSTEXPR_CEST == 1
   static_assert(common_static_map_tests());
-  static_assert(map_test1<cest::map, char, int>());
-  static_assert(map_test2<cest::map, char, int>());
-  static_assert(map_test3<cest::map, char, int>());
+  static_assert(map_test1<std::map, char, int>());
+  static_assert(map_test2<std::map, char, int>());
+  static_assert(map_test3<std::map, char, int>());
 #endif
 
   assert((map_test1<std::map, char, int>()));
-  assert((map_test1<cest::map, char, int>()));
   assert((map_test2<std::map, char, int>()));
-  assert((map_test2<cest::map, char, int>()));
   assert((map_test3<std::map, char, int>()));
-  assert((map_test3<cest::map, char, int>()));
 }
 
 #endif // _CEST_MAP_TESTS_HPP_

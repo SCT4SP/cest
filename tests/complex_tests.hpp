@@ -1,7 +1,6 @@
 #ifndef _CEST_COMPLEX_TESTS_HPP_
 #define _CEST_COMPLEX_TESTS_HPP_
 
-#include "cest/complex.hpp"
 #include "tests_util.hpp"
 #include <cassert>
 #include <complex>
@@ -19,11 +18,12 @@ template <typename Cx> constexpr bool complex_test1() {
 
 void complex_tests() {
 #if CONSTEXPR_CEST == 1
-  static_assert(complex_test1<cest::complex<double>>());
+  static_assert(complex_test1<std::complex<double>>());
 #endif
+  constexpr std::complex<double> x{-3, 4};
+  constexpr std::complex<double> y = x + x;
 
   assert(complex_test1<std::complex<double>>());
-  assert(complex_test1<cest::complex<double>>());
 }
 
 #endif // _CEST_COMPLEX_TESTS_HPP_

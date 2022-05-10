@@ -66,11 +66,10 @@ template <typename IntAlloc> constexpr bool alloc_test2() {
 template <bool SA, class IntAlloc> constexpr void tests_helper() {
   assert(alloc_test1<IntAlloc>());
   assert(alloc_test2<IntAlloc>());
+
   if constexpr (SA) {
-#if CONSTEXPR_CEST == 1
     static_assert(alloc_test1<IntAlloc>());
     static_assert(alloc_test2<IntAlloc>());
-#endif
   }
 }
 
@@ -79,7 +78,7 @@ template <bool SA, class IntAlloc> constexpr void tests_helper() {
 void allocator_tests() {
   using namespace alloc_tests;
 
-  tests_helper<CONSTEXPR_CEST, std::allocator<int>>(); // true: constexpr tests
+  tests_helper<CONSTEXPR_CEST, std::allocator<int>>();
 }
 
 #endif // _CEST_ALLOCATOR_TESTS_HPP_

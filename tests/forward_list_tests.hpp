@@ -2,7 +2,6 @@
 #define _CEST_FORWARD_LIST_TESTS_HPP_
 
 #include "../tests/tests_util.hpp"
-#include "cest/forward_list.hpp"
 #include <cassert>
 #include <forward_list>
 
@@ -146,7 +145,9 @@ void forward_list_tests() {
   using namespace fl_tests;
 
   tests_helper<false, std::forward_list>();
-  tests_helper<CONSTEXPR_CEST, cest::forward_list>();
+#if CONSTEXPR_CEST == 1
+  tests_helper<true, std::forward_list>();
+#endif
 }
 
 #endif // _CEST_FORWARD_LIST_TESTS_HPP_

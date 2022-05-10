@@ -2,8 +2,6 @@
 #define _CEST_QUEUE_TESTS_HPP_
 
 #include "../tests/tests_util.hpp"
-#include "cest/list.hpp"
-#include "cest/queue.hpp"
 #include <cassert>
 #include <list>
 #include <queue>
@@ -48,33 +46,24 @@ void queue_tests() {
   using namespace tests_util;
 
 #if CONSTEXPR_CEST == 1
-  static_assert(queue_test1<cest::queue<int>>());
-  static_assert(queue_test1<cest::queue<int, cest::list<int>>>());
+  static_assert(queue_test1<std::queue<int>>());
+  static_assert(queue_test1<std::queue<int, std::list<int>>>());
 
-  static_assert(queue_test2<cest::queue<int>>());
-  static_assert(queue_test2<cest::queue<int, cest::list<int>>>());
+  static_assert(queue_test2<std::queue<int>>());
+  static_assert(queue_test2<std::queue<int, std::list<int>>>());
 
-  static_assert(push_dtor_test<cest::queue<Bar<>>>());
-  static_assert(push_dtor_test<cest::queue<Bar<>, cest::list<Bar<>>>>());
+  static_assert(push_dtor_test<std::queue<Bar<>>>());
+  static_assert(push_dtor_test<std::queue<Bar<>, std::list<Bar<>>>>());
 #endif
 
   assert((queue_test1<std::queue<int>>()));
-  assert((queue_test1<cest::queue<int>>()));
-  assert((queue_test1<std::queue<int, cest::list<int>>>()));
-  assert((queue_test1<cest::queue<int, cest::list<int>>>()));
-  assert((queue_test1<cest::queue<int, std::list<int>>>()));
+  assert((queue_test1<std::queue<int, std::list<int>>>()));
 
   assert((queue_test2<std::queue<int>>()));
-  assert((queue_test2<cest::queue<int>>()));
-  assert((queue_test2<std::queue<int, cest::list<int>>>()));
-  assert((queue_test2<cest::queue<int, cest::list<int>>>()));
-  assert((queue_test2<cest::queue<int, std::list<int>>>()));
+  assert((queue_test2<std::queue<int, std::list<int>>>()));
 
   assert((push_dtor_test<std::queue<Bar<>>>()));
-  assert((push_dtor_test<cest::queue<Bar<>>>()));
-  assert((push_dtor_test<std::queue<Bar<>, cest::list<Bar<>>>>()));
-  assert((push_dtor_test<cest::queue<Bar<>, cest::list<Bar<>>>>()));
-  assert((push_dtor_test<cest::queue<Bar<>, std::list<Bar<>>>>()));
+  assert((push_dtor_test<std::queue<Bar<>, std::list<Bar<>>>>()));
 }
 
 #endif // _CEST_QUEUE_TESTS_HPP_

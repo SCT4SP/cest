@@ -1,7 +1,6 @@
 #ifndef _CEST_UTILITY_TESTS_HPP_
 #define _CEST_UTILITY_TESTS_HPP_
 
-#include "cest/utility.hpp"
 #include <cassert>
 #include <utility>
 
@@ -13,11 +12,10 @@ constexpr bool pair_test1() {
 
 void utility_tests() {
 #if CONSTEXPR_CEST == 1
-  static_assert(pair_test1<cest::pair>());
+  static_assert(pair_test1<std::pair>());
 #endif
 
   assert(pair_test1<std::pair>());
-  assert(pair_test1<cest::pair>());
 }
 
 #endif // _CEST_UTILITY_TESTS_HPP_

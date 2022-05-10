@@ -1,8 +1,6 @@
 #ifndef _CEST_STRING_TESTS_HPP_
 #define _CEST_STRING_TESTS_HPP_
 
-#include "cest/iostream.hpp"
-#include "cest/string.hpp"
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -88,7 +86,9 @@ template <typename S> constexpr bool string_test5() {
 template <typename S, typename T, typename U>
 constexpr bool string_test6(T &cout, U &endl) {
   S str("Zod");
+#if 0
   cout << str << endl;
+#endif
   return true;
 }
 
@@ -131,45 +131,29 @@ void string_tests() {
   using std_traits_type = decltype(std::cout)::traits_type;
   auto &std_endl = std::endl<std_char_type, std_traits_type>;
 
-  using cest_char_type = decltype(cest::cout)::char_type;
-  using cest_traits_type = decltype(cest::cout)::traits_type;
-  auto &cest_endl = cest::endl<cest_char_type, cest_traits_type>;
-
 #if CONSTEXPR_CEST == 1
-  static_assert(string_test1<cest::string>());
-  static_assert(string_test2<cest::string>());
-  static_assert(string_test3<cest::string>());
-  static_assert(string_test4<cest::string>());
-  static_assert(string_test5<cest::string>());
-  static_assert(string_test6<cest::string>(cest::cout, cest_endl));
-  static_assert(string_test7<cest::string>());
-  static_assert(string_test8<cest::string>());
-  static_assert(string_test9<cest::string>());
-  static_assert(string_test10<cest::string>());
+  static_assert(string_test1<std::string>());
+  static_assert(string_test2<std::string>());
+  static_assert(string_test3<std::string>());
+  static_assert(string_test4<std::string>());
+  static_assert(string_test5<std::string>());
+  static_assert(string_test6<std::string>(std::cout, std_endl));
+  static_assert(string_test7<std::string>());
+  static_assert(string_test8<std::string>());
+  static_assert(string_test9<std::string>());
+  static_assert(string_test10<std::string>());
 #endif
 
   assert(string_test1<std::string>());
-  assert(string_test1<cest::string>());
   assert(string_test2<std::string>());
-  assert(string_test2<cest::string>());
   assert(string_test3<std::string>());
-  assert(string_test3<cest::string>());
-
-  assert(string_test4<cest::string>());
   assert(string_test4<std::string>());
-
   assert(string_test5<std::string>());
-  assert(string_test5<cest::string>());
   assert(string_test6<std::string>(std::cout, std_endl));
-  assert(string_test6<cest::string>(cest::cout, cest_endl));
   assert(string_test7<std::string>());
-  assert(string_test7<cest::string>());
   assert(string_test8<std::string>());
-  assert(string_test8<cest::string>());
   assert(string_test9<std::string>());
-  assert(string_test9<cest::string>());
   assert(string_test10<std::string>());
-  assert(string_test10<cest::string>());
 }
 
 #endif // _CEST_STRING_TESTS_HPP_

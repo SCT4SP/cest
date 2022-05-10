@@ -2,8 +2,6 @@
 #define _CEST_VECTOR_TESTS_HPP_
 
 #include "../tests/tests_util.hpp"
-#include "cest/memory.hpp"
-#include "cest/vector.hpp"
 #include <cassert>
 #include <memory>
 #include <vector>
@@ -208,7 +206,9 @@ void vector_tests() {
 
   // true: constexpr tests        false: no constexpr tests
   tests_helper<false, std::vector, std::unique_ptr<int>>();
-  tests_helper<CONSTEXPR_CEST, cest::vector, cest::unique_ptr<int>>();
+#if CONSTEXPR_CEST == 1
+  tests_helper<true,  std::vector, std::unique_ptr<int>>();
+#endif
 }
 
 #endif // _CEST_VECTOR_TESTS_HPP_

@@ -16,7 +16,7 @@
 //#include "exception_tests.hpp"
 #include "forward_list_tests.hpp"
 //#include "functional_tests.hpp"
-//#include "iostream_tests.hpp"
+#include "iostream_tests.hpp"
 //#include "iterator_tests.hpp"
 #include "list_tests.hpp"
 #include "map_tests.hpp"
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 //  iterator_tests();
   algorithm_tests();
   numeric_tests();
-//  iostream_tests();
+  iostream_tests();
   allocator_tests();
 //  stringstream_tests();
   array_tests();

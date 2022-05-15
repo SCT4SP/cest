@@ -86,9 +86,7 @@ template <typename S> constexpr bool string_test5() {
 template <typename S, typename T, typename U>
 constexpr bool string_test6(T &cout, U &endl) {
   S str("Zod");
-#if 0
   cout << str << endl;
-#endif
   return true;
 }
 

@@ -26,7 +26,7 @@ protected:
   //  locale      _M_buf_locale;
 
 public:
-  constexpr // virtual
+  constexpr virtual
       ~basic_streambuf() {}
 
   constexpr int pubsync() { return this->sync(); }

@@ -3,6 +3,7 @@
 
 #include <iterator>
 #include <sstream>
+#include <fstream>
 #include <string>
 #include <cassert>
 

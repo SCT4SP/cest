@@ -1,6 +1,18 @@
 #ifndef _CEST_VECTOR_HPP_
 #define _CEST_VECTOR_HPP_
 
+#ifdef __cpp_lib_constexpr_vector
+
+#include <vector>
+
+namespace cest {
+
+using std::vector;
+
+} // namespace cest
+
+#else // __cpp_lib_constexpr_vector
+
 #include <cstddef>
 #include <initializer_list>
 #include <memory>    // std::allocator
@@ -228,5 +240,7 @@ constexpr bool operator==(const vector<_Tp, _Alloc> &__x,
 }
 
 } // namespace cest
+
+#endif // __cpp_lib_constexpr_vector
 
 #endif // _CEST_VECTOR_HPP_

@@ -32,6 +32,7 @@ template <typename V, typename S> constexpr bool algorithm_test1() {
   copy(b.begin(), b.end(), back_inserter(v2)); // ""
   auto vend = set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(),
                                back_inserter(vres));
+  vend = 6; // insert a 6 at the back; becomes 3,4,5,6
   auto vsum = accumulate(vres.begin(), vres.end(), 0);
 
   S s1, s2, sres;
@@ -39,11 +40,10 @@ template <typename V, typename S> constexpr bool algorithm_test1() {
   copy(b.begin(), b.end(), inserter(s2, s2.end()));
   auto send = set_intersection(s1.begin(), s1.end(), s2.begin(), s2.end(),
                                inserter(sres, sres.end()));
+  send = 6; // insert a 6 at the back; becomes 3,4,5,6
   auto ssum = accumulate(sres.begin(), sres.end(), 0);
 
-  *vend;                                        // no-op
-  *send;                                        // no-op
-  return sum == 12 && vsum == 12 && ssum == 12; // 3+4+5 == 12
+  return sum == 12 && vsum == 18 && ssum == 18; // 3+4+5==12 3+4+5+6==18
 }
 
 template <typename V, typename S> constexpr bool algorithm_test2() {

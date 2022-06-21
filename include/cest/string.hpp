@@ -1,8 +1,24 @@
 #ifndef _CEST_STRING_HPP_
 #define _CEST_STRING_HPP_
 
-#include "ostream.hpp"
+#include "ostream.hpp" // basic_ostream needed for ADL by operator<< below
 #include "runtime_ostream.hpp"
+
+#if defined(__cpp_lib_constexpr_string) && __GLIBCXX__ >= 20220000
+
+// 20220000? https://gcc.gnu.org/bugzilla/show_bug.cgi?id=103295 is resolved.
+
+#include <string>
+
+namespace cest {
+
+using std::basic_string;
+using std::string;
+
+} // namespace cest
+
+#else // __cpp_lib_constexpr_string
+
 #include <iterator>    // std::reverse_iterator
 #include <limits>      // std::numeric_limits
 #include <memory>      // std::allocator
@@ -352,6 +368,23 @@ operator<(const _CharT *__lhs,
   return __rhs.compare(__lhs) > 0;
 }
 
+using string = basic_string<char>;
+using wstring = basic_string<wchar_t>;
+using u8string = basic_string<char8_t>;
+using u16string = basic_string<char16_t>;
+using u32string = basic_string<char32_t>;
+
+} // namespace cest
+
+#endif // __cpp_lib_constexpr_string
+
+namespace cest {
+
+// This operator will also be used when __cpp_lib_constexpr_string is defined.
+// e.g. The first argument could be cest::cout. This has type cest::ostream,
+// which is defined in the cest namespace, and so ADL will find this operator.
+// So cest::cout << cest::string{"ok"} works, even when the alias definition of
+// cest::string (above) means this is really cest::cout << std::string{"ok"}
 template <class CharT, class Traits, class Allocator>
 constexpr basic_ostream<CharT, Traits> &
 operator<<(basic_ostream<CharT, Traits> &os,
@@ -360,12 +393,6 @@ operator<<(basic_ostream<CharT, Traits> &os,
   return os;
 }
 
-using string = basic_string<char>;
-using wstring = basic_string<wchar_t>;
-using u8string = basic_string<char8_t>;
-using u16string = basic_string<char16_t>;
-using u32string = basic_string<char32_t>;
-
-} // namespace cest
+}
 
 #endif // _CEST_STRING_HPP_

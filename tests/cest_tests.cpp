@@ -22,6 +22,7 @@
 #include "map_tests.hpp"
 #include "memory_tests.hpp"
 #include "numeric_tests.hpp"
+#include "optional_tests.hpp"
 #include "queue_tests.hpp"
 #include "set_tests.hpp"
 #include "string_tests.hpp"
@@ -56,6 +57,7 @@ int main(int argc, char *argv[]) {
   functional_tests();
   exception_tests();
   variant_tests();
+  optional_tests();
 
   return 0;
 }

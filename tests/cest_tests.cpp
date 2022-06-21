@@ -27,6 +27,7 @@
 #include "string_tests.hpp"
 #include "stringstream_tests.hpp"
 #include "utility_tests.hpp"
+#include "variant_tests.hpp"
 #include "vector_tests.hpp"
 
 int main(int argc, char *argv[]) {
@@ -54,6 +55,7 @@ int main(int argc, char *argv[]) {
   complex_tests();
   functional_tests();
   exception_tests();
+  variant_tests();
 
   return 0;
 }

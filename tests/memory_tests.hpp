@@ -66,6 +66,10 @@ constexpr bool make_unique_test() {
 
   struct b_t : a_t {
     constexpr int foo() override { return 1; }
+
+#if !defined(__clang__)
+    constexpr virtual ~b_t() {}; // GCC Bug 93413
+#endif
   };
 
   cest::unique_ptr<a_t> a_v = cest::make_unique<a_t>();

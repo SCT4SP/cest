@@ -48,6 +48,9 @@ protected:
   template <class U, class Deleter> struct ctrl_derived : public ctrl {
     constexpr ctrl_derived(U *ptr, Deleter del) : ptr_{ptr}, del_{del} {}
     virtual constexpr void destroy() override { del_(ptr_); }
+#if !defined(__clang__)
+    constexpr virtual ~ctrl_derived() {}; // GCC Bug 93413
+#endif
 
     U *ptr_;
     Deleter del_;

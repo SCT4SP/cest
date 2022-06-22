@@ -20,6 +20,10 @@ class impl_f : public virt_impl_f<R, Args...> {
 public:
   constexpr impl_f(F &&f) : f_(f) {}
 
+#if !defined(__clang__)
+  constexpr virtual ~impl_f() {}; // GCC Bug 93413
+#endif
+
   constexpr virtual R operator()(Args... args) override {
     return f_(std::forward<Args>(args)...);
   }
@@ -31,6 +35,10 @@ template <typename F, typename... Args>
 class impl_f<F, void, Args...> : public virt_impl_f<void, Args...> {
 public:
   constexpr impl_f(F &&f) : f_(f) {}
+
+#if !defined(__clang__)
+  constexpr virtual ~impl_f() {}; // GCC Bug 93413
+#endif
 
   constexpr virtual void operator()(Args... args) override {
     f_(std::forward<Args>(args)...);

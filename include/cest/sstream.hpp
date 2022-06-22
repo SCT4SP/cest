@@ -44,6 +44,10 @@ public:
     _M_stringbuf_init(__mode);
   }
 
+#if !defined(__clang__)
+  constexpr virtual ~basic_stringbuf() {}; // GCC Bug 93413
+#endif
+
   constexpr void str(const __string_type &__s) {
     _M_string = __s;
     _M_stringbuf_init(_M_mode);

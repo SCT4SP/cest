@@ -4,9 +4,10 @@
 #include "ostream.hpp" // basic_ostream needed for ADL by operator<< below
 #include "runtime_ostream.hpp"
 
-#if defined(__cpp_lib_constexpr_string) && __GLIBCXX__ >= 20220000
+#if defined(__cpp_lib_constexpr_string) && !defined(__clang__) && __GLIBCXX__ >= 20220000
 
-// 20220000? https://gcc.gnu.org/bugzilla/show_bug.cgi?id=103295 is resolved.
+// 20220000  ? https://gcc.gnu.org/bugzilla/show_bug.cgi?id=103295 is resolved.
+// __clang__ ? Bug 103295 still seems to bite.
 
 #include <string>
 

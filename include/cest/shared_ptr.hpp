@@ -5,6 +5,7 @@
 // https://www.justsoftwaresolutions.co.uk/cplusplus/shared-ptr-secret-constructor.html
 
 #include <compare> // std::strong_ordering
+#include <memory>  // std::weak_ptr
 #include <type_traits>
 
 #include "cest/compare.hpp"

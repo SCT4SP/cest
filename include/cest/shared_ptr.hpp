@@ -115,11 +115,22 @@ protected:
 template <class Deleter, class U>
 constexpr Deleter *get_deleter(const shared_ptr<U> &p) noexcept {
   using elem_t = typename shared_ptr<U>::element_type;
+  using ctrl_derived_t =
+    typename shared_ptr<U>::template ctrl_derived<elem_t, Deleter>;
 
   if constexpr (std::is_invocable_v<Deleter, elem_t *>) {
-    using ctrl_derived_t =
-        typename shared_ptr<U>::template ctrl_derived<elem_t, Deleter>;
-    auto ptr = dynamic_cast<ctrl_derived_t *>(p.pctrl_);
+    ctrl_derived_t* ptr{nullptr};
+#if defined(__clang__)
+    ptr = dynamic_cast<ctrl_derived_t *>(p.pctrl_); // fails as gcc bug 106107
+#else
+    static_assert(__cplusplus > 202002L, "g++ needs C++23's type_info==");
+    static_assert(__GNUC__ >= 13, "constexpr type_info== needs a recent g++");
+    if (typeid(*p.pctrl_) == typeid(ctrl_derived_t)) {
+      ptr = static_cast<ctrl_derived_t *>(p.pctrl_);
+    } else {
+      ptr = dynamic_cast<ctrl_derived_t *>(p.pctrl_);
+    }
+#endif
     return ptr ? &ptr->del_ : nullptr;
   }
 

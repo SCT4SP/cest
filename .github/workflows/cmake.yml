@@ -10,6 +10,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   CLANG_BUILD_DIR: build_clang
+  GCC_BUILD_DIR: build_gcc
 
 jobs:
   build:
@@ -23,7 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Create Build Environment
+    - name: Create Clang Build Environment
       # Some projects don't allow in-source building, so create a separate
       # build directory We'll use this as our working directory for all
       # subsequent commands
@@ -32,7 +33,7 @@ jobs:
 #    - name: Install updated libstdc++ and Clang
 #      run: sudo apt-get install libstdc++-10-dev clang-10
 
-    - name: Configure CMake
+    - name: Configure CMake for Clang
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
       shell: bash
@@ -43,17 +44,34 @@ jobs:
       # machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE/tests -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=clang++
 
-    - name: Build
+    - name: Build with Clang
       working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
       shell: bash
       # Execute the build. You can specify a specific target
       # with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
 
-    - name: Test
+    - name: Test Clang Build
       working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
       shell: bash
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html
-      # for more detail
+      run: ctest -C $BUILD_TYPE
+
+      # Now, as above for Clang, so below for GCC 12:
+
+    - name: Create GCC Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
+
+    - name: Configure CMake for GCC
+      shell: bash
+      working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
+      run: cmake $GITHUB_WORKSPACE/tests -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-12
+
+    - name: Build with GCC
+      working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Test GCC Build
+      working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
+      shell: bash
       run: ctest -C $BUILD_TYPE

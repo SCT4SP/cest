@@ -124,7 +124,6 @@ constexpr Deleter *get_deleter(const shared_ptr<U> &p) noexcept {
     ptr = dynamic_cast<ctrl_derived_t *>(p.pctrl_); // fails as gcc bug 106107
 #else
     static_assert(__cplusplus > 202002L, "g++ needs C++23's type_info==");
-    //static_assert(__GNUC__ >= 13, "constexpr type_info== needs a recent g++");
     static_assert(__GNUC__  > 12 ||
                  (__GNUC__ == 12 && (__GNUC_MINOR__ > 0 ||
                                     (__GNUC_MINOR__ == 0 &&

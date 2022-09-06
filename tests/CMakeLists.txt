@@ -2,7 +2,14 @@ cmake_minimum_required(VERSION 3.0)
 set(name cest_tests)
 project(${name})
 
-set(CMAKE_CXX_STANDARD 20)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  set(CMAKE_CXX_STANDARD 20)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  set(CMAKE_CXX_STANDARD 23)     # cest::shared_ptr uses type_info== with g++
+# elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+# elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+endif()
+
 add_compile_options(-Wall)
 
 # Use lsb_release to display Ubuntu version (useful within Github Actions)

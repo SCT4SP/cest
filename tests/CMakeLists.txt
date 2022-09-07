@@ -13,22 +13,26 @@ endif()
 add_compile_options(-Wall)
 
 # Use lsb_release to display Ubuntu version (useful within Github Actions)
-function(display_linux_lsb_release_information)
-  find_program(LSB_RELEASE_EXEC lsb_release)
-  if (NOT LSB_RELEASE_EXEC OR NOT CMAKE_SYSTEM_NAME MATCHES "Linux")
-    message("Cannot determine Ubuntu version using lsb_release.")
-    return()
+function(display_os_information)
+  if (WIN32)
+    # todo: name LSB_RELEASE_DESC more generically and set for Windows here
+  else()
+    find_program(LSB_RELEASE_EXEC lsb_release)
+    if (NOT LSB_RELEASE_EXEC OR NOT CMAKE_SYSTEM_NAME MATCHES "Linux")
+      message("Cannot determine Ubuntu version using lsb_release.")
+      return()
+    endif()
+
+    execute_process(COMMAND "${LSB_RELEASE_EXEC}" --short --description
+                    OUTPUT_VARIABLE LSB_RELEASE_DESC
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    message(STATUS "OS Version:         ${LSB_RELEASE_DESC}")
   endif()
-
-  execute_process(COMMAND "${LSB_RELEASE_EXEC}" --short --description
-                  OUTPUT_VARIABLE LSB_RELEASE_DESC
-                  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-  message(STATUS "OS Version:         ${LSB_RELEASE_DESC}")
 
 endfunction()
 
-display_linux_lsb_release_information()
+display_os_information()
 
 message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 message(STATUS "CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")

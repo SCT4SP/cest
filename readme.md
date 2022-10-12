@@ -8,18 +8,20 @@ The **C'est** project aims to provide a non-standard version of the C++
 standard library with enhanced support for compile time evaluation
 (`constexpr`) for use in research.
 
-GCC and Clang declare support for all 7 C++20 proposals which are part of
+GCC and Clang support all 7 C++20 proposals which are part of
 "Relaxations of constexpr restrictions": [P1064](https://wg21.link/P1064)
 [P1002](https://wg21.link/P1002) [P1327](https://wg21.link/P1327)
 [P1330](https://wg21.link/P1330) [P1331](https://wg21.link/P1331)
 [P1668](https://wg21.link/P1668) [P0784](https://wg21.link/P0784R7). Of these,
 the last, P0784 (More constexpr containers) includes discussion on "constexpr
-new-expressions".  Clang's support includes crucial facilities missing in GCC:
-for example, equality comparison of pointers at compile-time. Consequently,
-**C'est** requires a recent release of the Clang compiler.
+new-expressions".
 
-The C'est library is not standalone, and requires a C++20 standard library;
-such as GCC's libstdc++ (version 10 upwards). C'est also includes code from
+**C'est** supports both Clang and GCC. To pass all the tests provided, C++23
+is used (either via flag `-std=c++23` or `-std=c++2b`). A recent version of the
+GCC compiler is also required (e.g. GCC 12; `sudo apt-get install g++-12`).
+
+The C'est library is not standalone, and requires a recent standard library;
+such as GCC's libstdc++. C'est also includes code from
 libstdc++; as seen in `basic_ios.hpp`, `ios_base.hpp`, `istream.hpp`,
 `ostream.hpp`, `sstream.hpp`, `streambuf.hpp` and elsewhere.
 
@@ -85,8 +87,11 @@ clang++ -std=c++20 -I include example.cpp
 ```
 
 Compile-time and runtime tests are included within the `tests` directory. To
-build and run the tests use the following commands. For the runtime component,
-expected console output is listed in `cest_tests.cpp`.
+ensure runtime and compile-time parity, each `static_assert` therein is
+accompanied by a runtime `assert`. To build and run the tests use the following
+commands (the `Debug` CMake flag ensures the runtime `assert` calls remain
+active). For the runtime component, expected console output is listed in
+`cest_tests.cpp`.
 
 ```
 cd tests
@@ -94,7 +99,7 @@ mkdir build
 cd build
 cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug ..
 make
-./cest_tests
+make test
 ```
 
 ## Projects using C'est

@@ -27,6 +27,7 @@
 #include "set_tests.hpp"
 #include "string_tests.hpp"
 #include "stringstream_tests.hpp"
+#include "typeinfo_tests.hpp"
 #include "utility_tests.hpp"
 #include "variant_tests.hpp"
 #include "vector_tests.hpp"
@@ -58,6 +59,7 @@ int main(int argc, char *argv[]) {
   exception_tests();
   variant_tests();
   optional_tests();
+  typeinfo_tests();
 
   return 0;
 }

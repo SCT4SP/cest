@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.0)
 set(name cest_tests)
 project(${name})
 
+# Now test C++23's type_info::operator==
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_STANDARD 23)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  set(CMAKE_CXX_STANDARD 23)     # cest::shared_ptr uses type_info== with g++
+  set(CMAKE_CXX_STANDARD 23)
 # elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
 # elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()

@@ -54,6 +54,8 @@ The code below provides a basic demonstration of some functionality. Executing t
 
 // Copyright (c) 2020-2022 Paul Keir, University of the West of Scotland.
 
+// g++-12  -std=c++20 -I include example.cpp
+//   ... or:
 // clang++ -std=c++20 -I include example.cpp
 
 constexpr bool doit() {
@@ -83,7 +85,7 @@ The code above comes from the `example.cpp` file; found in the same
 directory as this readme. The command required to build the code above is:
 
 ```
-clang++ -std=c++20 -I include example.cpp
+$CXX -std=c++20 -I include example.cpp
 ```
 
 Compile-time and runtime tests are included within the `tests` directory. To

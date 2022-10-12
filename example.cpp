@@ -9,6 +9,8 @@
 
 // Copyright (c) 2020-2022 Paul Keir, University of the West of Scotland.
 
+// g++-12  -std=c++20 -I include example.cpp
+//   ... or:
 // clang++ -std=c++20 -I include example.cpp
 
 constexpr bool doit() {

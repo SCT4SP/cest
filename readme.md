@@ -20,8 +20,8 @@ new-expressions".
 is used (either via flag `-std=c++23` or `-std=c++2b`). A recent version of the
 GCC compiler is also required (e.g. GCC 12; `sudo apt-get install g++-12`).
 
-The C'est library is not standalone, and requires a recent standard library;
-such as GCC's libstdc++. C'est also includes code from
+The C'est library is not standalone, and requires a recent version of
+GCC's C++ standard library: libstdc++. C'est also includes code from
 libstdc++; as seen in `basic_ios.hpp`, `ios_base.hpp`, `istream.hpp`,
 `ostream.hpp`, `sstream.hpp`, `streambuf.hpp` and elsewhere.
 

@@ -46,13 +46,12 @@ public:
     swap(m_alloc, other.m_alloc);
   }
 
-  constexpr vector(const vector &other) : vector() {
-    reserve(other.capacity());
+  constexpr vector(const vector &other)
+      : vector(other.capacity(), other.get_allocator()) {
     m_size = other.size();
     using alloc_traits = std::allocator_traits<allocator_type>;
-    allocator_type alloc2 = get_allocator(); // allocators of same type r equal
     for (size_type i = 0; i < m_size; i++)
-      alloc_traits::construct(alloc2, &m_p[i], other.m_p[i]);
+      alloc_traits::construct(m_alloc, &m_p[i], other.m_p[i]);
   }
 
   constexpr vector(vector &&other) : vector() { swap(other); }
@@ -62,9 +61,8 @@ public:
     reserve(count);
     m_size = count;
     using alloc_traits = std::allocator_traits<allocator_type>;
-    allocator_type alloc2 = get_allocator();
     for (size_type i = 0; i < m_size; i++)
-      alloc_traits::construct(alloc2, &m_p[i]);
+      alloc_traits::construct(m_alloc, &m_p[i]);
   }
 
   constexpr vector(std::initializer_list<T> init,
@@ -88,6 +86,7 @@ public:
 
   constexpr vector &operator=(const vector &other) {
     reserve(other.capacity());
+    m_alloc = other.get_allocator();
 
     size_type i = 0;
     if (other.size() >= m_size) {

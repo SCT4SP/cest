@@ -20,10 +20,16 @@ template <typename FL> constexpr bool forward_list_test2() {
 }
 
 template <typename FL> constexpr bool forward_list_test3() {
-  FL fl;
-  fl.push_front(2);
-  fl.push_front(1);
-  return 1 == fl.front();
+  FL fl1;
+  fl1.push_front(2);
+  fl1.push_front(1);
+  bool b1 = 1 == fl1.front();
+
+  fl1.assign(5, 42);
+  FL fl2({42, 42, 42, 42, 42});
+  bool b2 = fl1 == fl2;
+
+  return b1 && b2;
 }
 
 template <typename FL> constexpr bool forward_list_test4() {

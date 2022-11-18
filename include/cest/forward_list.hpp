@@ -2,6 +2,7 @@
 #define _CEST_FORWARD_LIST_HPP_
 
 #include <memory>
+#include <cest/iterator.hpp>
 
 namespace cest {
 
@@ -101,6 +102,7 @@ template <class T, class Allocator = std::allocator<T>> struct forward_list {
 
   constexpr forward_list() = default;
   constexpr forward_list(const forward_list &other) {
+    m_node_alloc = other.get_allocator();
     const node_base *from = &other.m_front;
     node_base *to = &this->m_front;
     while (from->next) {
@@ -115,6 +117,16 @@ template <class T, class Allocator = std::allocator<T>> struct forward_list {
     forward_list tmp(other);
     this->swap(tmp);
     return *this;
+  }
+
+  explicit constexpr forward_list(const Allocator& alloc)
+      : m_front{}, m_node_alloc(alloc) {}
+
+  constexpr forward_list(std::initializer_list<T> init,
+                   const Allocator &alloc = Allocator()) : forward_list(alloc) {
+    for (const auto &x : init) {
+      push_front(x);
+    }
   }
 
   constexpr ~forward_list() { erase_after(before_begin(), end()); }
@@ -137,6 +149,12 @@ template <class T, class Allocator = std::allocator<T>> struct forward_list {
 
   [[nodiscard]] constexpr bool empty() const noexcept {
     return begin() == end();
+  }
+
+  constexpr void assign(size_type count, const T& value) {
+    clear();
+    for (size_type i = 0; i < count; i++)
+      push_front(value);
   }
 
   constexpr iterator insert_after(const_iterator pos, const value_type &value) {
@@ -204,6 +222,13 @@ template <class T, class Allocator = std::allocator<T>> struct forward_list {
   typename std::allocator_traits<allocator_type>::template rebind_alloc<node>
       m_node_alloc;
 };
+
+template <typename _Tp, typename _Alloc>
+constexpr bool operator==(const forward_list<_Tp, _Alloc> &__x,
+                          const forward_list<_Tp, _Alloc> &__y) {
+  return (cest::distance(__x.begin(), __x.end()) == cest::distance(__y.begin(), __y.end())) &&
+          std::equal(__x.begin(), __x.end(), __y.begin());
+}
 
 } // namespace cest
 

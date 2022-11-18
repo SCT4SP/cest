@@ -8,6 +8,7 @@ namespace cest {
 using std::back_inserter;
 using std::inserter;
 using std::istreambuf_iterator;
+using std::distance;
 
 } // namespace cest
 

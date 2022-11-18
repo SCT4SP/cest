@@ -50,7 +50,7 @@ public:
     reserve(other.capacity());
     m_size = other.size();
     using alloc_traits = std::allocator_traits<allocator_type>;
-    allocator_type alloc2 = get_allocator();
+    allocator_type alloc2 = get_allocator(); // allocators of same type r equal
     for (size_type i = 0; i < m_size; i++)
       alloc_traits::construct(alloc2, &m_p[i], other.m_p[i]);
   }

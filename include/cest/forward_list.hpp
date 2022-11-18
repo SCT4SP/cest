@@ -100,8 +100,8 @@ template <class T, class Allocator = std::allocator<T>> struct forward_list {
   };
 
   constexpr forward_list() = default;
-  constexpr forward_list(const forward_list &x) {
-    const node_base *from = &x.m_front;
+  constexpr forward_list(const forward_list &other) {
+    const node_base *from = &other.m_front;
     node_base *to = &this->m_front;
     while (from->next) {
       const node *nextf = static_cast<node *>(from->next);
@@ -111,16 +111,17 @@ template <class T, class Allocator = std::allocator<T>> struct forward_list {
     }
   }
 
-  constexpr forward_list &operator=(const forward_list &x) {
-    forward_list tmp(x);
+  constexpr forward_list& operator=(const forward_list &other) {
+    forward_list tmp(other);
     this->swap(tmp);
     return *this;
   }
 
   constexpr ~forward_list() { erase_after(before_begin(), end()); }
 
-  constexpr void swap(forward_list &x) {
-    std::swap(this->m_front.next, x.m_front.next);
+  constexpr void swap(forward_list& other) {
+    using std::swap;
+    swap(m_front, other.m_front);
   }
 
   constexpr allocator_type get_allocator() const noexcept {

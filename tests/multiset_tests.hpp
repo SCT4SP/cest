@@ -14,9 +14,7 @@ namespace multiset_tests_ns {
 constexpr bool common_static_multiset_tests() {
   auto f = []<template <class...> class MS>() {
     static_assert(sizeof(MS<float>) == sizeof(MS<double>));
-#if !defined(_LIBCPP_VERSION) && !defined(__clang__)
     static_assert(std::weakly_incrementable<typename MS<int>::iterator>);
-#endif
     using iter_t = typename MS<int>::iterator;
     using const_iter_t = typename MS<int>::const_iterator;
     static_assert(std::is_same_v<typename iter_t::iterator_category,

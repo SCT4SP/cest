@@ -48,11 +48,7 @@ public:
     return *this;
   }
 
-  // This results in the iterator's type failing std::weakly_incrementable etc.
-  // It's listed in cppreference.com. libc++ has it. libstdc++ doesn't; though
-  // note that the const version there returns iterator, but this is the same
-  // as const_iterator in set and multiset anyway.
-  //  constexpr     iterator  begin()       noexcept { return m_tree.begin(); }
+  constexpr iterator begin() noexcept { return m_tree.begin(); }
   constexpr const_iterator begin() const noexcept { return m_tree.begin(); }
   constexpr const_iterator cbegin() const noexcept { return m_tree.cbegin(); }
   constexpr iterator end() noexcept { return m_tree.end(); }
@@ -131,11 +127,7 @@ public:
     return *this;
   }
 
-  // This results in the iterator's type failing std::weakly_incrementable etc.
-  // It's listed in cppreference.com. libc++ has it. libstdc++ doesn't; though
-  // note that the const version there returns iterator, but this is the same
-  // as const_iterator in set and multiset anyway.
-  //  constexpr     iterator  begin()       noexcept { return m_tree.begin(); }
+  constexpr iterator begin() noexcept { return m_tree.begin(); }
   constexpr const_iterator begin() const noexcept { return m_tree.begin(); }
   constexpr const_iterator cbegin() const noexcept { return m_tree.cbegin(); }
   constexpr iterator end() noexcept { return m_tree.end(); }

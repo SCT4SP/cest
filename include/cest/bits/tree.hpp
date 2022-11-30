@@ -8,7 +8,7 @@
 namespace cest {
 
 template <class Key, class Compare = std::less<Key>,
-          class Allocator = std::allocator<Key>>
+          class Allocator = std::allocator<Key>, bool Multiset = false>
 class tree {
 public:
 
@@ -219,8 +219,12 @@ public:
       } else if (m_comp(n->x, value)) {
         ins_rec(n->r, n, ins_rec);
       } else {
-        ret_node = n; // the node that prevents insertion
-        return;
+        if constexpr (Multiset) {
+          ins_rec(n->r, n, ins_rec); // n->r aligns with m_comp(value, etc.)
+        } else {
+          ret_node = n; // the node that prevents insertion
+          return;
+        }
       }
 
       if (n->c == RED)

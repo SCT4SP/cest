@@ -21,6 +21,7 @@
 #include "list_tests.hpp"
 #include "map_tests.hpp"
 #include "memory_tests.hpp"
+#include "multiset_tests.hpp"
 #include "numeric_tests.hpp"
 #include "optional_tests.hpp"
 #include "queue_tests.hpp"
@@ -60,6 +61,7 @@ int main(int argc, char *argv[]) {
   variant_tests();
   optional_tests();
   typeinfo_tests();
+  multiset_tests();
 
   return 0;
 }

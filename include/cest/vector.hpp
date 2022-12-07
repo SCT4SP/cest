@@ -46,13 +46,7 @@ public:
     swap(m_alloc, other.m_alloc);
   }
 
-  constexpr vector(const vector &other)
-      : vector(other.capacity(), other.get_allocator()) {
-    m_size = other.size();
-    using alloc_traits = std::allocator_traits<allocator_type>;
-    for (size_type i = 0; i < m_size; i++)
-      alloc_traits::construct(m_alloc, &m_p[i], other.m_p[i]);
-  }
+  constexpr vector(const vector &other) : vector() { *this = other; }
 
   constexpr vector(vector &&other) : vector() { swap(other); }
 
@@ -60,9 +54,6 @@ public:
       : m_size{}, m_capacity{}, m_p{}, m_alloc(alloc) {
     reserve(count);
     m_size = count;
-    using alloc_traits = std::allocator_traits<allocator_type>;
-    for (size_type i = 0; i < m_size; i++)
-      alloc_traits::construct(m_alloc, &m_p[i]);
   }
 
   constexpr vector(std::initializer_list<T> init,
@@ -79,13 +70,10 @@ public:
       m_alloc.deallocate(m_p, m_capacity);
   }
 
-  constexpr vector &operator=(vector &&other) {
-    swap(other);
-    return *this;
-  }
+  constexpr vector &operator=(vector &&other) { swap(other); return *this; }
 
   constexpr vector &operator=(const vector &other) {
-    reserve(other.capacity());
+    reserve2(other.capacity(), other.get_allocator());
     m_alloc = other.get_allocator();
 
     size_type i = 0;
@@ -109,9 +97,12 @@ public:
   [[nodiscard]] constexpr bool empty() const noexcept { return m_size == 0; }
   constexpr size_type size() const noexcept { return m_size; }
   constexpr size_type capacity() const noexcept { return m_capacity; }
-  constexpr void reserve(size_type new_cap) {
+
+private:
+
+  constexpr void reserve2(size_type new_cap, Allocator new_alloc) {
     if (new_cap > m_capacity) {
-      value_type *p = m_alloc.allocate(new_cap);
+      value_type *p = new_alloc.allocate(new_cap);
       for (size_type i = 0; i < m_size; i++)
         std::construct_at(&p[i], std::move_if_noexcept(m_p[i]));
       if (0 != m_capacity) {
@@ -121,6 +112,12 @@ public:
       m_p = p;
       m_capacity = new_cap;
     }
+  }
+
+public:
+
+  constexpr void reserve(size_type new_cap) {
+    reserve2(new_cap, m_alloc);
   }
 
   constexpr void resize(size_type count) {

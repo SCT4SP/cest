@@ -1,9 +1,9 @@
 #ifndef _CEST_VECTOR_HPP_
 #define _CEST_VECTOR_HPP_
 
-#ifdef __cpp_lib_constexpr_vector
+#include <vector> // __cpp_lib_constexpr_vector is defined in here
 
-#include <vector>
+#ifdef __cpp_lib_constexpr_vector
 
 namespace cest {
 

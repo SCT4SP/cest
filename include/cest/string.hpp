@@ -1,6 +1,8 @@
 #ifndef _CEST_STRING_HPP_
 #define _CEST_STRING_HPP_
 
+#include <string> // __cpp_lib_constexpr_string is defined in here
+
 #include "ostream.hpp" // basic_ostream needed for ADL by operator<< below
 #include "runtime_ostream.hpp"
 
@@ -8,8 +10,6 @@
 
 // 20220000  ? https://gcc.gnu.org/bugzilla/show_bug.cgi?id=103295 is resolved.
 // __clang__ ? Bug 103295 still seems to bite.
-
-#include <string>
 
 namespace cest {
 

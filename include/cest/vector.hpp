@@ -3,7 +3,7 @@
 
 #include <vector> // __cpp_lib_constexpr_vector is defined in here
 
-#ifdef __cpp_lib_constexpr_vector
+#if defined(__cpp_lib_constexpr_vector) && !defined(USE_CEST_VECTOR_ETC)
 
 namespace cest {
 

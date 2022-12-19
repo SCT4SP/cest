@@ -54,6 +54,8 @@ public:
       : m_size{}, m_capacity{}, m_p{}, m_alloc(alloc) {
     reserve(count);
     m_size = count;
+    for (size_type i = 0; i < m_size; i++)
+      std::construct_at(&m_p[i]);
   }
 
   constexpr vector(std::initializer_list<T> init,

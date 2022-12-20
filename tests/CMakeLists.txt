@@ -46,13 +46,14 @@ target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../include)
 # Indicates to test cest's constexpr (and runtime) support
 target_compile_definitions(${name} PRIVATE CONSTEXPR_CEST=1)
 
-if (DEFINED USE_CEST_VECTOR_ETC)
+#if (DEFINED USE_CEST_VECTOR_ETC)
+if (USE_CEST_VECTOR_ETC)
   # Silence CMake https://stackoverflow.com/a/36452112/2023370 :
   set(ignoreMe "${USE_CEST_VECTOR_ETC}")
-  message("USE_CEST_VECTOR_ETC is defined. Using cest::vector etc.")
+  message("USE_CEST_VECTOR_ETC is defined. Using cest::vector, cest::string etc.")
   target_compile_definitions(${name} PRIVATE USE_CEST_VECTOR_ETC=1)
 else()
-  message("USE_CEST_VECTOR_ETC is NOT defined. Using std::vector etc.")
+  message("USE_CEST_VECTOR_ETC is NOT defined. Using std::vector, std::string etc.")
 endif ()
 
 enable_testing()

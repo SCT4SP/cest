@@ -13,12 +13,36 @@ env:
   GCC_BUILD_DIR: build_gcc
 
 jobs:
-  build:
-    # The CMake configure and build commands are platform agnostic and should
-    # work equally well on Windows or Mac.  You can convert this to a matrix
-    # build if you need cross-platform coverage.  See:
-    # https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#configuring-a-build-matrix
+  build-gcc:
 #    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create CMake Build Directory for Clang
+      run: cmake -E make_directory ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
+
+#    - name: Install updated libstdc++ and Clang
+#      run: sudo apt-get install libstdc++-10-dev clang-10
+
+    - name: Configure CMake for Clang
+      shell: bash
+      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
+      run: cmake $GITHUB_WORKSPACE/tests -DUSE_CEST_VECTOR_ETC=1 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=clang++
+
+    - name: Build with Clang
+      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Test Clang Build
+      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
+      shell: bash
+      run: ctest -C $BUILD_TYPE
+
+  # As above for Clang, so below for GCC 12:
+  build-clang:
     runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
 
     steps:
@@ -27,47 +51,13 @@ jobs:
     - name: Install Recent GCC
       run: sudo apt install g++-12
 
-    - name: Create Clang Build Environment
-      # Some projects don't allow in-source building, so create a separate
-      # build directory We'll use this as our working directory for all
-      # subsequent commands
-      run: cmake -E make_directory ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
-
-#    - name: Install updated libstdc++ and Clang
-#      run: sudo apt-get install libstdc++-10-dev clang-10
-
-    - name: Configure CMake for Clang
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system
-      shell: bash
-      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
-      # Note the current convention is to use the -S and -B options here to
-      # specify source and build directories, but this is only available with
-      # CMake 3.13 and higher.  The CMake binaries on the Github Actions
-      # machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE/tests -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=clang++
-
-    - name: Build with Clang
-      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
-      shell: bash
-      # Execute the build. You can specify a specific target
-      # with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE
-
-    - name: Test Clang Build
-      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
-      shell: bash
-      run: ctest -C $BUILD_TYPE
-
-      # Now, as above for Clang, so below for GCC 12:
-
-    - name: Create GCC Build Environment
+    - name: Create CMake Build Directory for GCC
       run: cmake -E make_directory ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
 
     - name: Configure CMake for GCC
       shell: bash
       working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
-      run: cmake $GITHUB_WORKSPACE/tests -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-12
+      run: cmake $GITHUB_WORKSPACE/tests -DUSE_CEST_VECTOR_ETC=1 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-12
 
     - name: Build with GCC
       working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}

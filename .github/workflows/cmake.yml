@@ -4,72 +4,15 @@ name: build-test
 # on: [push]
 on:
   push:
-    branches: [master]
+    branches: [master,dev]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
-  CLANG_BUILD_DIR: build_clang
-  GCC_BUILD_DIR: build_gcc
+  CMAKE_BUILD_DIR: build
   USE_CEST_VECTOR_ETC: 1
 
 jobs:
-  build-gcc:
-#    runs-on: ubuntu-latest
-    runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Create CMake Build Directory for Clang
-      run: cmake -E make_directory ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
-
-#    - name: Install updated libstdc++ and Clang
-#      run: sudo apt-get install libstdc++-10-dev clang-10
-
-    - name: Configure CMake for Clang
-      shell: bash
-      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
-      run: cmake $GITHUB_WORKSPACE/tests -DUSE_CEST_VECTOR_ETC=1 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=clang++
-
-    - name: Build with Clang
-      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
-      shell: bash
-      run: cmake --build . --config $BUILD_TYPE
-
-    - name: Test Clang Build
-      working-directory: ${{runner.workspace}}/${{env.CLANG_BUILD_DIR}}
-      shell: bash
-      run: ctest -C $BUILD_TYPE
-
-  # As above for Clang, so below for GCC 12:
-  build-clang:
-    runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install Recent GCC
-      run: sudo apt install g++-12
-
-    - name: Create CMake Build Directory for GCC
-      run: cmake -E make_directory ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
-
-    - name: Configure CMake for GCC
-      shell: bash
-      working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
-      run: cmake $GITHUB_WORKSPACE/tests -DUSE_CEST_VECTOR_ETC=1 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-12
-
-    - name: Build with GCC
-      working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
-      shell: bash
-      run: cmake --build . --config $BUILD_TYPE
-
-    - name: Test GCC Build
-      working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
-      shell: bash
-      run: ctest -C $BUILD_TYPE
-
   build-script-clang-cest:
     runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
 
@@ -77,7 +20,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build Script for Clang with C'est
-      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests $USE_CEST_VECTOR_ETC $BUILD_TYPE clang++
+      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CMAKE_BUILD_DIR} $GITHUB_WORKSPACE/tests $USE_CEST_VECTOR_ETC $BUILD_TYPE clang++
       shell: bash
 
   build-script-clang-std:
@@ -87,7 +30,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build Script for Clang with C'est
-      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests $((! USE_CEST_VECTOR_ETC)) $BUILD_TYPE clang++
+      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CMAKE_BUILD_DIR} $GITHUB_WORKSPACE/tests $((! USE_CEST_VECTOR_ETC)) $BUILD_TYPE clang++
       shell: bash
 
   build-script-gcc-cest:
@@ -100,7 +43,7 @@ jobs:
       run: sudo apt install g++-12
 
     - name: Build Script for GCC with C'est
-      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests $USE_CEST_VECTOR_ETC $BUILD_TYPE g++-12
+      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CMAKE_BUILD_DIR} $GITHUB_WORKSPACE/tests $USE_CEST_VECTOR_ETC $BUILD_TYPE g++-12
       shell: bash
 
   build-script-gcc-std:
@@ -113,5 +56,5 @@ jobs:
       run: sudo apt install g++-12
 
     - name: Build Script for GCC with C'est
-      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests $((! USE_CEST_VECTOR_ETC)) $BUILD_TYPE g++-12
+      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CMAKE_BUILD_DIR} $GITHUB_WORKSPACE/tests $((! USE_CEST_VECTOR_ETC)) $BUILD_TYPE g++-12
       shell: bash

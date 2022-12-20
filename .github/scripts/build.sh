@@ -9,6 +9,7 @@ CMAKE_BUILD_TYPE=$4
 CMAKE_CXX_COMPILER=$5
 
 echo !!!!!!!!!!!!!!!!!!!!! $1 $2 $3 $4 $5
+cmake errrrrrrorrr
 exit
 
 cmake -E make_directory ${CMAKE_BUILD_DIR}

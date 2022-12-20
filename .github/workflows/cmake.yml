@@ -76,7 +76,9 @@ jobs:
     - name: Debugging
       run: |
           ls ${{github.workspace}}
+          echo
           ls $GITHUB_WORKSPACE
+          echo
           echo ok so far
 
     - name: Run build script

@@ -73,6 +73,8 @@ jobs:
     runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
 
     steps:
+    - uses: actions/checkout@v2
+
     - name: Debugging
       run: |
           ls ${{github.workspace}}

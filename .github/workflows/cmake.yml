@@ -80,6 +80,16 @@ jobs:
       run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests $USE_CEST_VECTOR_ETC $BUILD_TYPE clang++
       shell: bash
 
+  build-script-clang-std:
+    runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Script for Clang with C'est
+      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests $((! USE_CEST_VECTOR_ETC)) $BUILD_TYPE clang++
+      shell: bash
+
   build-script-gcc-cest:
     runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
 
@@ -91,4 +101,17 @@ jobs:
 
     - name: Build Script for GCC with C'est
       run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests $USE_CEST_VECTOR_ETC $BUILD_TYPE g++-12
+      shell: bash
+
+  build-script-gcc-std:
+    runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Recent GCC
+      run: sudo apt install g++-12
+
+    - name: Build Script for GCC with C'est
+      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests $((! USE_CEST_VECTOR_ETC)) $BUILD_TYPE g++-12
       shell: bash

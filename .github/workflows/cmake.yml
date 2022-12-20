@@ -74,5 +74,5 @@ jobs:
 
     steps:
     - name: Run build script
-      run: ./.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests 1 $BUILD_TYPE clang++
+      run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests 1 $BUILD_TYPE clang++
       shell: bash

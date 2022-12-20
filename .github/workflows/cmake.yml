@@ -68,3 +68,11 @@ jobs:
       working-directory: ${{runner.workspace}}/${{env.GCC_BUILD_DIR}}
       shell: bash
       run: ctest -C $BUILD_TYPE
+
+  build-script-clang:
+    runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
+
+    steps:
+    - name: Run build script
+      run: ./.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests 1 $BUILD_TYPE clang++
+      shell: bash

@@ -73,6 +73,12 @@ jobs:
     runs-on: 'ubuntu-22.04'      # Sep 2022 - ubuntu-latest is 20.04 LTS
 
     steps:
+    - name: Debugging
+      run: |
+          ls ${{github.workspace}}
+          ls $GITHUB_WORKSPACE
+          echo ok so far
+
     - name: Run build script
       run: $GITHUB_WORKSPACE/.github/scripts/build.sh ${CLANG_BUILD_DIR} $GITHUB_WORKSPACE/tests 1 $BUILD_TYPE clang++
       shell: bash

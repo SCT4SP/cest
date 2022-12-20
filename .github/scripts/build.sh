@@ -1,16 +1,12 @@
 #!/bin/bash
 
-# bash build.sh build $PWD/../../tests 1 Debug clang++
+# e.g. sh build.sh build $PWD/../../tests 1 Debug clang++
 
 CMAKE_BUILD_DIR=$1
 CMAKE_SRC_DIR=$2
 USE_CEST_VECTOR_ETC=$3
 CMAKE_BUILD_TYPE=$4
 CMAKE_CXX_COMPILER=$5
-
-echo !!!!!!!!!!!!!!!!!!!!! $1 $2 $3 $4 $5
-cmake errrrrrrorrr
-exit
 
 cmake -E make_directory ${CMAKE_BUILD_DIR}
 cd ${CMAKE_BUILD_DIR}

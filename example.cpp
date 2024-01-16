@@ -9,7 +9,7 @@
 
 // Copyright (c) 2020-2022 Paul Keir, University of the West of Scotland.
 
-// g++-12  -std=c++20 -I include example.cpp
+// g++     -std=c++23 -I include example.cpp
 //   ... or:
 // clang++ -std=c++20 -I include example.cpp
 
@@ -23,7 +23,7 @@ constexpr bool doit() {
 
   set_intersection(dq.begin(), dq.end(), v.begin(), v.end(),
                    inserter(s, s.end()));
-  function<int()> f = [&]() { return accumulate(s.begin(), s.end(), 0); };
+  function<int()> f = [&] { return accumulate(s.begin(), s.end(), 0); };
   auto x = f();
   cout << str << " World " << x << endl;
 
